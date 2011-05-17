@@ -87,7 +87,7 @@ public class Challenge {
 		  JSONObject geoLocation_rightBottom = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_RIGHT_BOTTOM);
 		  locationRightBottom = new GeoPoint(geoLocation_rightBottom.getInt(FIELD_GEOLOCATION_LAT), geoLocation_rightBottom.getInt(FIELD_GEOLOCATION_LON));
 		  
-		  jsonChallenge.getDouble(FIELD_LOCATION);
+		  
 		  JSONArray jsonParticipants = jsonChallenge.getJSONArray(FIELD_PARTICIPANTS);
 		  participants = new ArrayList<Participant>();
 		  for (int i = 0; i < jsonParticipants.length(); i++) 
