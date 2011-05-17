@@ -1,7 +1,11 @@
 package at.ac.uniklu.mobile;
 	
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import at.ac.uniklu.mobile.util.Constants;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -10,16 +14,24 @@ import com.google.android.maps.MapView;
 
 public class HomeActivity extends MapActivity {
 	
-	
-	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home);
         
-        Log.v(Constants.LOG_TAG, "initialize mapview");
-        configureMapView();       
+        Log.d(Constants.LOG_TAG, "initialize mapview");
+        configureMapView();
+        
+        // set up button listener for menu selection
+        final Button button = (Button) findViewById(R.id.button_change_challenge);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(Constants.LOG_TAG, "change challenge button clicked");
+                startActivity(new Intent(HomeActivity.this, ChallengeListActivity.class));
+            }
+        });
+
         
     }
     

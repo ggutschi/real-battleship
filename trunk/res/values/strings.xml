@@ -7,4 +7,5 @@
     
     <!--  list view -->
     <string name="challenge_list_empty">No challenges available.</string>
+    <string name="challenges">Available Challenges</string>
 </resources>

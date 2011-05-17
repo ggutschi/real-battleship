@@ -12,7 +12,10 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>        
+        </activity> 
+        <activity android:name="ChallengeListActivity"
+                  android:label="@string/challenges">
+        </activity>       
         <!--  use google maps library -->
         <uses-library android:name="com.google.android.maps" />
     </application>
