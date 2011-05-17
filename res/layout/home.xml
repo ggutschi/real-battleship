@@ -16,7 +16,7 @@
     
     <TextView android:text="@string/status_message" android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@+id/status_message"></TextView>
     <LinearLayout android:id="@+id/homeLayout" android:layout_width="fill_parent" android:layout_height="wrap_content">
-        <Button android:layout_height="wrap_content" android:id="@+id/button1" android:layout_width="fill_parent" android:text="@string/change_challenge"></Button>
+        <Button android:layout_height="wrap_content" android:id="@+id/button_change_challenge" android:layout_width="fill_parent" android:text="@string/change_challenge"></Button>
     </LinearLayout>
-    <Button android:layout_height="wrap_content" android:id="@+id/button2" android:layout_width="fill_parent" android:text="@string/start_challenge"></Button>
+    <Button android:layout_height="wrap_content" android:id="@+id/button_start_challenge" android:layout_width="fill_parent" android:text="@string/start_challenge"></Button>
 </LinearLayout>

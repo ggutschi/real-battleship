@@ -14,8 +14,8 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int button1=0x7f050003;
-        public static final int button2=0x7f050004;
+        public static final int button_change_challenge=0x7f050003;
+        public static final int button_start_challenge=0x7f050004;
         public static final int challenge_map=0x7f050000;
         public static final int homeLayout=0x7f050002;
         public static final int status_message=0x7f050001;
@@ -29,6 +29,7 @@ public final class R {
         /**   list view 
          */
         public static final int challenge_list_empty=0x7f040004;
+        public static final int challenges=0x7f040005;
         public static final int change_challenge=0x7f040002;
         public static final int start_challenge=0x7f040003;
         public static final int status_message=0x7f040000;
