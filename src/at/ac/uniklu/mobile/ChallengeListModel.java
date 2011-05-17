@@ -15,7 +15,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import android.content.Context;
 import android.util.Log;
@@ -61,6 +60,7 @@ public class ChallengeListModel {
     
     private void loadChallenges() {
     	
+    	Log.d(Constants.LOG_TAG, "load challenges");
     	HttpClient httpClient = new DefaultHttpClient();  
     	HttpGet httpGet = new HttpGet(Constants.URL_WEBSERVICE_GETCHALLENGES);  
     	HttpResponse response;  
