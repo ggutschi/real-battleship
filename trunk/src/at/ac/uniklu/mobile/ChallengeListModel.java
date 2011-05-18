@@ -13,7 +13,10 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 
 import android.content.Context;
@@ -68,7 +71,7 @@ public class ChallengeListModel {
     	try {  
     		response = httpClient.execute(httpGet);  
     		
-    		if (response.getStatusLine().getStatusCode() == Constants.URL_STATUSCODE_OK) {
+    		if (response.getStatusLine().getStatusCode() == Constants.WEBSERVICE_STATUSCODE_OK) {
     		
     			HttpEntity entity = response.getEntity();
     			
@@ -104,20 +107,18 @@ public class ChallengeListModel {
     		}
     		
     	}
-		catch (ClientProtocolException e) {  
-		// TODO Auto-generated catch block  
+		catch (ClientProtocolException e) {
 		e.printStackTrace();  
-		} catch (IOException e) {  
-		// TODO Auto-generated catch block  
+		Log.e(Constants.LOG_TAG, "", e);
+		} catch (IOException e) {    
 		e.printStackTrace();  
+		Log.e(Constants.LOG_TAG, "", e);
 		}  catch (Exception e){  
 		e.printStackTrace();  
+		Log.e(Constants.LOG_TAG, "", e);
 		}finally{  
 		httpGet.abort();  
-		}  
-    		  
-    		  
-    	
+		}
     }
     
     /**
@@ -147,6 +148,66 @@ public class ChallengeListModel {
     			return c;
     	}
     	return null;
+    }
+    
+    /**
+     * adds an new participant to the challenge by sending an HTTP POST request to the challenge server
+     * @param android_id the unique android id of the new participants´ smartphone
+     * @param ip_address the current ip address of the new participants´ smartphone
+     */
+    public boolean addParticipant(String android_id, String ip_address) {
+    	boolean bTransactionPerformed = false;
+    	HttpClient httpClient = new DefaultHttpClient(); 
+    	HttpResponse response; 
+    	HttpPost postMethod = new HttpPost(Constants.URL_WEBSERVICE_ADDPARTICIPANTS);  
+    	  
+    	try {  
+	    	HttpParams params = new BasicHttpParams(); 
+	    	
+	    	params.setParameter("android_id", android_id);
+	    	params.setParameter("inet_address", ip_address);	    	
+	    	postMethod.setParams(params);
+	    	
+	    	Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
+	    	
+	    	response = httpClient.execute(postMethod);
+	    	
+	    	if (response.getStatusLine().getStatusCode() == Constants.WEBSERVICE_STATUSCODE_OK) {
+	    		Log.d(Constants.LOG_TAG, "webservice response code ok");
+	    		HttpEntity entity = response.getEntity();    			
+    			if (entity != null)
+    			{
+    				InputStream instream = entity.getContent();  
+            		BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
+            		String line = reader.readLine();
+            		
+            		if (line.equals(Constants.WEBSERVICE_TRANSACTION_OK)) {
+            			bTransactionPerformed = true; // add participant successful
+            			Log.d(Constants.LOG_TAG, "webservice transaction successful");
+            		}
+            		else
+            			Log.e(Constants.LOG_TAG, "webservice transaction was not successful, response: " + line);
+    			}
+    			else
+    				Log.e(Constants.LOG_TAG, "webservice response entity is empty");
+	    	}
+	    	else
+	    		Log.e(Constants.LOG_TAG, "webservice response code not ok: " + response.getStatusLine().getStatusCode());
+	    	
+    	} catch (ClientProtocolException e) {    
+    	e.printStackTrace();  
+    	Log.e(Constants.LOG_TAG, "", e);
+    	} catch (IOException e) {
+    	e.printStackTrace();  
+    	Log.e(Constants.LOG_TAG, "", e);
+    	} catch (Exception e) {    
+    	e.printStackTrace();  
+    	Log.e(Constants.LOG_TAG, "", e);
+    	} finally {  
+    	postMethod.abort();  
+    	}
+    	
+    	return bTransactionPerformed;
     }
 
     /**

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
+-- version 3.3.2deb1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Erstellungszeit: 17. Mai 2011 um 18:43
--- Server Version: 5.5.8
--- PHP-Version: 5.3.5
+-- Host: sql03-dev.itac.at
+-- Erstellungszeit: 18. Mai 2011 um 21:39
+-- Server Version: 5.1.41
+-- PHP-Version: 5.3.2-1ubuntu4.9
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS `challenges` (
   `name` varchar(200) NOT NULL,
   `locationLeftTop` point NOT NULL,
   `locationRightBottom` point NOT NULL,
+  `cellsX` int(11) NOT NULL,
+  `cellsY` int(11) NOT NULL,
   `location` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
@@ -40,8 +42,8 @@ CREATE TABLE IF NOT EXISTS `challenges` (
 -- Daten fÃ¼r Tabelle `challenges`
 --
 
-INSERT INTO `challenges` (`id`, `name`, `locationLeftTop`, `locationRightBottom`, `location`, `active`) VALUES
-(1, 'Klagenfurt City Challenge', 0x0000000001010000000395f1ef339e2c40d5ec815660504740, 0x000000000101000000b988efc4acc72c40b8921d1b81504740, 'Klagenfurt', 1);
+INSERT INTO `challenges` (`id`, `name`, `locationLeftTop`, `locationRightBottom`, `cellsX`, `cellsY`, `location`, `active`) VALUES
+(1, 'Klagenfurt City Challenge', '\0\0\0\0\0\0\0PåmzkPG@\0\0\0Àyš,@', '\0\0\0\0\0\0\0ÚeŒqnOG@\0\0\0€¡,@', 20, 20, 'Klagenfurt', 1);
 
 -- --------------------------------------------------------
 
@@ -64,8 +66,9 @@ CREATE TABLE IF NOT EXISTS `participants` (
 --
 
 INSERT INTO `participants` (`id`, `challenge_id`, `inet_addr`, `android_id`) VALUES
-(1, 1, '127.0.0.1', 'f3c4e5a1'),
-(2, 1, '127.0.0.2', 'b3c4a5e6');
+(1, 1, '127.0.0.5', 'f3c4e5a1'),
+(2, 1, '127.0.0.4', 'b3c4a5e6'),
+(4, 1, '127.0.0.9', 'a3c4e5a1');
 
 -- --------------------------------------------------------
 
