@@ -16,5 +16,6 @@ public class Constants {
 	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/rbs/getChallenges.php";
 	/** response code value if webservice call was successful **/
 	public final static int URL_STATUSCODE_OK = 200;
-	
+	/** unique key for current challenge object **/
+	public final static String CHALLGENGE_KEY = "CHALLGENGE";
 }
