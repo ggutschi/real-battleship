@@ -18,4 +18,7 @@ public class Constants {
 	public final static int URL_STATUSCODE_OK = 200;
 	/** unique key for current challenge object **/
 	public final static String CHALLGENGE_KEY = "CHALLGENGE";
+	/** the request code when starting an activity for result **/
+	public final static int CMD_CODE_CHANGE_CHALLENGE = 1000;
+	
 }

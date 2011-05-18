@@ -8,12 +8,14 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
@@ -24,6 +26,8 @@ import at.ac.uniklu.mobile.util.Constants;
  */
 public class ChallengeListActivity extends ListActivity {
 	
+	private ArrayList<Challenge> challengeList;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {    	 
@@ -32,7 +36,7 @@ public class ChallengeListActivity extends ListActivity {
         setContentView(R.layout.challenge_list);
         
         ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext());
-        ArrayList<Challenge> challengeList = listModel.getChallenges();
+        challengeList = listModel.getChallenges();
                
         ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(this, challengeList, android.R.layout.simple_list_item_2);
         setListAdapter(challengeAdapter);
@@ -73,7 +77,22 @@ public class ChallengeListActivity extends ListActivity {
     
     
     
-    /**
+    @Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		// TODO Auto-generated method stub
+		super.onListItemClick(l, v, position, id);
+		Log.d(Constants.LOG_TAG, "list item click, id: " + id);
+		ChallengeListModel listModel = ChallengeListModel.getInstance(ChallengeListActivity.this);
+		Challenge c = listModel.getChallenges().get(position);
+		Intent intent = new Intent(ChallengeListActivity.this, HomeActivity.class);
+		intent.putExtra(Challenge.FIELD_ID, c.getId());
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
+
+
+	/**
      * (Simple) list adapter for a list of animals.
      */
     private class ChallengeListAdapter extends BaseAdapter {

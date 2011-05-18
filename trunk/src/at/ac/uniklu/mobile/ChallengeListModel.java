@@ -135,6 +135,19 @@ public class ChallengeListModel {
     public ArrayList<Challenge> getChallenges() {
         return challengeList;
     }
+    
+    /**
+     * get challenge by the unique challenge id
+     * @param id challenge id
+     * @return
+     */
+    public Challenge getChallengeById(int id) {
+    	for (Challenge c: challengeList) {
+    		if (c.getId() == id)
+    			return c;
+    	}
+    	return null;
+    }
 
     /**
      * Get the singleton instance of this class.

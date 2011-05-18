@@ -22,6 +22,12 @@ public class Challenge {
 	/** challenge active field **/
 	public static final String FIELD_ACTIVE = "active";
 	
+	/** challenge cellsX field **/
+	public static final String FIELD_CELLS_X = "cellsX";
+	
+	/** challenge cellsY field **/
+	public static final String FIELD_CELLS_Y = "cellsY";
+	
 	/** challenge participants field **/
 	public static final String FIELD_PARTICIPANTS = "participants";
 	
@@ -61,6 +67,13 @@ public class Challenge {
 	private GeoPoint locationLeftTop;
 	/** the right bottom geo point of the challenge area **/
 	private GeoPoint locationRightBottom;
+	
+	/** how many cells between the two geo points should be placed on X-coordinate **/
+	private int cellsX;
+	
+	/** how many cells between the two geo points should be placed on Y-coordinate **/
+	private int cellsY;
+	
 	/** list of all ship positions (row, col) **/
 	private ArrayList<ShipPosition> shipPositions;
 	
@@ -82,6 +95,8 @@ public class Challenge {
 		  name = jsonChallenge.getString(FIELD_NAME);
 		  active = jsonChallenge.getBoolean(FIELD_ACTIVE);
 		  location = jsonChallenge.getString(FIELD_LOCATION);
+		  cellsX = jsonChallenge.getInt(FIELD_CELLS_X);
+		  cellsY = jsonChallenge.getInt(FIELD_CELLS_Y);		  
 		  JSONObject geoLocation_leftTop = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_LEFT_TOP);		  
 		  locationLeftTop = new GeoPoint(geoLocation_leftTop.getInt(FIELD_GEOLOCATION_LAT), geoLocation_leftTop.getInt(FIELD_GEOLOCATION_LON));
 		  JSONObject geoLocation_rightBottom = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_RIGHT_BOTTOM);
@@ -148,4 +163,21 @@ public class Challenge {
 	public void setLocation(String location) {
 		this.location = location;
 	}
+	
+	public int getCellsX() {
+		return cellsX;
+	}
+
+	public void setCellsX(int cellsX) {
+		this.cellsX = cellsX;
+	}
+
+	public int getCellsY() {
+		return cellsY;
+	}
+
+	public void setCellsY(int cellsY) {
+		this.cellsY = cellsY;
+	}
+
 }
