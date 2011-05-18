@@ -47,7 +47,7 @@ public class LocationUtil extends Activity implements LocationListener {
 		// get the location manager
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 		// register the listener to receive location updates
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 5000, 5, this);
 	}
 	
 	/**

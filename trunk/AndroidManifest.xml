@@ -15,7 +15,9 @@
         </activity> 
         <activity android:name="ChallengeListActivity"
                   android:label="@string/challenges">
-        </activity>       
+        </activity>      
+        <activity android:name="ChallengeStartActivity">
+        </activity>      
         <!--  use google maps library -->
         <uses-library android:name="com.google.android.maps" />
     </application>
