@@ -36,12 +36,7 @@ public class ChallengeStartActivity extends MapActivity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
     	
-    	//this.currentChallenge = (Challenge) getIntent().getExtras().get(Constants.CHALLGENGE_KEY);
-    	try {
-    		this.currentChallenge = new Challenge(new JSONObject("{\"id\":\"1\",\"name\":\"Klagenfurt City Challenge\",\"location\":\"Klagenfurt\",\"locationLeftTop\":{\"lat\":46628073,\"lon\":14301774},\"locationRightBottom\":{\"lat\":46620631,\"lon\":14314434},\"cellsX\":\"20\",\"cellsY\":\"20\",\"active\":true,\"participants\":[{\"android_id\":\"f3c4e5a1\",\"inet_addr\":\"127.0.0.1\"},{\"android_id\":\"b3c4a5e6\",\"inet_addr\":\"127.0.0.2\"}],\"shippositions\":[{\"row\":\"2\",\"column\":\"2\"},{\"row\":\"2\",\"column\":\"3\"}]}"));
-    	} catch (JSONException je) {
-	    	Log.d(Constants.LOG_TAG, "Exception while reading from json " + je);
-    	}
+    	this.currentChallenge = (Challenge) getIntent().getExtras().getInt(Constants.CHALLENGE_FIELD_ID);
     	
     	Log.d(Constants.LOG_TAG, "Challenge: " + currentChallenge);
     	
