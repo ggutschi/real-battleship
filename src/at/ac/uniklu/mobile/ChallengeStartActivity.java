@@ -1,6 +1,5 @@
 package at.ac.uniklu.mobile;
 
-import android.app.Activity;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -8,11 +7,16 @@ import android.os.Bundle;
 import android.util.Log;
 import at.ac.uniklu.mobile.util.Constants;
 
-public class ChallengeStartActivity extends Activity {
+import com.google.android.maps.MapActivity;
+
+public class ChallengeStartActivity extends MapActivity {
 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	super.onCreate(savedInstanceState);
+    	setContentView(R.layout.start_challenge);
+    	
     	setupLocationManager();
     }
     
@@ -52,4 +56,10 @@ public class ChallengeStartActivity extends Activity {
     	
     	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
     }
+
+	@Override
+	protected boolean isRouteDisplayed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }
