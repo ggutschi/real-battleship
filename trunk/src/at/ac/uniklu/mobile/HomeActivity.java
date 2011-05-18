@@ -31,6 +31,15 @@ public class HomeActivity extends MapActivity {
                 startActivity(new Intent(HomeActivity.this, ChallengeListActivity.class));
             }
         });
+        
+        // set up button listener for menu selection
+        final Button button_start = (Button) findViewById(R.id.button_start_challenge);
+        button_start.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(Constants.LOG_TAG, "start challenge button clicked");
+                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class));
+            }
+        });
 
         
     }
