@@ -12,7 +12,8 @@ public class Constants {
 	public final static double DEFAULT_LONGITUDE = 14.30899;
 	
 	/** URL of webservice to retrieve all challenges from server **/
-	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
+	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
+	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/rbs/getChallenges.php";
 	/** response code value if webservice call was successful **/
 	public final static int URL_STATUSCODE_OK = 200;
 	
