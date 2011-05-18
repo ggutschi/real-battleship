@@ -9,7 +9,8 @@ mysql_select_db($db_name);
 
 // AsText(`locationLeftTop`)
 $result = mysql_query("SELECT id, name, active, location, X(`locationLeftTop`) as locationLeftTop_X, Y(`locationLeftTop`) as locationLeftTop_Y ,
-                      X(`locationRightBottom`) as locationRightBottom_X, Y(`locationRightBottom`) as locationRightBottom_Y FROM challenges");
+                      X(`locationRightBottom`) as locationRightBottom_X, Y(`locationRightBottom`) as locationRightBottom_Y,
+                      cellsX, cellsY FROM challenges");
 
 $i = 0;
 
@@ -19,14 +20,14 @@ while($row = mysql_fetch_array($result))
     //echo 'challenge location ' . " " . $row['location'] .'<br />';    
     //echo 'challenge location ' . " " . $row['locationLeftTop_X'] .'<br />';
     //echo 'challenge location ' . " " . $row['locationRightBottom_X'] .'<br />';
-    
-    array_push($response, $row);
-    
+        
     $response[$i] = array('id' => $row['id'],
                       'name' => $row['name'],
                       'location' => $row['location'],
-                      'locationLeftTop' => array ('lat' => $row['locationLeftTop_X']*1E6, 'lon' => $row['locationLeftTop_Y']*1E6 ),
-                      'locationRightBottom' => array ('lat' => $row['locationRightBottom_X']*1E6, 'lon' => $row['locationRightBottom_Y']*1E6 ),
+                      'locationLeftTop' => array ('lat' => $row['locationLeftTop_X']*1E8, 'lon' => $row['locationLeftTop_Y']*1E8 ),
+                      'locationRightBottom' => array ('lat' => $row['locationRightBottom_X']*1E8, 'lon' => $row['locationRightBottom_Y']*1E8 ),
+                      'cellsX' => $row['cellsX'],
+                      'cellsY' => $row['cellsY'],
                       'active' => (bool)$row['active'],
                       );
     

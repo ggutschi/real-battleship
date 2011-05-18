@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
+import at.ac.uniklu.mobile.util.HelperUtil;
 
 /**
  * Activity for display all available challenges.
@@ -83,9 +84,18 @@ public class ChallengeListActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		Log.d(Constants.LOG_TAG, "list item click, id: " + id);
 		ChallengeListModel listModel = ChallengeListModel.getInstance(ChallengeListActivity.this);
+		// notify server
+		String android_id = HelperUtil.getAndroidId(this);
+		String ip_address = HelperUtil.getIpAddress();
+		
+		Log.d(Constants.LOG_TAG, "notify server because of new participant with android_id: " + android_id
+				+ " ip address: " + ip_address);
+		
+		boolean bState = listModel.addParticipant(android_id, ip_address);		
 		Challenge c = listModel.getChallenges().get(position);
 		Intent intent = new Intent(ChallengeListActivity.this, HomeActivity.class);
 		intent.putExtra(Challenge.FIELD_ID, c.getId());
+		
 		setResult(RESULT_OK, intent);
 		finish();
 	}

@@ -13,11 +13,13 @@ public class Constants {
 	
 	/** URL of webservice to retrieve all challenges from server **/
 	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
-	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/rbs/getChallenges.php";
+	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenges.php";
+	/** URL of webservice to add a new particpiant to a challenge **/
+	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
 	/** response code value if webservice call was successful **/
-	public final static int URL_STATUSCODE_OK = 200;
-	/** unique key for current challenge object **/
-	public final static String CHALLGENGE_KEY = "CHALLGENGE";
+	public final static int WEBSERVICE_STATUSCODE_OK = 200;
+	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/
+	public final static String WEBSERVICE_TRANSACTION_OK = "OK";	
 	/** the request code when starting an activity for result **/
 	public final static int CMD_CODE_CHANGE_CHALLENGE = 1000;
 	
