@@ -6,6 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+import at.ac.uniklu.mobile.util.Constants;
+
 import com.google.android.maps.GeoPoint;
 
 /**
@@ -98,9 +101,9 @@ public class Challenge {
 		  cellsX = jsonChallenge.getInt(FIELD_CELLS_X);
 		  cellsY = jsonChallenge.getInt(FIELD_CELLS_Y);		  
 		  JSONObject geoLocation_leftTop = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_LEFT_TOP);		  
-		  locationLeftTop = new GeoPoint(geoLocation_leftTop.getInt(FIELD_GEOLOCATION_LAT), geoLocation_leftTop.getInt(FIELD_GEOLOCATION_LON));
+		  locationLeftTop = new GeoPoint((int)(geoLocation_leftTop.getDouble(FIELD_GEOLOCATION_LAT)*1E6), (int)(geoLocation_leftTop.getDouble(FIELD_GEOLOCATION_LON)*1E6));
 		  JSONObject geoLocation_rightBottom = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_RIGHT_BOTTOM);
-		  locationRightBottom = new GeoPoint(geoLocation_rightBottom.getInt(FIELD_GEOLOCATION_LAT), geoLocation_rightBottom.getInt(FIELD_GEOLOCATION_LON));
+		  locationRightBottom = new GeoPoint((int)(geoLocation_rightBottom.getDouble(FIELD_GEOLOCATION_LAT)*1E6), (int)(geoLocation_rightBottom.getDouble(FIELD_GEOLOCATION_LON)*1E6));
 		  
 		  
 		  JSONArray jsonParticipants = jsonChallenge.getJSONArray(FIELD_PARTICIPANTS);
@@ -118,6 +121,7 @@ public class Challenge {
 			  ShipPosition sp = new ShipPosition(jsonShipPositions.getJSONObject(i));
 			  shipPositions.add(sp);
 		  }
+		  Log.d(Constants.LOG_TAG, "challenge object constructed with lat: " + locationLeftTop.getLatitudeE6());
 	}
 	public int getId() {
 		return id;

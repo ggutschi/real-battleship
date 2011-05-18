@@ -5,9 +5,9 @@ require_once('config.php');
 $conn = mysql_connect($db_host, $db_user, $db_pwd) OR die('Error connecting to mysql database');
 mysql_select_db($db_name);
 
-$android_id = htmlspecialchars(stripslashes($_GET['android_id']));
-$inet_address = htmlspecialchars(stripslashes($_GET['inet_address']));
-$challenge_id = htmlspecialchars(stripslashes($_GET['challenge_id']));
+$android_id = htmlspecialchars(stripslashes($_POST['android_id']));
+$inet_address = htmlspecialchars(stripslashes($_POST['inet_address']));
+$challenge_id = htmlspecialchars(stripslashes($_POST['challenge_id']));
 
 if(empty($challenge_id) || empty($inet_address) || empty($android_id))
 {

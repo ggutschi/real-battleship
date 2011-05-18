@@ -9,7 +9,7 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 import android.content.Context;
-import android.provider.Settings.Secure;
+import android.provider.Settings;
 import android.util.Log;
 
 /**
@@ -25,7 +25,14 @@ public class HelperUtil {
 	 * @return a unique 64-bit hex string representing the unique android id
 	 */
 	public static String getAndroidId(Context context) {
-		return Secure.getString(context.getContentResolver(), Secure.ANDROID_ID);		
+		String id = Settings.Secure.getString(context.getContentResolver(),
+		         Settings.Secure.ANDROID_ID);
+		
+		// TODO: remove next two lines when deploying app (only needed on emulator, because emulator doesnt have a device id)
+		if (id == null)
+			id = Constants.DEFAULT_EMULATOR_ANDROID_ID;
+		
+		return id;
 	}
 	
 	/**
