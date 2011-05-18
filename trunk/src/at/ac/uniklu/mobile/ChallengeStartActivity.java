@@ -2,6 +2,9 @@ package at.ac.uniklu.mobile;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -11,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 
 import com.google.android.maps.GeoPoint;
@@ -21,15 +25,25 @@ import com.google.android.maps.Overlay;
 
 public class ChallengeStartActivity extends MapActivity {
 	
-	private MapView mapView;
-	private MapController mapController;
-	private GeoPoint currentLocation = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
-
+	private MapView 		mapView;
+	private MapController 	mapController;
+	private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
+	private Challenge 		currentChallenge;
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
+    	
+    	//this.currentChallenge = (Challenge) getIntent().getExtras().get(Constants.CHALLGENGE_KEY);
+    	try {
+    		this.currentChallenge = new Challenge(new JSONObject("{\"id\":\"1\",\"name\":\"Klagenfurt City Challenge\",\"location\":\"Klagenfurt\",\"locationLeftTop\":{\"lat\":46628073,\"lon\":14301774},\"locationRightBottom\":{\"lat\":46620631,\"lon\":14314434},\"cellsX\":\"20\",\"cellsY\":\"20\",\"active\":true,\"participants\":[{\"android_id\":\"f3c4e5a1\",\"inet_addr\":\"127.0.0.1\"},{\"android_id\":\"b3c4a5e6\",\"inet_addr\":\"127.0.0.2\"}],\"shippositions\":[{\"row\":\"2\",\"column\":\"2\"},{\"row\":\"2\",\"column\":\"3\"}]}"));
+    	} catch (JSONException je) {
+	    	Log.d(Constants.LOG_TAG, "Exception while reading from json " + je);
+    	}
+    	
+    	Log.d(Constants.LOG_TAG, "Challenge: " + currentChallenge);
     	
     	mapView = (MapView) findViewById(R.id.challenge_map);
         mapView.setBuiltInZoomControls(true);
@@ -38,13 +52,14 @@ public class ChallengeStartActivity extends MapActivity {
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
     	overlays.add(new CurrentPositionOverlay());
+    	overlays.add(new GridOverlay());
 
     	mapView.invalidate();
         
         mapController = mapView.getController();
         mapController.setZoom(10);
         mapController.animateTo(currentLocation);
-    	
+        
     	setupLocationManager();
     }
     
@@ -108,9 +123,6 @@ public class ChallengeStartActivity extends MapActivity {
 	            mapView.getProjection().toPixels(currentLocation, point);
 
 	            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fadenkreuz);
-
-		    	Log.d(Constants.LOG_TAG, "bmp " + bmp);
-		    	Log.d(Constants.LOG_TAG, "point " + point);
 	            
 	            int x = point.x - bmp.getWidth() / 2;
 	            int y = point.y - bmp.getHeight();
@@ -121,14 +133,6 @@ public class ChallengeStartActivity extends MapActivity {
 	}
 	
 	private class GridOverlay extends com.google.android.maps.Overlay {
-		
-		
-		
-		public GridOverlay() {
-			super();
-			
-			
-		}
 
 	    @Override
 	    public void draw(Canvas canvas, MapView mapView, boolean shadow) {
@@ -136,16 +140,23 @@ public class ChallengeStartActivity extends MapActivity {
 
 	        if (!shadow) {
 
-	            Point point = new Point();
-	            mapView.getProjection().toPixels(currentLocation, point);
+	            Point point1 = new Point();
+	            Point point2 = new Point();
+	            
+	            mapView.getProjection().toPixels(currentChallenge.getLocationLeftTop(), point1);
+	            mapView.getProjection().toPixels(currentChallenge.getLocationRightBottom(), point2);
 
 	            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fadenkreuz);
-
-		    	Log.d(Constants.LOG_TAG, "bmp " + bmp);
-		    	Log.d(Constants.LOG_TAG, "point " + point);
 	            
-	            int x = point.x - bmp.getWidth() / 2;
-	            int y = point.y - bmp.getHeight();
+	            int x = point1.x - bmp.getWidth() / 2;
+	            int y = point1.y - bmp.getHeight();
+	        
+	            canvas.drawBitmap(bmp, x, y, null);
+
+	            bmp = BitmapFactory.decodeResource(getResources(), R.drawable.icon);
+	            
+	            x = point2.x - bmp.getWidth() / 2;
+	            y = point2.y - bmp.getHeight();
 	        
 	            canvas.drawBitmap(bmp, x, y, null);
 	        }
