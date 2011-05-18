@@ -7,14 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
@@ -154,8 +158,9 @@ public class ChallengeListModel {
      * adds an new participant to the challenge by sending an HTTP POST request to the challenge server
      * @param android_id the unique android id of the new participants´ smartphone
      * @param ip_address the current ip address of the new participants´ smartphone
+     * @param challenge_id the id of the challenge a new participant wants to join with
      */
-    public boolean addParticipant(String android_id, String ip_address) {
+    public boolean addParticipant(String android_id, String ip_address, int challenge_id) {
     	boolean bTransactionPerformed = false;
     	HttpClient httpClient = new DefaultHttpClient(); 
     	HttpResponse response; 
@@ -164,9 +169,18 @@ public class ChallengeListModel {
     	try {  
 	    	HttpParams params = new BasicHttpParams(); 
 	    	
-	    	params.setParameter("android_id", android_id);
+	    	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+	         nameValuePairs.add(new BasicNameValuePair("android_id", android_id));
+	         nameValuePairs.add(new BasicNameValuePair("inet_address", ip_address));
+	         nameValuePairs.add(new BasicNameValuePair("challenge_id", Integer.toString(challenge_id)));
+	         postMethod.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+	    	
+	    	/*params.setParameter("android_id", android_id);
 	    	params.setParameter("inet_address", ip_address);	    	
+	    	params.setParameter("challenge_id", challenge_id);
 	    	postMethod.setParams(params);
+	    	*/
 	    	
 	    	Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
 	    	

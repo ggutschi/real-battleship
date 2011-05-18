@@ -84,19 +84,23 @@ public class ChallengeListActivity extends ListActivity {
 		super.onListItemClick(l, v, position, id);
 		Log.d(Constants.LOG_TAG, "list item click, id: " + id);
 		ChallengeListModel listModel = ChallengeListModel.getInstance(ChallengeListActivity.this);
+		Challenge c = listModel.getChallenges().get(position);
+		
 		// notify server
 		String android_id = HelperUtil.getAndroidId(this);
 		String ip_address = HelperUtil.getIpAddress();
 		
 		Log.d(Constants.LOG_TAG, "notify server because of new participant with android_id: " + android_id
-				+ " ip address: " + ip_address);
+				+ " ip address: " + ip_address + " challenge id: " + c.getId());
 		
-		boolean bState = listModel.addParticipant(android_id, ip_address);		
-		Challenge c = listModel.getChallenges().get(position);
+		boolean bOK = listModel.addParticipant(android_id, ip_address, c.getId());		
+		
 		Intent intent = new Intent(ChallengeListActivity.this, HomeActivity.class);
 		intent.putExtra(Challenge.FIELD_ID, c.getId());
-		
-		setResult(RESULT_OK, intent);
+		if (bOK)
+			setResult(RESULT_OK, intent);
+		else
+			setResult(RESULT_CANCELED, intent);
 		finish();
 	}
 

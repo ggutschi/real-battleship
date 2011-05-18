@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 
@@ -61,12 +62,26 @@ public class HomeActivity extends MapActivity {
         
         Log.d(Constants.LOG_TAG, "on activity result, request code: " + requestCode + " , resultCode: " + resultCode);
         
-        if (requestCode == Constants.CMD_CODE_CHANGE_CHALLENGE && resultCode == RESULT_OK) {
-            // new challenge selected
-        	ChallengeListModel listModel = ChallengeListModel.getInstance(this);
-        	current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
-        	Challenge challenge = listModel.getChallengeById(current_challenge_id);
-        	configureMapView(challenge);
+        if (requestCode == Constants.CMD_CODE_CHANGE_CHALLENGE)
+        {
+        	if (resultCode == RESULT_OK) {
+                // new challenge selected
+        		// error occured
+                Toast.makeText(HomeActivity.this, R.string.challenge_changed, Toast.LENGTH_SHORT).show();
+            	ChallengeListModel listModel = ChallengeListModel.getInstance(this);
+            	current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
+            	Challenge challenge = listModel.getChallengeById(current_challenge_id);
+            	Log.d(Constants.LOG_TAG, "new challenge selected with id: " + challenge.getId()
+            			+ " name: " + challenge.getName() 
+            			+ " location: " + challenge.getLocation()
+            			+ " lat: " + challenge.getLocationLeftTop().getLatitudeE6()
+            			+ " lon: " + challenge.getLocationLeftTop().getLongitudeE6());
+            	configureMapView(challenge);        		
+        	}
+        	else if (resultCode == RESULT_CANCELED) {
+        		// error occured
+                Toast.makeText(HomeActivity.this, R.string.challenge_not_changed, Toast.LENGTH_SHORT).show();
+        	}
         }
     }
     
@@ -78,11 +93,14 @@ public class HomeActivity extends MapActivity {
     	MapView mapView = (MapView) findViewById(R.id.challenge_map);
         mapView.setBuiltInZoomControls(true);
         MapController mapController = mapView.getController();
-        mapController.setZoom(10);
+        mapController.setZoom(14);
         if (c != null)
         	geoPoint = c.getLocationLeftTop();
         else
-        	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
+        	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E8), ((int)(Constants.DEFAULT_LONGITUDE * 1E8)));
+        Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + geoPoint.getLatitudeE6() 
+        		+ " lon: " + geoPoint.getLongitudeE6());
+        
         mapController.animateTo(geoPoint);
     }
     

@@ -8,4 +8,8 @@
     <!--  list view -->
     <string name="challenge_list_empty">No challenges available.</string>
     <string name="challenges">Available Challenges</string>
+    
+    <!--  home view -->
+    <string name="challenge_not_changed">You could not be assigned to this challenge.</string>
+    <string name="challenge_changed">Challenge successfully selected.</string>
 </resources>

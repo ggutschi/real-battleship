@@ -10,6 +10,8 @@ public class Constants {
 	public final static double DEFAULT_LATITUDE = 46.62794;
 	/** default longitude for google map view **/
 	public final static double DEFAULT_LONGITUDE = 14.30899;
+	/** default android identifier for the emulator (because the emulator doesnt have a unique device id) **/
+	public final static String DEFAULT_EMULATOR_ANDROID_ID = "e3f17bc89afe54fe";
 	
 	/** URL of webservice to retrieve all challenges from server **/
 	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
