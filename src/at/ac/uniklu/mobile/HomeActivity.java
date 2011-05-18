@@ -15,6 +15,9 @@ import com.google.android.maps.MapView;
 
 public class HomeActivity extends MapActivity {
 	
+	
+	private int current_challenge_id;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class HomeActivity extends MapActivity {
         button_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "start challenge button clicked");
-                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class));
+                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, current_challenge_id));
             }
         });
 
@@ -61,7 +64,8 @@ public class HomeActivity extends MapActivity {
         if (requestCode == Constants.CMD_CODE_CHANGE_CHALLENGE && resultCode == RESULT_OK) {
             // new challenge selected
         	ChallengeListModel listModel = ChallengeListModel.getInstance(this);
-        	Challenge challenge = listModel.getChallengeById(data.getExtras().getInt(Challenge.FIELD_ID));
+        	current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
+        	Challenge challenge = listModel.getChallengeById(current_challenge_id);
         	configureMapView(challenge);
         }
     }
