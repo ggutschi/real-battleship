@@ -11,27 +11,56 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int icon=0x7f020000;
+        public static final int fadenkreuz=0x7f020000;
+        public static final int icon=0x7f020001;
     }
     public static final class id {
-        public static final int button_change_challenge=0x7f050003;
-        public static final int button_start_challenge=0x7f050004;
-        public static final int challenge_map=0x7f050000;
-        public static final int homeLayout=0x7f050002;
-        public static final int status_message=0x7f050001;
+        public static final int button_change_challenge=0x7f060008;
+        public static final int button_start_challenge=0x7f060009;
+        public static final int challenge_location=0x7f060007;
+        public static final int challenge_map=0x7f060000;
+        public static final int challenge_name=0x7f060005;
+        public static final int frameLayout1=0x7f060001;
+        public static final int label_challenge_location=0x7f060006;
+        public static final int label_challenge_name=0x7f060004;
+        public static final int linearLayoutChallengeInfo=0x7f060003;
+        public static final int no_challenge_selected=0x7f060002;
     }
     public static final class layout {
         public static final int challenge_list=0x7f030000;
         public static final int home=0x7f030001;
+        public static final int start_challenge=0x7f030002;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
+        public static final int challenge_changed=0x7f040007;
         /**   list view 
          */
         public static final int challenge_list_empty=0x7f040004;
+        /**   home view 
+         */
+        public static final int challenge_not_changed=0x7f040006;
         public static final int challenges=0x7f040005;
         public static final int change_challenge=0x7f040002;
+        public static final int label_challenge=0x7f040008;
+        public static final int label_location=0x7f040009;
+        public static final int no_challenge_selected=0x7f040000;
         public static final int start_challenge=0x7f040003;
-        public static final int status_message=0x7f040000;
+    }
+    public static final class style {
+        public static final int challenge_location=0x7f050006;
+        public static final int challenge_name=0x7f050004;
+        /**  Style for widgets in the label column of a label/value row 
+         */
+        public static final int label=0x7f050000;
+        public static final int label_challenge_location=0x7f050005;
+        /**   home screen 
+         */
+        public static final int label_challenge_name=0x7f050003;
+        public static final int no_challenge_selected=0x7f050007;
+        /**  Style for a label/value row of widgets 
+         */
+        public static final int row_layout1=0x7f050002;
+        public static final int value=0x7f050001;
     }
 }

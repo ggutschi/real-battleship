@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="status_message">Please select a location.</string>
+    <string name="no_challenge_selected">No challenge selected.</string>
     <string name="app_name">Real Battleship</string>
     <string name="change_challenge">Change Challenge</string>
     <string name="start_challenge">Start Challenge</string>
@@ -12,4 +12,6 @@
     <!--  home view -->
     <string name="challenge_not_changed">You could not be assigned to this challenge.</string>
     <string name="challenge_changed">Challenge successfully selected.</string>
+    <string name="label_challenge">Challenge</string>
+    <string name="label_location">Location</string>
 </resources>

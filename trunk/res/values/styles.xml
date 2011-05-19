@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Style for widgets in the label column of a label/value row -->
+	<style name="label">
+		<item name="android:textSize">16sp</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:layout_marginLeft">10dp</item>
+		<item name="android:layout_marginRight">2dp</item>		
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<style name="value">
+		<item name="android:textSize">16sp</item>
+		<item name="android:layout_marginRight">5dp</item>
+		<item name="android:layout_weight">75</item>
+		<item name="android:layout_width">0dp</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<!-- Style for a label/value row of widgets -->
+	<style name="row_layout1">
+		<item name="android:orientation">horizontal</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+	
+	<!--  home screen -->
+	<style name="label_challenge_name" parent="label">
+		<item name="android:layout_marginTop">10dp</item>
+		<item name="android:layout_marginRight">5dp</item>
+		
+	</style>
+	<style name="challenge_name" parent="value">
+		<item name="android:layout_marginTop">10dp</item>
+	</style>
+	
+	<style name="label_challenge_location" parent="label">
+		<item name="android:layout_marginRight">15dp</item>
+		<item name="android:layout_weight">0</item>		
+	</style>
+	
+	<style name="challenge_location" parent="value">
+	</style>
+	
+	<style name="no_challenge_selected" parent="label">
+		<item name="android:layout_marginTop">20dp</item>
+		<item name="android:gravity">center</item>
+		<item name="android:layout_height">fill_parent</item>
+	</style>
+	
+	
+	<!--  /home screen -->
+</resources>

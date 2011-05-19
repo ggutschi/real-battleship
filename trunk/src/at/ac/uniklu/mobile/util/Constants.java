@@ -24,5 +24,7 @@ public class Constants {
 	public final static String WEBSERVICE_TRANSACTION_OK = "OK";	
 	/** the request code when starting an activity for result **/
 	public final static int CMD_CODE_CHANGE_CHALLENGE = 1000;
+	/** the return code from challenge list activity if challenge registration was not successful **/
+	public final static int RETURN_CODE_CHANGE_CHALLENGE_ERROR = 400;
 	
 }
