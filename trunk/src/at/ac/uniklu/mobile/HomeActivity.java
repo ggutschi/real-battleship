@@ -28,6 +28,7 @@ public class HomeActivity extends MapActivity {
         
         Log.d(Constants.LOG_TAG, "initialize mapview");
         configureMapView(null);
+        initializeChallengeInfos();
         
         // set up button listener for menu selection
         final Button button = (Button) findViewById(R.id.button_change_challenge);
@@ -78,7 +79,7 @@ public class HomeActivity extends MapActivity {
             			+ " lat: " + challenge.getLocationLeftTop().getLatitudeE6()
             			+ " lon: " + challenge.getLocationLeftTop().getLongitudeE6());
             	configureMapView(challenge); 
-            	setChallengeInfoLabels(challenge);
+            	initializeChallengeInfos(challenge);
         	}
         	else if (resultCode == Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR) {
         		// error occured
@@ -95,11 +96,11 @@ public class HomeActivity extends MapActivity {
     	MapView mapView = (MapView) findViewById(R.id.challenge_map);
         mapView.setBuiltInZoomControls(true);
         MapController mapController = mapView.getController();
-        mapController.setZoom(14);
+        mapController.setZoom(15);
         if (c != null)
         	geoPoint = c.getLocationLeftTop();
         else
-        	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E8), ((int)(Constants.DEFAULT_LONGITUDE * 1E8)));
+        	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
         Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + geoPoint.getLatitudeE6() 
         		+ " lon: " + geoPoint.getLongitudeE6());
         
@@ -110,20 +111,28 @@ public class HomeActivity extends MapActivity {
      * sets the challenge information in the UI
      * @param c
      */
-    private void setChallengeInfoLabels(Challenge c) {
+    private void initializeChallengeInfos(Challenge... c) {
     	
     	TextView no_challenge = (TextView)findViewById(R.id.no_challenge_selected);
     	
-    	if (c!= null) {
+    	if (c!= null && c.length > 0) {
     		// display challenge info
     		TextView challengeName = (TextView)findViewById(R.id.challenge_name);
-    		challengeName.setText(c.getName());
+    		challengeName.setText(c[0].getName());
+    		TextView challengeLocation = (TextView)findViewById(R.id.challenge_location);
+    		challengeLocation.setText(c[0].getLocation());
     		no_challenge.setVisibility(View.GONE);
+    		findViewById(R.id.no_challenge_selected).setVisibility(View.GONE);
+    		findViewById(R.id.button_start_challenge).setEnabled(true);
+    		findViewById(R.id.button_start_challenge).setVisibility(View.VISIBLE);
+    		findViewById(R.id.linearLayoutChallengeInfo).setVisibility(View.VISIBLE);
     	}
     	else {
-    		// dont display challenge info when there is no info available
+    		// dont display challenge info and disable start challenge button when there is no info available
     		findViewById(R.id.linearLayoutChallengeInfo).setVisibility(View.GONE);
+    		findViewById(R.id.button_start_challenge).setEnabled(false);
     		no_challenge.setVisibility(View.VISIBLE);
+    		
     	}
     }
     
