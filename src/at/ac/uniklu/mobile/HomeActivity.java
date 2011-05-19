@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
@@ -76,9 +77,10 @@ public class HomeActivity extends MapActivity {
             			+ " location: " + challenge.getLocation()
             			+ " lat: " + challenge.getLocationLeftTop().getLatitudeE6()
             			+ " lon: " + challenge.getLocationLeftTop().getLongitudeE6());
-            	configureMapView(challenge);        		
+            	configureMapView(challenge); 
+            	setChallengeInfoLabels(challenge);
         	}
-        	else if (resultCode == RESULT_CANCELED) {
+        	else if (resultCode == Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR) {
         		// error occured
                 Toast.makeText(HomeActivity.this, R.string.challenge_not_changed, Toast.LENGTH_SHORT).show();
         	}
@@ -102,6 +104,27 @@ public class HomeActivity extends MapActivity {
         		+ " lon: " + geoPoint.getLongitudeE6());
         
         mapController.animateTo(geoPoint);
+    }
+    
+    /**
+     * sets the challenge information in the UI
+     * @param c
+     */
+    private void setChallengeInfoLabels(Challenge c) {
+    	
+    	TextView no_challenge = (TextView)findViewById(R.id.no_challenge_selected);
+    	
+    	if (c!= null) {
+    		// display challenge info
+    		TextView challengeName = (TextView)findViewById(R.id.challenge_name);
+    		challengeName.setText(c.getName());
+    		no_challenge.setVisibility(View.GONE);
+    	}
+    	else {
+    		// dont display challenge info when there is no info available
+    		findViewById(R.id.linearLayoutChallengeInfo).setVisibility(View.GONE);
+    		no_challenge.setVisibility(View.VISIBLE);
+    	}
     }
     
     /**

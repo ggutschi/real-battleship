@@ -100,7 +100,7 @@ public class ChallengeListActivity extends ListActivity {
 		if (bOK)
 			setResult(RESULT_OK, intent);
 		else
-			setResult(RESULT_CANCELED, intent);
+			setResult(Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR, intent);
 		finish();
 	}
 
