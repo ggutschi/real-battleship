@@ -1,5 +1,7 @@
 package at.ac.uniklu.mobile;
 	
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,11 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
+import at.ac.uniklu.mobile.util.GridOverlay;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
 
 public class HomeActivity extends MapActivity {
 	
@@ -96,11 +100,33 @@ public class HomeActivity extends MapActivity {
     	MapView mapView = (MapView) findViewById(R.id.challenge_map);
         mapView.setBuiltInZoomControls(true);
         MapController mapController = mapView.getController();
-        mapController.setZoom(15);
-        if (c != null)
-        	geoPoint = c.getLocationLeftTop();
-        else
+        
+
+    	
+    	mapView = (MapView) findViewById(R.id.challenge_map);
+        mapView.setBuiltInZoomControls(true);
+        mapView.setSatellite(true);
+
+        if (c != null) {
+	    	List<Overlay> overlays = mapView.getOverlays();
+	    	overlays.clear();
+	    	overlays.add(new GridOverlay(mapView, c));
+	        
+	    	GeoPoint lt = c.getLocationLeftTop();
+	    	GeoPoint rb = c.getLocationRightBottom();
+	    	
+	    	int latDiff = rb.getLatitudeE6()  - lt.getLatitudeE6();
+	    	int lonDiff = rb.getLongitudeE6() - lt.getLongitudeE6();
+        
+        	geoPoint = new GeoPoint(lt.getLatitudeE6() + latDiff / 2, lt.getLongitudeE6() + lonDiff / 2);
+            
+            mapController.zoomToSpan(latDiff, lonDiff);
+    	} else {
         	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
+        	
+        	mapController.setZoom(2);
+    	}
+        
         Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + geoPoint.getLatitudeE6() 
         		+ " lon: " + geoPoint.getLongitudeE6());
         
