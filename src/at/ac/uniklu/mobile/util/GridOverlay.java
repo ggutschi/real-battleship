@@ -19,7 +19,7 @@ public class GridOverlay extends com.google.android.maps.Overlay {
 	
 	public final static int UNCOVERED_SHIP_COLOR = Color.RED;
 
-	public final static int UNCOVERED_SHIP_TRANSPARENCY = 200;	// value between 0 and 255
+	public final static int UNCOVERED_SHIP_TRANSPARENCY = 150;	// value between 0 and 255
 	
 	private MapView mapView;
 	private Challenge currentChallenge;
