@@ -20,4 +20,20 @@ public class Participant {
 		inet_addr = jsonObject.getString(FIELD_INET_ADDR);
 	}
 
+	public String getAndroid_id() {
+		return android_id;
+	}
+
+	public void setAndroid_id(String androidId) {
+		android_id = androidId;
+	}
+
+	public String getInet_addr() {
+		return inet_addr;
+	}
+
+	public void setInet_addr(String inetAddr) {
+		inet_addr = inetAddr;
+	}
+
 }
