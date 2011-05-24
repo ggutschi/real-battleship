@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
+import at.ac.uniklu.mobile.util.GridOverlay;
+import at.ac.uniklu.mobile.util.PositionOverlay;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -49,13 +51,13 @@ public class ChallengeStartActivity extends MapActivity {
 
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
-    	overlays.add(new CurrentPositionOverlay());
-    	overlays.add(new GridOverlay());
+    	overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
+    	overlays.add(new GridOverlay(mapView, currentChallenge));
 
     	mapView.invalidate();
         
         mapController = mapView.getController();
-        mapController.setZoom(15);
+        mapController.setZoom(18);
         mapController.animateTo(currentLocation);
         
     	setupLocationManager();
@@ -107,67 +109,5 @@ public class ChallengeStartActivity extends MapActivity {
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-	
-	private class CurrentPositionOverlay extends com.google.android.maps.Overlay {
-
-	    @Override
-	    public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-	        super.draw(canvas, mapView, shadow);
-
-	        if (!shadow) {
-
-	            Point point = new Point();
-	            mapView.getProjection().toPixels(currentLocation, point);
-
-	            Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.fadenkreuz);
-	            
-	            int x = point.x - bmp.getWidth() / 2;
-	            int y = point.y - bmp.getHeight();
-	        
-	            canvas.drawBitmap(bmp, x, y, null);
-	        }
-	    }
-	}
-	
-	private class GridOverlay extends com.google.android.maps.Overlay {
-
-	    @Override
-	    public void draw(Canvas canvas, MapView mapView, boolean shadow) {
-	        super.draw(canvas, mapView, shadow);
-
-	        if (!shadow) {
-
-	            Point point1 = new Point();
-	            Point point2 = new Point();
-	            
-	        	Paint paint = new Paint();
-	        	
-	        	paint.setColor(GRID_COLOR);
-	        	paint.setStrokeWidth(GRID_LINE_WIDTH);
-	            
-	            mapView.getProjection().toPixels(currentChallenge.getLocationLeftTop(), point1);
-	            mapView.getProjection().toPixels(currentChallenge.getLocationRightBottom(), point2);
-	            
-	            float diffX = (point2.x - point1.x) / currentChallenge.getCellsX();	            
-	            float diffY = (point2.y - point1.y) / currentChallenge.getCellsY();
-	            
-	            // draw vertical lines
-	            if (point1.x < point2.x)
-	            	for (float f = point1.x; f <= point2.x; f += diffX)
-	            		canvas.drawLine(f, point1.y, f, point2.y, paint);
-	            else
-	            	for (float f = point1.x; f >= point2.x; f += diffX)
-	            		canvas.drawLine(f, point1.y, f, point2.y, paint);
-
-	            // draw horizontal lines
-	            if (point1.y < point2.y)
-	            	for (float f = point1.y; f <= point2.y; f += diffY)
-	            		canvas.drawLine(point1.x, f, point2.x, f, paint);
-	            else
-	            	for (float f = point1.y; f >= point2.y; f += diffY)
-	            		canvas.drawLine(point1.x, f, point2.x, f, paint);
-	        }
-	    }
 	}
 }
