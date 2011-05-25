@@ -34,8 +34,8 @@ public class Challenge {
 	/** challenge participants field **/
 	public static final String FIELD_PARTICIPANTS = "participants";
 	
-	/** challenge ship positions field **/
-	public static final String FIELD_SHIP_POSITIONS = "shippositions";
+	/** challenge ships field **/
+	public static final String FIELD_SHIPS = "ships";
 	
 	/** challenge location left top field **/
 	public static final String FIELD_GEOLOCATION = "geolocation";
@@ -78,7 +78,7 @@ public class Challenge {
 	private int cellsY;
 	
 	/** list of all ship positions (row, col) **/
-	private ArrayList<ShipPosition> shipPositions;
+	private ArrayList<Ship> ships;
 	
 	public Challenge(int id, String name, boolean active, GeoPoint locLeftTop, String location) {
 		this.id = id;
@@ -113,13 +113,13 @@ public class Challenge {
 			  Participant p = new Participant(jsonParticipants.getJSONObject(i));
 			  participants.add(p);
 		  }
-		  JSONArray jsonShipPositions = jsonChallenge.getJSONArray(FIELD_SHIP_POSITIONS);
-		  shipPositions = new ArrayList<ShipPosition>();
+		  JSONArray jsonShipPositions = jsonChallenge.getJSONArray(FIELD_SHIPS);
+		  ships = new ArrayList<Ship>();
 		  
 		  for (int i = 0; i < jsonShipPositions.length(); i++) 
 		  {
-			  ShipPosition sp = new ShipPosition(jsonShipPositions.getJSONObject(i));
-			  shipPositions.add(sp);
+			  Ship s = new Ship(jsonShipPositions.getJSONObject(i));
+			  ships.add(s);
 		  }
 		  Log.d(Constants.LOG_TAG, "challenge object constructed with lat: " + locationLeftTop.getLatitudeE6());
 	}
@@ -153,11 +153,11 @@ public class Challenge {
 	public void setLocationRightBottom(GeoPoint locationRightBottom) {
 		this.locationRightBottom = locationRightBottom;
 	}
-	public ArrayList<ShipPosition> getShipPositions() {
-		return shipPositions;
+	public ArrayList<Ship> getShips() {
+		return ships;
 	}
-	public void setShipPositions(ArrayList<ShipPosition> shipPositions) {
-		this.shipPositions = shipPositions;
+	public void setShips(ArrayList<Ship> ships) {
+		this.ships = ships;
 	};
 	
 	public String getLocation() {
