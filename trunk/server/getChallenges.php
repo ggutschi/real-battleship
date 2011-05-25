@@ -44,21 +44,34 @@ while($row = mysql_fetch_array($result))
                                                 'inet_addr' => $row_participants['inet_addr']);
       $j++;
     }
-    
-    //$response[$i]['shippositions'] = array();
-    
-    $result_pos= mysql_query("SELECT `row`, `column`, `uncovered` 
-                                        FROM ship_positions where challenge_id = " . $row['id'] . ";");
-    $z = 0;
-    while($row_pos = mysql_fetch_array($result_pos))
-    {    
-      //echo 'ship position row ' . " " . $row_pos['row'] .'<br />';
-      //echo 'ship position col' . " " . $row_pos['column'] .'<br />';
-      $response[$i]['shippositions'][$z] = array('row' => $row_pos['row'],
+
+
+    $result_ships = mysql_query("SELECT * FROM ships where challenge_id = " . $row['id'] . ";");
+
+    $k = 0;
+
+    while($row_ships = mysql_fetch_array($result_ships))
+    {
+	$response[$i]['ships'][$k] = array('id' => $row_ships['id'],
+						'destroyed' => (boolean)$row_ships['destroyed'] );
+
+    	$result_pos= mysql_query("SELECT `row`, `column`, `uncovered` 
+                                        FROM ship_positions where ship_id = " . $row_ships['id'] . ";");
+	$z = 0;
+       while($row_pos = mysql_fetch_array($result_pos))
+       {    
+	      //echo 'ship position row ' . " " . $row_pos['row'] .'<br />';
+	      //echo 'ship position col' . " " . $row_pos['column'] .'<br />';
+	      $response[$i]['ships'][$k]['shippositions'][$z] = array('row' => $row_pos['row'],
                                                  'column' => $row_pos['column'],
 							'uncovered' => (boolean)$row_pos['uncovered']);
-      $z++;
-    }
+	      $z++;
+	}
+
+	$k++;
+     } // ships
+
+
     $i++;
   }
 

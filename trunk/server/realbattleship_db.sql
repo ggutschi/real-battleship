@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql03-dev.itac.at
--- Erstellungszeit: 25. Mai 2011 um 09:01
+-- Erstellungszeit: 25. Mai 2011 um 09:59
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.2-1ubuntu4.9
 
@@ -81,6 +81,7 @@ DROP TABLE IF EXISTS `ships`;
 CREATE TABLE IF NOT EXISTS `ships` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `destroyed` tinyint(1) NOT NULL,
+  `challenge_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
@@ -88,9 +89,9 @@ CREATE TABLE IF NOT EXISTS `ships` (
 -- Daten für Tabelle `ships`
 --
 
-INSERT INTO `ships` (`id`, `destroyed`) VALUES
-(1, 0),
-(2, 1);
+INSERT INTO `ships` (`id`, `destroyed`, `challenge_id`) VALUES
+(1, 0, 1),
+(2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -101,20 +102,19 @@ INSERT INTO `ships` (`id`, `destroyed`) VALUES
 DROP TABLE IF EXISTS `ship_positions`;
 CREATE TABLE IF NOT EXISTS `ship_positions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `challenge_id` int(11) NOT NULL,
   `row` int(11) NOT NULL,
   `column` int(11) NOT NULL,
   `uncovered` tinyint(1) NOT NULL,
   `ship_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQUE_SHIP_POSITIONS` (`challenge_id`,`row`,`column`)
+  UNIQUE KEY `UNIQUE_SHIP_POSITIONS` (`row`,`column`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `ship_positions`
 --
 
-INSERT INTO `ship_positions` (`id`, `challenge_id`, `row`, `column`, `uncovered`, `ship_id`) VALUES
-(1, 1, 2, 2, 1, 1),
-(2, 1, 2, 3, 0, 1),
-(3, 1, 4, 4, 0, 2);
+INSERT INTO `ship_positions` (`id`, `row`, `column`, `uncovered`, `ship_id`) VALUES
+(1, 2, 2, 1, 1),
+(2, 2, 3, 0, 1),
+(3, 4, 4, 0, 2);
