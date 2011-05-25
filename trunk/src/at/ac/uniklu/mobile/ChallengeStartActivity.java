@@ -78,31 +78,32 @@ public class ChallengeStartActivity extends MapActivity {
             	int i = 0;
             	
             	if (diffX > 0)
-            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) < (i * diffX) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
-            		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) < (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
             			;
             	else
-            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) > (i * diffX) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) >= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
-                		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
-                			;
+            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) > (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) >= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
+                		;
             	
             	Log.d(Constants.LOG_TAG, "Cell x = " + i);
 
+            	int j = 0;
             	
             	if (diffY > 0)
-            		for (i = 0; (currentLocation.getLatitudeE6() + diffY) < (i * diffY) && (i * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) <= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
-            		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+            		for (j = 0; (currentLocation.getLatitudeE6() + diffY) < (j * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) && (j * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) <= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
             			;
             	else
-            		for (i = 0; (currentLocation.getLatitudeE6() + diffY) > (i * diffY) && (i * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) >= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
-                		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+            		for (j = 0; (currentLocation.getLatitudeE6() + diffY) > (j * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) && (j * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) >= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
                 			;
             	
-            	Log.d(Constants.LOG_TAG, "Cell y = " + i);
+            	Log.d(Constants.LOG_TAG, "Cell y = " + j);
             	
-            	//uncoverCell();
+            	uncoverCell(i, j);
             }
         });
+    }
+    
+    private void uncoverCell(int x, int y) {
+    	
     }
     
     public void setupLocationManager() {
