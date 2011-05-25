@@ -35,7 +35,7 @@ public class PositionOverlay extends com.google.android.maps.Overlay {
             Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.fadenkreuz);
             
             int x = point.x - bmp.getWidth() / 2;
-            int y = point.y - bmp.getHeight();
+            int y = point.y - bmp.getHeight() / 2;
         
             canvas.drawBitmap(bmp, x, y, null);
         }
