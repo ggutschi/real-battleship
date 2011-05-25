@@ -47,7 +47,7 @@ while($row = mysql_fetch_array($result))
     
     //$response[$i]['shippositions'] = array();
     
-    $result_pos= mysql_query("SELECT `row`, `column` 
+    $result_pos= mysql_query("SELECT `row`, `column`, `uncovered` 
                                         FROM ship_positions where challenge_id = " . $row['id'] . ";");
     $z = 0;
     while($row_pos = mysql_fetch_array($result_pos))
@@ -55,7 +55,8 @@ while($row = mysql_fetch_array($result))
       //echo 'ship position row ' . " " . $row_pos['row'] .'<br />';
       //echo 'ship position col' . " " . $row_pos['column'] .'<br />';
       $response[$i]['shippositions'][$z] = array('row' => $row_pos['row'],
-                                                 'column' => $row_pos['column']);
+                                                 'column' => $row_pos['column'],
+							'uncovered' => (boolean)$row_pos['uncovered']);
       $z++;
     }
     $i++;
