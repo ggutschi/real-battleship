@@ -14,5 +14,5 @@
     <Button android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:text="Uncover Cell"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true" android:id="@+id/bUncover" />
+        android:layout_alignParentBottom="true" android:id="@+id/button_uncover" />
 </RelativeLayout>

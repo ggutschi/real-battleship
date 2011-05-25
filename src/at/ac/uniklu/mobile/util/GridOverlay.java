@@ -13,7 +13,7 @@ public class GridOverlay extends com.google.android.maps.Overlay {
 	
 	public final static float GRID_LINE_WIDTH = 3;
 	
-	public final static int GRID_COLOR = Color.RED;
+	public final static int GRID_COLOR = Color.WHITE;
 	
 	public final static int GRID_TRANSPARENCY = 200;	// value between 0 and 255
 	

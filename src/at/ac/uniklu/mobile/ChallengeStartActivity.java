@@ -2,6 +2,7 @@ package at.ac.uniklu.mobile;
 
 import java.util.List;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
@@ -61,6 +64,45 @@ public class ChallengeStartActivity extends MapActivity {
         mapController.animateTo(currentLocation);
         
     	setupLocationManager();
+
+        
+        // set up button listener for uncover button
+        final Button button_start = (Button) findViewById(R.id.button_uncover);
+        button_start.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(Constants.LOG_TAG, "uncover cell button clicked");
+            	
+            	int diffX = (currentChallenge.getLocationRightBottom().getLongitudeE6() - currentChallenge.getLocationLeftTop().getLongitudeE6()) / currentChallenge.getCellsX();
+            	int diffY = (currentChallenge.getLocationRightBottom().getLatitudeE6()  - currentChallenge.getLocationLeftTop().getLatitudeE6())  / currentChallenge.getCellsY();
+            	
+            	int i = 0;
+            	
+            	if (diffX > 0)
+            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) < (i * diffX) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
+            		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+            			;
+            	else
+            		for (i = 0; (currentLocation.getLongitudeE6() + diffX) > (i * diffX) && (i * diffX + currentChallenge.getLocationLeftTop().getLongitudeE6()) >= currentChallenge.getLocationRightBottom().getLongitudeE6(); i++)
+                		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+                			;
+            	
+            	Log.d(Constants.LOG_TAG, "Cell x = " + i);
+
+            	
+            	if (diffY > 0)
+            		for (i = 0; (currentLocation.getLatitudeE6() + diffY) < (i * diffY) && (i * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) <= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
+            		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+            			;
+            	else
+            		for (i = 0; (currentLocation.getLatitudeE6() + diffY) > (i * diffY) && (i * diffY + currentChallenge.getLocationLeftTop().getLatitudeE6()) >= currentChallenge.getLocationRightBottom().getLatitudeE6(); i++)
+                		//for (i = currentChallenge.getLocationLeftTop().getLongitudeE6(); (currentLocation.getLongitudeE6() + diffX) < i && i <= currentChallenge.getLocationRightBottom().getLongitudeE6(); i += diffX)
+                			;
+            	
+            	Log.d(Constants.LOG_TAG, "Cell y = " + i);
+            	
+            	//uncoverCell();
+            }
+        });
     }
     
     public void setupLocationManager() {
