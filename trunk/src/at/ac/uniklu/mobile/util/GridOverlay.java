@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.db.Ship;
 import at.ac.uniklu.mobile.db.ShipPosition;
 
 import com.google.android.maps.MapView;
@@ -72,10 +73,10 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
             
             // draw uncovered cells
-            for (ShipPosition sp : currentChallenge.getShipPositions()) {
-            	if (sp.isUncovered())
-            		canvas.drawRect(point1.x + sp.getColumn() * diffX, point1.y + sp.getRow() * diffY, point1.x + (sp.getColumn() + 1) * diffX, point1.y + (sp.getRow() + 1) * diffY, paint);
-            }
+            for (Ship s : currentChallenge.getShips())
+            	for (ShipPosition sp: s.getShipPositions())
+            		if (sp.isUncovered())
+            			canvas.drawRect(point1.x + sp.getColumn() * diffX, point1.y + sp.getRow() * diffY, point1.x + (sp.getColumn() + 1) * diffX, point1.y + (sp.getRow() + 1) * diffY, paint);
         }
     }
 }
