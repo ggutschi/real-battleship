@@ -65,12 +65,14 @@ public class ChallengeListModel {
         loadChallenges();
     }
     
-    private void loadChallenges() {
+    public void loadChallenges() {
     	
     	Log.d(Constants.LOG_TAG, "load challenges");
     	HttpClient httpClient = new DefaultHttpClient();  
     	HttpGet httpGet = new HttpGet(Constants.URL_WEBSERVICE_GETCHALLENGES);  
     	HttpResponse response;  
+    	
+    	challengeList.clear();
     	
     	try {  
     		response = httpClient.execute(httpGet);  
@@ -138,6 +140,8 @@ public class ChallengeListModel {
      * @return the mAnimals
      */
     public ArrayList<Challenge> getChallenges() {
+    	this.loadChallenges();
+    	
         return challengeList;
     }
     
@@ -169,7 +173,7 @@ public class ChallengeListModel {
     	try {  
 	    	HttpParams params = new BasicHttpParams(); 
 	    	
-	    	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+	    	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	         nameValuePairs.add(new BasicNameValuePair("android_id", android_id));
 	         nameValuePairs.add(new BasicNameValuePair("inet_address", ip_address));
 	         nameValuePairs.add(new BasicNameValuePair("challenge_id", Integer.toString(challenge_id)));

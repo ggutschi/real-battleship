@@ -18,7 +18,9 @@ public class GridOverlay extends com.google.android.maps.Overlay {
 	
 	public final static int GRID_TRANSPARENCY = 200;	// value between 0 and 255
 	
-	public final static int UNCOVERED_SHIP_COLOR = Color.RED;
+	public final static int UNCOVERED_SHIP_COLOR = Color.BLACK;
+	
+	public final static int UNCOVERED_SHIPPOSITION_COLOR = Color.RED;
 
 	public final static int UNCOVERED_SHIP_TRANSPARENCY = 150;	// value between 0 and 255
 	
@@ -69,14 +71,20 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             	for (float f = point1.y; f >= point2.y; f += diffY)
             		canvas.drawLine(point1.x, f, point2.x, f, paint);
             
-            paint.setColor(UNCOVERED_SHIP_COLOR);
-            paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
-            
             // draw uncovered cells
-            for (Ship s : currentChallenge.getShips())
+            for (Ship s : currentChallenge.getShips()) {
+            	if (s.getShipPositions().size() == s.getNumberOfUncoveredShipPositions())
+            		paint.setColor(UNCOVERED_SHIP_COLOR);
+            	else
+            		paint.setColor(UNCOVERED_SHIPPOSITION_COLOR);
+                
+                paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
+            
             	for (ShipPosition sp: s.getShipPositions())
             		if (sp.isUncovered())
             			canvas.drawRect(point1.x + sp.getColumn() * diffX, point1.y + sp.getRow() * diffY, point1.x + (sp.getColumn() + 1) * diffX, point1.y + (sp.getRow() + 1) * diffY, paint);
+        
+            }
         }
     }
 }
