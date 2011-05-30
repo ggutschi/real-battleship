@@ -18,6 +18,8 @@ public class Constants {
 	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenges.php";
 	/** URL of webservice to add a new particpiant to a challenge **/
 	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
+	/** URL of webservice to uncover a shipposition **/
+	public final static String URL_WEBSERVICE_UNCOVERSHIPPOSITION = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/updateChallengeState.php";
 	/** response code value if webservice call was successful **/
 	public final static int WEBSERVICE_STATUSCODE_OK = 200;
 	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/
@@ -26,5 +28,9 @@ public class Constants {
 	public final static int CMD_CODE_CHANGE_CHALLENGE = 1000;
 	/** the return code from challenge list activity if challenge registration was not successful **/
 	public final static int RETURN_CODE_CHANGE_CHALLENGE_ERROR = 400;
+	/** response code value if webservice call was successful **/
+	public final static String WEBSERVICE_STATUSCODE_UNCOVERED = "OK";
+	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/
+	public final static String WEBSERVICE_STATUSCODE_NOT_UNCOVERED = "NOK";	
 	
 }
