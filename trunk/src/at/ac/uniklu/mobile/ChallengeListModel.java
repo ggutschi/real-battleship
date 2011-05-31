@@ -68,11 +68,11 @@ public class ChallengeListModel {
     public void loadChallenges() {
     	
     	Log.d(Constants.LOG_TAG, "load challenges");
+    	challengeList.clear();
+    	
     	HttpClient httpClient = new DefaultHttpClient();  
     	HttpGet httpGet = new HttpGet(Constants.URL_WEBSERVICE_GETCHALLENGES);  
     	HttpResponse response;  
-    	
-    	challengeList.clear();
     	
     	try {  
     		response = httpClient.execute(httpGet);  
@@ -171,7 +171,6 @@ public class ChallengeListModel {
     	HttpPost postMethod = new HttpPost(Constants.URL_WEBSERVICE_ADDPARTICIPANTS);  
     	  
     	try {  
-	    	HttpParams params = new BasicHttpParams(); 
 	    	
 	    	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	         nameValuePairs.add(new BasicNameValuePair("android_id", android_id));
@@ -186,7 +185,7 @@ public class ChallengeListModel {
 	    	postMethod.setParams(params);
 	    	*/
 	    	
-	    	Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
+	    	//Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
 	    	
 	    	response = httpClient.execute(postMethod);
 	    	

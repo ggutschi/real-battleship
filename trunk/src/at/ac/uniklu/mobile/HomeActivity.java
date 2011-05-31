@@ -12,6 +12,7 @@ import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
+import at.ac.uniklu.mobile.util.HttpUtil;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -52,6 +53,28 @@ public class HomeActivity extends MapActivity {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "start challenge button clicked");
                 startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, current_challenge_id));
+            }
+        });
+        
+        // set up button listener for menu selection
+        final Button button_reset = (Button) findViewById(R.id.button_reset_challenge);
+        button_reset.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(Constants.LOG_TAG, "reset challenge button clicked");
+            	String result = null;
+            	try {
+            		result = HttpUtil.doGetRequest(Constants.URL_WEBSERVICE_CLEARCHALLENGE);
+            		Log.d(Constants.LOG_TAG, "response: " + result); 
+            	}
+            	catch(Exception ex) {
+            		Log.e(Constants.LOG_TAG, ex.getMessage(), ex);
+            	}
+            	
+            	if (result.equalsIgnoreCase(Constants.WEBSERVICE_TRANSACTION_OK)) {
+            		Log.d(Constants.LOG_TAG, "reset challenge successful");
+            		Toast.makeText(HomeActivity.this, R.string.challenge_reset, Toast.LENGTH_SHORT).show();
+            	}
+            		
             }
         });
 
