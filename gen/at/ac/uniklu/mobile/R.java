@@ -16,8 +16,9 @@ public final class R {
     }
     public static final class id {
         public static final int button_change_challenge=0x7f060008;
+        public static final int button_reset_challenge=0x7f06000a;
         public static final int button_start_challenge=0x7f060009;
-        public static final int button_uncover=0x7f06000a;
+        public static final int button_uncover=0x7f06000b;
         public static final int challenge_location=0x7f060007;
         public static final int challenge_map=0x7f060000;
         public static final int challenge_name=0x7f060005;
@@ -34,18 +35,20 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040001;
-        public static final int challenge_changed=0x7f040007;
+        public static final int challenge_changed=0x7f040008;
         /**   list view 
          */
-        public static final int challenge_list_empty=0x7f040004;
+        public static final int challenge_list_empty=0x7f040005;
         /**   home view 
          */
-        public static final int challenge_not_changed=0x7f040006;
-        public static final int challenges=0x7f040005;
+        public static final int challenge_not_changed=0x7f040007;
+        public static final int challenge_reset=0x7f040009;
+        public static final int challenges=0x7f040006;
         public static final int change_challenge=0x7f040002;
-        public static final int label_challenge=0x7f040008;
-        public static final int label_location=0x7f040009;
+        public static final int label_challenge=0x7f04000a;
+        public static final int label_location=0x7f04000b;
         public static final int no_challenge_selected=0x7f040000;
+        public static final int reset_challenge=0x7f040004;
         public static final int start_challenge=0x7f040003;
     }
     public static final class style {

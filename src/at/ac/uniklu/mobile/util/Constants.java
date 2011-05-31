@@ -20,6 +20,8 @@ public class Constants {
 	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
 	/** URL of webservice to uncover a shipposition **/
 	public final static String URL_WEBSERVICE_UNCOVERSHIPPOSITION = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/updateChallengeState.php";
+	/** URL of webservice to clear all challenges (reset uncovered & destroyed flags of all ships) **/
+	public final static String URL_WEBSERVICE_CLEARCHALLENGE = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/resetChallenges.php";
 	/** response code value if webservice call was successful **/
 	public final static int WEBSERVICE_STATUSCODE_OK = 200;
 	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/
