@@ -151,7 +151,10 @@ public class ChallengeStartActivity extends MapActivity {
     
     private void uncoverCell(int x, int y) {
     	if (sendUncoverRequest(x, y)) {
-    		ChallengeListModel.getInstance(this).loadChallenges();
+    		//ChallengeListModel.getInstance(this).loadChallenges();
+    		
+    		currentChallenge.uncoverCellLocally(x, y);
+        	Log.d(Constants.LOG_TAG, "Cell uncovered");
     		
     		addOverlays();
     	}

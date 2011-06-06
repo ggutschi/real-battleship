@@ -10,9 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.db.Ship;
+import at.ac.uniklu.mobile.db.ShipPosition;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
 import at.ac.uniklu.mobile.util.HttpUtil;
+import at.ac.uniklu.mobile.util.PositionOverlay;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -22,17 +25,23 @@ import com.google.android.maps.Overlay;
 
 public class HomeActivity extends MapActivity {
 	
+	private MapView mapView;
+	private MapController mapController;
 	
-	private int current_challenge_id;
+	private Challenge currentChallenge;
+	private GeoPoint currentLocation;
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    	Log.d(Constants.LOG_TAG, "On create");
+    	
         setContentView(R.layout.home);
         
         Log.d(Constants.LOG_TAG, "initialize mapview");
-        configureMapView(null);
+        configureMapView();
         initializeChallengeInfos();
         
         // set up button listener for menu selection
@@ -52,7 +61,7 @@ public class HomeActivity extends MapActivity {
         button_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "start challenge button clicked");
-                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, current_challenge_id));
+                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId()));
             }
         });
         
@@ -72,6 +81,9 @@ public class HomeActivity extends MapActivity {
             	
             	if (result.equalsIgnoreCase(Constants.WEBSERVICE_TRANSACTION_OK)) {
             		Log.d(Constants.LOG_TAG, "reset challenge successful");
+            		addOverlays();
+            		
+            		currentChallenge.resetChallengeLocally();
             		Toast.makeText(HomeActivity.this, R.string.challenge_reset, Toast.LENGTH_SHORT).show();
             	}
             		
@@ -82,7 +94,33 @@ public class HomeActivity extends MapActivity {
     }
     
     
-    /* (non-Javadoc)
+    @Override
+	protected void onResume() {
+
+    	Log.d(Constants.LOG_TAG, "On resume");
+    	
+		super.onResume();
+		
+		if (currentChallenge != null)
+			zoomOut();
+	}
+    
+    private void zoomOut() {
+    	GeoPoint lt = currentChallenge.getLocationLeftTop();
+    	GeoPoint rb = currentChallenge.getLocationRightBottom();
+    	
+    	int latDiff = rb.getLatitudeE6()  - lt.getLatitudeE6();
+    	int lonDiff = rb.getLongitudeE6() - lt.getLongitudeE6();
+        
+    	GeoPoint gp = new GeoPoint(lt.getLatitudeE6() + latDiff / 2, lt.getLongitudeE6() + lonDiff / 2);
+        
+    	mapController.animateTo(gp);
+    	
+        mapController.zoomToSpan(latDiff, lonDiff);
+    }
+
+
+	/* (non-Javadoc)
      * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
      */
     @Override
@@ -98,15 +136,15 @@ public class HomeActivity extends MapActivity {
         		// error occured
                 Toast.makeText(HomeActivity.this, R.string.challenge_changed, Toast.LENGTH_SHORT).show();
             	ChallengeListModel listModel = ChallengeListModel.getInstance(this);
-            	current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
-            	Challenge challenge = listModel.getChallengeById(current_challenge_id);
-            	Log.d(Constants.LOG_TAG, "new challenge selected with id: " + challenge.getId()
-            			+ " name: " + challenge.getName() 
-            			+ " location: " + challenge.getLocation()
-            			+ " lat: " + challenge.getLocationLeftTop().getLatitudeE6()
-            			+ " lon: " + challenge.getLocationLeftTop().getLongitudeE6());
-            	configureMapView(challenge); 
-            	initializeChallengeInfos(challenge);
+            	int current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
+            	currentChallenge = listModel.getChallengeById(current_challenge_id);
+            	Log.d(Constants.LOG_TAG, "new challenge selected with id: " + currentChallenge.getId()
+            			+ " name: " + currentChallenge.getName() 
+            			+ " location: " + currentChallenge.getLocation()
+            			+ " lat: " + currentChallenge.getLocationLeftTop().getLatitudeE6()
+            			+ " lon: " + currentChallenge.getLocationLeftTop().getLongitudeE6());
+            	configureMapView(); 
+            	initializeChallengeInfos(currentChallenge);
         	}
         	else if (resultCode == Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR) {
         		// error occured
@@ -114,46 +152,45 @@ public class HomeActivity extends MapActivity {
         	}
         }
     }
+
+
+
+	private void addOverlays() {
+    	List<Overlay> overlays = mapView.getOverlays();
+    	overlays.clear();
+    	overlays.add(new GridOverlay(mapView, currentChallenge));
+    	overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
+
+    	mapView.invalidate();
+
+    	Log.d(Constants.LOG_TAG, "Overlays added.");
+    }
     
     /**
      * configures the google map view by setting default values
      */
-    private void configureMapView(Challenge c) {
-    	GeoPoint geoPoint = null;
-    	MapView mapView = (MapView) findViewById(R.id.challenge_map);
-        mapView.setBuiltInZoomControls(true);
-        MapController mapController = mapView.getController();
-        
-
-    	
+    private void configureMapView() {
     	mapView = (MapView) findViewById(R.id.challenge_map);
+        mapView.setBuiltInZoomControls(true);
+        mapController = mapView.getController();
+        
         mapView.setBuiltInZoomControls(true);
         mapView.setSatellite(true);
 
-        if (c != null) {
-	    	List<Overlay> overlays = mapView.getOverlays();
-	    	overlays.clear();
-	    	overlays.add(new GridOverlay(mapView, c));
-	        
-	    	GeoPoint lt = c.getLocationLeftTop();
-	    	GeoPoint rb = c.getLocationRightBottom();
+        if (currentChallenge != null) {
+	    	addOverlays();
 	    	
-	    	int latDiff = rb.getLatitudeE6()  - lt.getLatitudeE6();
-	    	int lonDiff = rb.getLongitudeE6() - lt.getLongitudeE6();
-        
-        	geoPoint = new GeoPoint(lt.getLatitudeE6() + latDiff / 2, lt.getLongitudeE6() + lonDiff / 2);
-            
-            mapController.zoomToSpan(latDiff, lonDiff);
+	    	zoomOut();
     	} else {
-        	geoPoint = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
+        	currentLocation = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
         	
         	mapController.setZoom(2);
     	}
         
-        Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + geoPoint.getLatitudeE6() 
-        		+ " lon: " + geoPoint.getLongitudeE6());
+        Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + currentLocation.getLatitudeE6() 
+        		+ " lon: " + currentLocation.getLongitudeE6());
         
-        mapController.animateTo(geoPoint);
+        mapController.animateTo(currentLocation);
     }
     
     /**
