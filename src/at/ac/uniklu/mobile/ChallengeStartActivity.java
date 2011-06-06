@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
@@ -153,7 +154,8 @@ public class ChallengeStartActivity extends MapActivity {
     	if (sendUncoverRequest(x, y)) {
     		//ChallengeListModel.getInstance(this).loadChallenges();
     		
-    		currentChallenge.uncoverCellLocally(x, y);
+    		currentChallenge.uncoverCellLocally(x, y, this);
+    		
         	Log.d(Constants.LOG_TAG, "Cell uncovered");
     		
     		addOverlays();

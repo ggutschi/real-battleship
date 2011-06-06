@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -28,6 +29,9 @@ import at.ac.uniklu.mobile.util.HelperUtil;
 public class ChallengeListActivity extends ListActivity {
 	
 	private ArrayList<Challenge> challengeList;
+    
+	private ProgressDialog progressDialog;
+    //private ProgressThread progressThread;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -37,7 +41,15 @@ public class ChallengeListActivity extends ListActivity {
         setContentView(R.layout.challenge_list);
         
         ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext());
+        
+        //progressDialog = new ProgressDialog(this);
+        //progressThread = new ProgressThread();
+        
+        //progressThread.start();
+        
         challengeList = listModel.getChallenges();
+        
+        //progressThread.stopp();
                
         ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(this, challengeList, android.R.layout.simple_list_item_2);
         setListAdapter(challengeAdapter);
@@ -55,7 +67,6 @@ public class ChallengeListActivity extends ListActivity {
 
         registerForContextMenu(getListView());
 
-        
     }
     
     /**
@@ -103,6 +114,35 @@ public class ChallengeListActivity extends ListActivity {
 			setResult(Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR, intent);
 		finish();
 	}
+    
+    
+    private class ProgressThread extends Thread {
+    	boolean stop = false;
+    	
+    	@Override
+    	public void run() {            
+            
+            progressDialog.setTitle("Loading");
+            progressDialog.setMessage("Loading challenges from server...");
+            
+            progressDialog.show();
+    		
+    		
+    		while (!stop) {
+    			try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+    		}
+    		
+    		progressDialog.dismiss();
+    	}
+    	
+    	public void stopp() {
+    		this.stop = true;
+    	}
+    }
 
 
 

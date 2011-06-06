@@ -6,7 +6,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
+import at.ac.uniklu.mobile.HomeActivity;
+import at.ac.uniklu.mobile.R;
 import at.ac.uniklu.mobile.util.Constants;
 
 import com.google.android.maps.GeoPoint;
@@ -146,23 +150,38 @@ public class Challenge {
 					  uncoveredCells.get(sp.getRow()).set(sp.getColumn(), true);
 	}
 	
-	private void uncoverShipPositionLocallyAt(int x, int y) {
+	private void uncoverShipPositionLocallyAt(int x, int y, Context c) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
 				if (sp.getRow() == y && sp.getColumn() == x) {
-					sp.setUncovered(true);
+					
+					if (!sp.isUncovered()) {
+		            		
+						sp.setUncovered(true);
+						
+		            	if (s.getShipPositions().size() == s.getNumberOfUncoveredShipPositions()) {
+		            		s.setDestroyed(true);
+		            		Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
+		            	} else
+							Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
+					}
+		    		
 		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
 				}
 	}
 	
-	public void uncoverCellLocally(int x, int y) {
+	public void uncoverCellLocally(int x, int y, Context c) {
 		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
 
         	Log.d(Constants.LOG_TAG, "Uncovering cell (" + x + ", " + y + ")");
-			uncoveredCells.get(y).set(x, true);
+        	
+        	if (uncoveredCells.get(y).get(x))
+        		Toast.makeText(c, R.string.already_uncovered, Toast.LENGTH_SHORT).show();
+        	
+        	uncoveredCells.get(y).set(x, true);
 
         	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
-			this.uncoverShipPositionLocallyAt(x, y);
+			this.uncoverShipPositionLocallyAt(x, y, c);
 		} else
         	Log.d(Constants.LOG_TAG, "Uncovering cells failed");
 	}

@@ -16,4 +16,10 @@
     <string name="challenge_reset">Challenge reset successful.</string>
     <string name="label_challenge">Challenge</string>
     <string name="label_location">Location</string>
+    
+    <!-- challenge start -->
+    <string name="already_uncovered">Cell already uncovered.</string>
+    <string name="ship_position_uncovered">You have uncovered a ship position!</string>
+    <string name="ship_uncovered">Congratulations! You uncovered a ship.</string>
+    <string name="game_over">Game over! All ships have been uncovered.</string>
 </resources>
