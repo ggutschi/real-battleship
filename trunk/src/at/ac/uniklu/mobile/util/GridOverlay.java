@@ -88,7 +88,7 @@ public class GridOverlay extends com.google.android.maps.Overlay {
                     
             			
             for (Ship s : currentChallenge.getShips()) {
-            	if (s.getShipPositions().size() == s.getNumberOfUncoveredShipPositions())
+            	if (s.isDestroyed())
             		paint.setColor(UNCOVERED_SHIP_COLOR);
             	else
             		paint.setColor(UNCOVERED_SHIPPOSITION_COLOR);
