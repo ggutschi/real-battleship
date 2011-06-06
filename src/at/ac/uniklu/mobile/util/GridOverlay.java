@@ -1,7 +1,5 @@
 package at.ac.uniklu.mobile.util;
 
-import java.util.ArrayList;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
