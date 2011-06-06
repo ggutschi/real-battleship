@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql03-dev.itac.at
--- Erstellungszeit: 25. Mai 2011 um 09:59
+-- Erstellungszeit: 06. Juni 2011 um 18:05
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.2-1ubuntu4.9
 
@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `participants` (
   `challenge_id` int(11) NOT NULL,
   `inet_addr` varchar(100) NOT NULL,
   `android_id` varchar(100) NOT NULL,
+  `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `android_id` (`android_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
@@ -65,11 +66,11 @@ CREATE TABLE IF NOT EXISTS `participants` (
 -- Daten für Tabelle `participants`
 --
 
-INSERT INTO `participants` (`id`, `challenge_id`, `inet_addr`, `android_id`) VALUES
-(1, 1, '127.0.0.5', 'f3c4e5a1'),
-(2, 1, '127.0.0.4', 'b3c4a5e6'),
-(4, 1, '127.0.0.9', 'a3c4e5a1'),
-(5, 1, '10.0.2.15', 'e3f17bc89afe54fe');
+INSERT INTO `participants` (`id`, `challenge_id`, `inet_addr`, `android_id`, `active`) VALUES
+(1, 1, '127.0.0.5', 'f3c4e5a1', 0),
+(2, 1, '127.0.0.4', 'b3c4a5e6', 0),
+(4, 1, '127.0.0.9', 'a3c4e5a1', 0),
+(5, 1, '10.0.2.15', 'e3f17bc89afe54fe', 1);
 
 -- --------------------------------------------------------
 
@@ -83,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `ships` (
   `destroyed` tinyint(1) NOT NULL,
   `challenge_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- Daten für Tabelle `ships`
@@ -91,7 +92,8 @@ CREATE TABLE IF NOT EXISTS `ships` (
 
 INSERT INTO `ships` (`id`, `destroyed`, `challenge_id`) VALUES
 (1, 0, 1),
-(2, 1, 1);
+(2, 0, 1),
+(3, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -108,13 +110,14 @@ CREATE TABLE IF NOT EXISTS `ship_positions` (
   `ship_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_SHIP_POSITIONS` (`row`,`column`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- Daten für Tabelle `ship_positions`
 --
 
 INSERT INTO `ship_positions` (`id`, `row`, `column`, `uncovered`, `ship_id`) VALUES
-(1, 2, 2, 1, 1),
+(1, 2, 2, 0, 1),
 (2, 2, 3, 0, 1),
-(3, 4, 4, 0, 2);
+(3, 4, 4, 0, 2),
+(4, 0, 2, 1, 3);
