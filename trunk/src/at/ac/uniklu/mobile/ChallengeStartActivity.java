@@ -48,10 +48,6 @@ import com.google.android.maps.Overlay;
 
 public class ChallengeStartActivity extends MapActivity {
 	
-	public final static float GRID_LINE_WIDTH = 5;
-	
-	public final static int GRID_COLOR = Color.RED;
-	
 	private MapView 		mapView;
 	private MapController 	mapController;
 	private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
@@ -94,11 +90,20 @@ public class ChallengeStartActivity extends MapActivity {
         });
     }
     
-    private void addOverlays() {
+    
+    
+    @Override
+	protected void onResume() {
+		super.onResume();
+	}
+
+
+
+	private void addOverlays() {
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
-    	overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
     	overlays.add(new GridOverlay(mapView, currentChallenge));
+    	overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
 
     	mapView.invalidate();
 
@@ -223,6 +228,8 @@ public class ChallengeStartActivity extends MapActivity {
 		    	Log.d(Constants.LOG_TAG, "location changed to " + arg0);
 		    	
 		    	currentLocation = new GeoPoint((int) (arg0.getLatitude() * 1E6), (int) (arg0.getLongitude() * 1E6));
+		        
+		        addOverlays();
 		    	
 		    	mapController.animateTo(currentLocation);
 
