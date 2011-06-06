@@ -1,5 +1,7 @@
 package at.ac.uniklu.mobile.util;
 
+import java.util.ArrayList;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,6 +19,8 @@ public class GridOverlay extends com.google.android.maps.Overlay {
 	public final static int GRID_COLOR = Color.WHITE;
 	
 	public final static int GRID_TRANSPARENCY = 200;	// value between 0 and 255
+	
+	public final static int UNCOVERED_CELL_COLOR = Color.WHITE;
 	
 	public final static int UNCOVERED_SHIP_COLOR = Color.BLACK;
 	
@@ -72,8 +76,17 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             else
             	for (float f = point1.y; f >= point2.y; f += diffY)
             		canvas.drawLine(point1.x, f, point2.x, f, paint);
+
+    		paint.setColor(UNCOVERED_CELL_COLOR);
+            paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
             
             // draw uncovered cells
+            for (int i = 0; i < currentChallenge.getCellsY(); i++)
+            	for (int j = 0; j < currentChallenge.getCellsX(); j++)
+            		if (currentChallenge.isUncovered(j, i))
+            			canvas.drawRect(point1.x + j * diffX, point1.y + i * diffY, point1.x + (j + 1) * diffX, point1.y + (i + 1) * diffY, paint);
+                    
+            			
             for (Ship s : currentChallenge.getShips()) {
             	if (s.getShipPositions().size() == s.getNumberOfUncoveredShipPositions())
             		paint.setColor(UNCOVERED_SHIP_COLOR);

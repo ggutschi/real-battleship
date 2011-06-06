@@ -80,6 +80,10 @@ public class Challenge {
 	/** list of all ship positions (row, col) **/
 	private ArrayList<Ship> ships;
 	
+	
+	private ArrayList<ArrayList<Boolean>> uncoveredCells;
+	
+	
 	public Challenge(int id, String name, boolean active, GeoPoint locLeftTop, String location) {
 		this.id = id;
 		this.name = name;		
@@ -122,7 +126,64 @@ public class Challenge {
 			  ships.add(s);
 		  }
 		  Log.d(Constants.LOG_TAG, "challenge object constructed with lat: " + locationLeftTop.getLatitudeE6());
+		  
+		  initializeUncoveredCells();
 	}
+	
+	private void initializeUncoveredCells() {
+		  uncoveredCells = new ArrayList<ArrayList<Boolean>>();
+		  
+		  for (int i = 0; i < this.getCellsY(); i++) {
+			  uncoveredCells.add(new ArrayList<Boolean>());
+			  
+			  for (int j = 0; j < this.getCellsY(); j++)
+				  uncoveredCells.get(i).add(false);
+		  }
+		  
+		  for (Ship s : ships)
+			  for (ShipPosition sp : s.getShipPositions())
+				  if (sp.isUncovered())
+					  uncoveredCells.get(sp.getRow()).set(sp.getColumn(), true);
+	}
+	
+	private void uncoverShipPositionLocallyAt(int x, int y) {
+		for (Ship s : this.ships)
+			for (ShipPosition sp : s.getShipPositions())
+				if (sp.getRow() == y && sp.getColumn() == x) {
+					sp.setUncovered(true);
+		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
+				}
+	}
+	
+	public void uncoverCellLocally(int x, int y) {
+		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
+
+        	Log.d(Constants.LOG_TAG, "Uncovering cell (" + x + ", " + y + ")");
+			uncoveredCells.get(y).set(x, true);
+
+        	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
+			this.uncoverShipPositionLocallyAt(x, y);
+		} else
+        	Log.d(Constants.LOG_TAG, "Uncovering cells failed");
+	}
+	
+	public void resetChallengeLocally() {
+		for (Ship s : ships)
+			for (ShipPosition sp : s.getShipPositions())
+				sp.setUncovered(false);
+		
+		for (ArrayList<Boolean> row : uncoveredCells)
+			for (int i = 0; i < row.size(); i++)
+				row.set(i, false);
+	}
+	
+	public boolean isUncovered(int x, int y) {
+		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size())
+			return uncoveredCells.get(y).get(x);
+			
+		return false;
+	}
+	
 	public int getId() {
 		return id;
 	}
