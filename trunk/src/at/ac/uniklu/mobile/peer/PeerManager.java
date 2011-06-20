@@ -21,7 +21,7 @@ public class PeerManager {
 	
 	/** the server ip which is responsible for initial peer registration **/
 	//public static String RENDEZVOUS_SERVER_IP = "93.104.210.214";
-	public static String RENDEZVOUS_SERVER_IP = "10.0.2.2";
+	public static String RENDEZVOUS_SERVER_IP = "192.168.1.101";
 	/** server port for intial peer registration **/
 	public static int RENDEZVOUS_SERVER_PORT = 19423;
 	public static String RENDEZVOUS_JOIN_MESSAGE = "joined";
