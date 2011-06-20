@@ -159,8 +159,9 @@ public class Challenge {
 		            		
 						sp.setUncovered(true);
 						
-		            	if (s.isDestroyed()) {
+		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
 		            		Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
+		            		s.setDestroyed(true);
 		            	} else
 							Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
 					}
