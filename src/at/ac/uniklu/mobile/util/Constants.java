@@ -15,13 +15,17 @@ public class Constants {
 	
 	/** URL of webservice to retrieve all challenges from server **/
 	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
-	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenges.php";
+	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenges.php";
+	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://192.168.1.101/rbs/getChallenges.php";
 	/** URL of webservice to add a new particpiant to a challenge **/
-	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
+	//public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
+	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://192.168.1.101/rbs/addParticipant.php";
 	/** URL of webservice to uncover a shipposition **/
-	public final static String URL_WEBSERVICE_UNCOVERSHIPPOSITION = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/updateChallengeState.php";
+	//public final static String URL_WEBSERVICE_UNCOVERSHIPPOSITION = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/updateChallengeState.php";
+	public final static String URL_WEBSERVICE_UNCOVERSHIPPOSITION = "http://192.168.1.101/rbs/updateChallengeState.php";
 	/** URL of webservice to clear all challenges (reset uncovered & destroyed flags of all ships) **/
-	public final static String URL_WEBSERVICE_CLEARCHALLENGE = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/resetChallenges.php";
+	//public final static String URL_WEBSERVICE_CLEARCHALLENGE = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/resetChallenges.php";
+	public final static String URL_WEBSERVICE_CLEARCHALLENGE = "http://192.168.1.101/rbs/resetChallenges.php";
 	/** response code value if webservice call was successful **/
 	public final static int WEBSERVICE_STATUSCODE_OK = 200;
 	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/

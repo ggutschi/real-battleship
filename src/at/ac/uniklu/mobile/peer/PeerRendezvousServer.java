@@ -46,8 +46,8 @@ public class PeerRendezvousServer extends Thread {
 		
 		return PeerManager.RENDEZVOUS_JOIN_MESSAGE + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
 				+ challenge.getId() + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
-				//+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + HelperUtil.getIpAddress(); 
-				+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + "10.0.2.2";
+				+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + HelperUtil.getIpAddress(); 
+				//+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + "10.0.2.2";
 				
 	}
 	
