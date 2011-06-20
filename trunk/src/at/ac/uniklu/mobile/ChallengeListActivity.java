@@ -12,7 +12,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,16 +33,14 @@ public class ChallengeListActivity extends ListActivity {
 	private ProgressDialog progressDialog;
     private ProgressThread progressThread;
 	
-	ProgressDialog pd;
-	
 	/** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {  
+    public void onCreate(Bundle savedInstanceState) {    	 
     	super.onCreate(savedInstanceState);
     	Log.d(Constants.LOG_TAG, "initialize list view");
         setContentView(R.layout.challenge_list);
         
-        listModel = ChallengeListModel.getInstance(getApplicationContext());
+        ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext());
         
         /*progressDialog = new ProgressDialog(this);
         progressThread = new ProgressThread();
@@ -53,9 +50,9 @@ public class ChallengeListActivity extends ListActivity {
         
         challengeList = listModel.getChallenges();
         
-        pd.dismiss();
-        
-        ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(ChallengeListActivity.this, challengeList, android.R.layout.simple_list_item_2);
+        //progressThread.stopp();
+               
+        ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(this, challengeList, android.R.layout.simple_list_item_2);
         setListAdapter(challengeAdapter);
         
         // Register an observer to handle the case where the list contents change
@@ -70,6 +67,7 @@ public class ChallengeListActivity extends ListActivity {
         listModel.registerDependentAdapter(challengeAdapter);
 
         registerForContextMenu(getListView());
+
     }
     
     /**
@@ -117,6 +115,36 @@ public class ChallengeListActivity extends ListActivity {
 			setResult(Constants.RETURN_CODE_CHANGE_CHALLENGE_ERROR, intent);
 		finish();
 	}
+    
+    
+    private class ProgressThread extends Thread {
+    	boolean stop = false;
+    	
+    	@Override
+    	public void run() {            
+            
+            progressDialog.setTitle("Loading");
+            progressDialog.setMessage("Loading challenges from server...");
+            
+            progressDialog.show();
+    		
+    		
+    		while (!stop) {
+    			try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+    		}
+    		
+    		progressDialog.dismiss();
+    	}
+    	
+    	public void stopp() {
+    		this.stop = true;
+    	}
+    }
+
 
 
 	/**
