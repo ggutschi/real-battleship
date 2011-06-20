@@ -27,7 +27,7 @@ public class PositionOverlay extends com.google.android.maps.Overlay {
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
         super.draw(canvas, mapView, shadow);
 
-        if (!shadow) {
+        if (!shadow && location != null) {
 
             Point point = new Point();
             mapView.getProjection().toPixels(location, point);
