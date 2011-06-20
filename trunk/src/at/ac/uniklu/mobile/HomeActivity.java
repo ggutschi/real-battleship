@@ -3,8 +3,10 @@ package at.ac.uniklu.mobile;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -91,6 +93,11 @@ public class HomeActivity extends MapActivity {
         });
 
         
+    }
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
     }
     
     
