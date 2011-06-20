@@ -37,8 +37,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
+import at.ac.uniklu.mobile.util.HelperUtil;
 import at.ac.uniklu.mobile.util.PositionOverlay;
 
 import com.google.android.maps.GeoPoint;
@@ -63,6 +65,9 @@ public class ChallengeStartActivity extends MapActivity {
     	this.currentChallenge = ChallengeListModel.getInstance(this).getChallengeById(getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	
     	Log.d(Constants.LOG_TAG, "Challenge: " + currentChallenge);
+    	
+    	PeerManager.init(currentChallenge, this.getBaseContext());
+    	
     	
     	mapView = (MapView) findViewById(R.id.challenge_map);
         mapView.setBuiltInZoomControls(true);

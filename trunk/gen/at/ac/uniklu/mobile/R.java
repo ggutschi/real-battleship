@@ -34,6 +34,9 @@ public final class R {
         public static final int start_challenge=0x7f030002;
     }
     public static final class string {
+        /**  challenge start 
+         */
+        public static final int already_uncovered=0x7f04000c;
         public static final int app_name=0x7f040001;
         public static final int challenge_changed=0x7f040008;
         /**   list view 
@@ -45,10 +48,13 @@ public final class R {
         public static final int challenge_reset=0x7f040009;
         public static final int challenges=0x7f040006;
         public static final int change_challenge=0x7f040002;
+        public static final int game_over=0x7f04000f;
         public static final int label_challenge=0x7f04000a;
         public static final int label_location=0x7f04000b;
         public static final int no_challenge_selected=0x7f040000;
         public static final int reset_challenge=0x7f040004;
+        public static final int ship_position_uncovered=0x7f04000d;
+        public static final int ship_uncovered=0x7f04000e;
         public static final int start_challenge=0x7f040003;
     }
     public static final class style {

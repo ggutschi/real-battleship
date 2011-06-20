@@ -31,7 +31,7 @@ public class ChallengeListActivity extends ListActivity {
 	private ArrayList<Challenge> challengeList;
     
 	private ProgressDialog progressDialog;
-    //private ProgressThread progressThread;
+    private ProgressThread progressThread;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -42,10 +42,11 @@ public class ChallengeListActivity extends ListActivity {
         
         ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext());
         
-        //progressDialog = new ProgressDialog(this);
-        //progressThread = new ProgressThread();
+        /*progressDialog = new ProgressDialog(this);
+        progressThread = new ProgressThread();
         
-        //progressThread.start();
+        progressThread.start();
+        */
         
         challengeList = listModel.getChallenges();
         
