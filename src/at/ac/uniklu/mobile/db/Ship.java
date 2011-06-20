@@ -62,15 +62,4 @@ public class Ship {
 	public void setShipPositions(ArrayList<ShipPosition> shipPositions) {
 		this.shipPositions = shipPositions;
 	}
-	
-	public int getNumberOfUncoveredShipPositions() {
-		int num = 0;
-		
-		for (ShipPosition sp : this.getShipPositions())
-			if (sp.isUncovered())
-				num++;
-		
-		return num;
-	}
-
 }

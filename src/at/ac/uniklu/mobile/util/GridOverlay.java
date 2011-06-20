@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Ship;
 import at.ac.uniklu.mobile.db.ShipPosition;
@@ -86,10 +87,15 @@ public class GridOverlay extends com.google.android.maps.Overlay {
                     
             			
             for (Ship s : currentChallenge.getShips()) {
-            	if (s.isDestroyed())
+            	if (s.isDestroyed()) {
             		paint.setColor(UNCOVERED_SHIP_COLOR);
-            	else
+            		
+            		Log.d(Constants.LOG_TAG, "Ship is destroyed.");
+            	} else {
             		paint.setColor(UNCOVERED_SHIPPOSITION_COLOR);
+        		
+            		Log.d(Constants.LOG_TAG, "Shipcell is destroyed.");
+            	}
                 
                 paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
             
