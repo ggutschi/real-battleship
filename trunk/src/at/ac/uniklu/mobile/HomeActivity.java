@@ -166,7 +166,7 @@ public class HomeActivity extends MapActivity {
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
     	overlays.add(new GridOverlay(mapView, currentChallenge));
-    	overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
+    	//overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
 
     	mapView.invalidate();
 
