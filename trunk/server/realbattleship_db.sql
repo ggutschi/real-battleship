@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql03-dev.itac.at
--- Erstellungszeit: 06. Juni 2011 um 18:05
+-- Erstellungszeit: 20. Juni 2011 um 12:39
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.2-1ubuntu4.9
 
