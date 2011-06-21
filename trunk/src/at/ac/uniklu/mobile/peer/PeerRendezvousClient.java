@@ -3,6 +3,7 @@ package at.ac.uniklu.mobile.peer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,16 +12,50 @@ import java.util.Vector;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.util.Log;
+import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
+import at.ac.uniklu.mobile.util.HelperUtil;
 
 public class PeerRendezvousClient extends Thread {	
+
+	private Challenge challenge = null;
+	private Context context = null;
+	
+	public PeerRendezvousClient(Context context, Challenge challenge) {
+		this.challenge = challenge;
+		this.context = context;
+	}
 	
 	public void run()
 	{		
 		try {
-			//InetAddress serverAddr = InetAddress.getByName(PeerManager.RENDEZVOUS_SERVER_IP);
-			InetAddress serverAddr = InetAddress.getByName("localhost");
+			InetAddress serverAddr = InetAddress.getByName(PeerManager.RENDEZVOUS_SERVER_IP);
+			Log.d(Constants.LOG_TAG, "PeerRendezvousServer is connecting to rendezvous server...");
+			Socket socket = new Socket(serverAddr, PeerManager.RENDEZVOUS_SERVER_PORT);
+
+			Log.d(Constants.LOG_TAG , "PeerRendezvousServer try to send message...");
+			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+			String msg = getRendezvousMessage();
+			out.println(msg);
+			//out.flush();
+			Log.d(Constants.LOG_TAG, "PeerRendezvousServer message " + msg + " was sent!");
+			try {
+				sleep(PeerManager.RENDEZVOUS_TIME_PERIOD);
+			}
+			catch(InterruptedException iex)
+			{
+		  
+			}	
+				
+			socket.close();
+		}
+		catch(Exception ex) {
+			Log.e(Constants.LOG_TAG, "PeerRendezvousServer", ex);
+		}
+		
+		try {
 			//InetAddress serverAddr = InetAddress.getLocalHost();
 			Log.d(Constants.LOG_TAG, "PeerRendezvousClient is connecting to rendezvous server...");
 			//Socket socket = new Socket(serverAddr, 19423);
@@ -61,6 +96,15 @@ public class PeerRendezvousClient extends Thread {
 					+ ioex.getMessage(), ioex);
 			
 		}		
+	}
+	
+	
+	private String getRendezvousMessage() {		
+		return PeerManager.RENDEZVOUS_JOIN_MESSAGE + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
+				+ challenge.getId() + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
+				+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + HelperUtil.getIpAddress(); 
+				//+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + "10.0.2.2";
+				
 	}
 	
 	/**
