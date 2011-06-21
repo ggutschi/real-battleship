@@ -38,6 +38,13 @@ if (is_array($ship_position))
 	{
 		// ship position not yet uncovered
 		mysql_query("UPDATE ship_positions SET uncovered=1 where id = " . $ship_position['id']);
+
+		$num_uncovered = mysql_query("select * from ship_positions sp where ship_id = " . $ship_position['ship_id'] . " and uncovered = 0");
+		$count_uncovered = mysql_num_rows($num_uncovered);
+
+		if ($count_uncovered < 1) {
+			mysql_query("UPDATE ships SET destroyed = 1 where id = " . $ship_position['ship_id']);
+		}		
 		echo "OK";
 	}
 	else
