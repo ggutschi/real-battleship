@@ -41,13 +41,6 @@ public class PeerRendezvousClient extends Thread {
 			out.println(msg);
 			//out.flush();
 			Log.d(Constants.LOG_TAG, "PeerRendezvousServer message " + msg + " was sent!");
-			try {
-				sleep(PeerManager.RENDEZVOUS_TIME_PERIOD);
-			}
-			catch(InterruptedException iex)
-			{
-		  
-			}	
 				
 			socket.close();
 		}
@@ -99,10 +92,10 @@ public class PeerRendezvousClient extends Thread {
 	}
 	
 	
-	private String getRendezvousMessage() {		
+	public String getRendezvousMessage() {		
 		return PeerManager.RENDEZVOUS_JOIN_MESSAGE + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
 				+ challenge.getId() + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
-				+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + HelperUtil.getIpAddress(); 
+				+ HelperUtil.getAndroidId(context); 
 				//+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + "10.0.2.2";
 				
 	}

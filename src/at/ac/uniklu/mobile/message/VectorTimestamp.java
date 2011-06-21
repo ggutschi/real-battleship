@@ -2,6 +2,8 @@ package at.ac.uniklu.mobile.message;
 
 import java.util.HashMap;
 
+import at.ac.uniklu.mobile.peer.PeerManager;
+
 public class VectorTimestamp {
 	private HashMap<String, Integer> myVector = new HashMap<String, Integer>();
 	private String androidId;
@@ -50,5 +52,19 @@ public class VectorTimestamp {
 				return false;
 				
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		for (String androidId : this.myVector.keySet()) {
+			sb.append(androidId);
+			sb.append(PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR);
+			sb.append(this.myVector.get(androidId));
+			sb.append(PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR);
+		}
+		
+		return sb.substring(0, sb.length() - 2).toString();
 	}
 }
