@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: sql03-dev.itac.at
--- Erstellungszeit: 20. Juni 2011 um 12:39
+-- Erstellungszeit: 21. Juni 2011 um 18:45
 -- Server Version: 5.1.41
 -- PHP-Version: 5.3.2-1ubuntu4.9
 
@@ -36,14 +36,15 @@ CREATE TABLE IF NOT EXISTS `challenges` (
   `location` varchar(200) NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
 -- Daten fÃ¼r Tabelle `challenges`
 --
 
 INSERT INTO `challenges` (`id`, `name`, `locationLeftTop`, `locationRightBottom`, `cellsX`, `cellsY`, `location`, `active`) VALUES
-(1, 'Klagenfurt City Challenge', '\0\0\0\0\0\0\0PåmzkPG@\0\0\0Àyš,@', '\0\0\0\0\0\0\0ÚeŒqnOG@\0\0\0€¡,@', 5, 5, 'Klagenfurt', 1);
+(1, 'Klagenfurt City Challenge', '\0\0\0\0\0\0\0PåmzkPG@\0\0\0Àyš,@', '\0\0\0\0\0\0\0ÚeŒqnOG@\0\0\0€¡,@', 5, 5, 'Klagenfurt', 1),
+(2, 'Uni Challenge', '\0\0\0\0\0\0\0·Ñ\0ÞNG@¿E''K­‡,@', '\0\0\0\0\0\0\0ïŽŒÕNG@|a2Uˆ,@', 4, 3, 'Universitaet Klagenfurt', 1);
 
 -- --------------------------------------------------------
 
@@ -60,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `participants` (
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `android_id` (`android_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
 
 --
 -- Daten fÃ¼r Tabelle `participants`
@@ -70,7 +71,8 @@ INSERT INTO `participants` (`id`, `challenge_id`, `inet_addr`, `android_id`, `ac
 (1, 1, '127.0.0.5', 'f3c4e5a1', 0),
 (2, 1, '127.0.0.4', 'b3c4a5e6', 0),
 (4, 1, '127.0.0.9', 'a3c4e5a1', 0),
-(5, 1, '10.0.2.15', 'e3f17bc89afe54fe', 1);
+(5, 1, '10.0.2.15', 'e3f17bc89afe54fe', 1),
+(6, 1, '92.248.54.136', '200145745bbb418b', 0);
 
 -- --------------------------------------------------------
 
@@ -84,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `ships` (
   `destroyed` tinyint(1) NOT NULL,
   `challenge_id` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- Daten fÃ¼r Tabelle `ships`
@@ -93,7 +95,10 @@ CREATE TABLE IF NOT EXISTS `ships` (
 INSERT INTO `ships` (`id`, `destroyed`, `challenge_id`) VALUES
 (1, 0, 1),
 (2, 0, 1),
-(3, 0, 1);
+(3, 0, 1),
+(4, 0, 2),
+(5, 0, 2),
+(6, 0, 2);
 
 -- --------------------------------------------------------
 
@@ -108,9 +113,8 @@ CREATE TABLE IF NOT EXISTS `ship_positions` (
   `column` int(11) NOT NULL,
   `uncovered` tinyint(1) NOT NULL,
   `ship_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQUE_SHIP_POSITIONS` (`row`,`column`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- Daten fÃ¼r Tabelle `ship_positions`
@@ -120,4 +124,9 @@ INSERT INTO `ship_positions` (`id`, `row`, `column`, `uncovered`, `ship_id`) VAL
 (1, 2, 2, 0, 1),
 (2, 2, 3, 0, 1),
 (3, 4, 4, 0, 2),
-(4, 0, 2, 1, 3);
+(4, 0, 2, 0, 3),
+(5, 0, 0, 0, 4),
+(6, 2, 0, 1, 5),
+(7, 2, 1, 0, 5),
+(8, 1, 3, 0, 6),
+(10, 2, 3, 0, 6);
