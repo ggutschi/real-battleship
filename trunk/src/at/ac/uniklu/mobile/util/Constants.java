@@ -40,5 +40,10 @@ public class Constants {
 	public final static String WEBSERVICE_STATUSCODE_NOT_UNCOVERED = "NOK";	
 	/** port for peer to peer messaging and rendezvous server **/
 	public final static int PEER_TO_PEER_PORT = 19423;
-	
+	/** separator for peer messages **/
+	public final static char MESSAGE_SEP_CHAR = ';';
+	/** message prefix for uncovering fields **/
+	public final static String UNCOVERED_MSG = "uncovered";
+	/** message prefix for uncovering fields **/
+	public final static String RELEASED_MSG = "released";
 }

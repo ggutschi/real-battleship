@@ -2,7 +2,9 @@ package at.ac.uniklu.mobile.message;
 
 import java.util.HashMap;
 
+import android.util.Log;
 import at.ac.uniklu.mobile.peer.PeerManager;
+import at.ac.uniklu.mobile.util.Constants;
 
 public class VectorTimestamp {
 	private HashMap<String, Integer> myVector = new HashMap<String, Integer>();
@@ -13,6 +15,8 @@ public class VectorTimestamp {
 		this.androidId = androidId;
 		
 		myVector.put(androidId, 0);
+		
+		Log.d(Constants.LOG_TAG, "Puttet android id " + androidId + " to vector.");
 	}
 	
 	public HashMap<String, Integer> getVector() {

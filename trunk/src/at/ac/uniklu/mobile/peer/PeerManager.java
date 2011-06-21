@@ -7,6 +7,7 @@ import java.util.Vector;
 import android.content.Context;
 import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.VectorTimestamp;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
@@ -18,6 +19,8 @@ public class PeerManager {
 	
 	/** vector stores all online peers for a specific challenge **/
 	private static Vector<Peer> peers;
+	/** vector timestamp for message passing **/
+	private static VectorTimestamp vectorTimestamp;
 	/** the current challenge object **/
 	private static Challenge currentChallenge;
 	/** the current application **/
@@ -40,10 +43,12 @@ public class PeerManager {
 		currentChallenge = challenge; 
 		appContext = context;
 		
+		vectorTimestamp = new VectorTimestamp(HelperUtil.getAndroidId(appContext));
+		
 		try {
-			Log.d(Constants.LOG_TAG, "Creating local peer...");
+			Log.d(Constants.LOG_TAG, "Creating local peer with android id " + HelperUtil.getAndroidId(context));
 			myPeer =  new Peer(HelperUtil.getAndroidId(context), InetAddress.getByName(HelperUtil.getIpAddress()));
-			Log.d(Constants.LOG_TAG, "Peer created with vectortimestamp " + myPeer.getVectorTimestamp());
+			Log.d(Constants.LOG_TAG, "Peer created with android id " + HelperUtil.getAndroidId(context));
 			
 			peerServerThread = new Thread(myPeer);
 			
@@ -82,15 +87,24 @@ public class PeerManager {
 			peers = new Vector<Peer>();
 			peers.addAll(currentPeers);
 			
-			for (Peer p : peers)
+			vectorTimestamp = new VectorTimestamp(HelperUtil.getAndroidId(appContext));
+			
+			for (Peer p : peers) {
 				if (!p.isServer())
 					p.connectToPeer(true);
 				else
 					p.connectToPeer(false);
+				
+				vectorTimestamp.getVector().put(p.getAndroidId(), 0);
+			}
 		}
 	}
 	
-	public static  void startRendezvous() {
+	public static VectorTimestamp getVectorTimestamp() {
+		return vectorTimestamp;
+	}
+	
+	public static void startRendezvous() {
 		synchronized (peers) {
 			rc = new PeerRendezvousClient(appContext, currentChallenge);
 			rc.getPeers();
@@ -98,7 +112,20 @@ public class PeerManager {
 	}
 	
 	public static void sendUncoverMessage(int x, int y) {
-		for (Peer p : peers)
-			p.sendUncoverMessage(x, y);
+		synchronized (peers) {
+			for (Peer p : peers)
+				p.sendUncoverMessage(x, y);
+		}
+	}
+	
+	public static void removePeer(String androidId) {
+		synchronized (peers) {
+			for (Peer p : peers)
+				if (p.getAndroidId().equals(androidId)) {
+					p.closeSocket();
+					
+					removePeer(p);
+				}
+		}
 	}
 }
