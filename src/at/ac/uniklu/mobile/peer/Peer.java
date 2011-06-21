@@ -20,7 +20,6 @@ public class Peer implements Runnable {
 	
 	private String androidId;
 	private InetAddress ipAddress;
-	private VectorTimestamp vectorTimestamp;
 	private Socket socket;
 	private PrintWriter out;
 	
@@ -30,12 +29,7 @@ public class Peer implements Runnable {
 		Log.d(Constants.LOG_TAG, "Creating local peer (constructor)...");
 		this.androidId = androidId;
 		this.ipAddress = ipAddress;
-		this.vectorTimestamp = new VectorTimestamp(androidId);
 		Log.d(Constants.LOG_TAG, "Local peer created (constructor).");
-	}
-	
-	public VectorTimestamp getVectorTimestamp() {
-		return vectorTimestamp;
 	}
 	
 	public void connectToPeer(boolean rendezvous) {
@@ -64,6 +58,16 @@ public class Peer implements Runnable {
 		return this.ipAddress.getHostAddress().equals(PeerManager.RENDEZVOUS_SERVER_IP);
 	}
 	
+	public void closeSocket() {
+		try {
+			if (socket != null)
+				socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public String getAndroidId() {
 		return androidId;
 	}
@@ -79,11 +83,15 @@ public class Peer implements Runnable {
 	
 	public void sendUncoverMessage(int x, int y) {
 		Log.d(Constants.LOG_TAG , "Peer try to send message...");
-		vectorTimestamp.next();
-		String msg = (new UncoverMessage(PeerManager.getCurrentChallenge(), vectorTimestamp, x, y)).toString();
+		PeerManager.getVectorTimestamp().next();
+		String msg = (new UncoverMessage(PeerManager.getCurrentChallenge(), PeerManager.getVectorTimestamp(), x, y)).toString();
 		out.println(msg);
 		//out.flush();
 		Log.d(Constants.LOG_TAG, "Peer message " + msg + " was sent!");
+	}
+	
+	private void releasePeer(String androidId) {
+		PeerManager.removePeer(androidId);
 	}
 	
 	public void run() {
@@ -99,9 +107,21 @@ public class Peer implements Runnable {
 			while (!stop) {
 				line = in.readLine();
 				
-				// CHECK MESSAGE + VECTORTIMESTAMP
-
-				Log.d(Constants.LOG_TAG, "Message received: " + line);				
+				Log.d(Constants.LOG_TAG, "Message received: " + line);
+				
+				// released;android_id
+				String[] msgSplitted = line.split(Constants.MESSAGE_SEP_CHAR + "");
+				
+				if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
+					// CHECK VECTORTIMESTAMP
+					// UNCOVER FIELD LOCALLY
+				} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
+					if (msgSplitted.length > 1) {
+						String androidId = msgSplitted[1];
+						
+						releasePeer(androidId);
+					}
+				}
 			}
 
 			socket.close();
