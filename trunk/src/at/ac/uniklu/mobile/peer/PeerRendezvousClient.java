@@ -18,22 +18,24 @@ import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
-public class PeerRendezvousClient extends Thread {	
+public class PeerRendezvousClient {	
 
 	private Challenge challenge = null;
 	private Context context = null;
+	Socket socket;
 	
 	public PeerRendezvousClient(Context context, Challenge challenge) {
 		this.challenge = challenge;
 		this.context = context;
 	}
 	
-	public void run()
+	public void getPeers()
 	{		
+		
 		try {
 			InetAddress serverAddr = InetAddress.getByName(PeerManager.RENDEZVOUS_SERVER_IP);
 			Log.d(Constants.LOG_TAG, "PeerRendezvousServer is connecting to rendezvous server...");
-			Socket socket = new Socket(serverAddr, PeerManager.RENDEZVOUS_SERVER_PORT);
+			socket = new Socket(serverAddr, Constants.PEER_TO_PEER_PORT);
 
 			Log.d(Constants.LOG_TAG , "PeerRendezvousServer try to send message...");
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
@@ -41,26 +43,14 @@ public class PeerRendezvousClient extends Thread {
 			out.println(msg);
 			//out.flush();
 			Log.d(Constants.LOG_TAG, "PeerRendezvousServer message " + msg + " was sent!");
-				
-			socket.close();
-		}
-		catch(Exception ex) {
-			Log.e(Constants.LOG_TAG, "PeerRendezvousServer", ex);
-		}
-		
-		try {
+			
 			//InetAddress serverAddr = InetAddress.getLocalHost();
 			Log.d(Constants.LOG_TAG, "PeerRendezvousClient is connecting to rendezvous server...");
 			//Socket socket = new Socket(serverAddr, 19423);
-			ServerSocket ss = new ServerSocket(19423);
-			//Socket socket = ss.accept();
 			String line = null;
 			BufferedReader in = null;
-			Socket socket = null;
 			
 			//while(true) {
-			Log.d(Constants.LOG_TAG, "PeerRendezvousClient vor accept ");
-			socket = ss.accept();
 			
 			Log.d(Constants.LOG_TAG, "PeerRendezvousClient wait for server message: ");
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -88,7 +78,7 @@ public class PeerRendezvousClient extends Thread {
 			Log.e(Constants.LOG_TAG, "IOException occured while receiving rendezvous server messages: " 
 					+ ioex.getMessage(), ioex);
 			
-		}		
+		}
 	}
 	
 	
@@ -118,7 +108,7 @@ public class PeerRendezvousClient extends Thread {
 			peers = new Vector<Peer>();
 			for (int i = 0; i < peerArr.length(); i++) {
 				JSONObject obj = peerArr.getJSONObject(0);
-				Peer peer = new Peer(obj.getString("android_id"), InetAddress.getByName(obj.getString("ipaddy")), 0L);
+				Peer peer = new Peer(obj.getString("android_id"), InetAddress.getByName(obj.getString("ipaddy")));
 				peers.add(peer);
 			}
 		}

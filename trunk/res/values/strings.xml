@@ -22,4 +22,5 @@
     <string name="ship_position_uncovered">You have uncovered a ship position!</string>
     <string name="ship_uncovered">Congratulations! You uncovered a ship.</string>
     <string name="game_over">Game over! All ships have been uncovered.</string>
+    <string name="no_gps">Waiting for GPS signal...</string>
 </resources>

@@ -77,8 +77,11 @@ public class ChallengeStartActivity extends MapActivity {
         addOverlays();
         
         mapController = mapView.getController();
-        mapController.setZoom(18);
-        mapController.animateTo(currentLocation);
+        
+        if (currentLocation != null) {
+	        mapController.setZoom(18);
+	        mapController.animateTo(currentLocation);
+        }
         
     	setupLocationManager();
 
@@ -92,7 +95,8 @@ public class ChallengeStartActivity extends MapActivity {
             	int x = getCurrentCellX();
             	int y = getCurrentCellY();
             	
-            	uncoverCell(x, y);
+            	if (x != -1 && y != -1)
+            		uncoverCell(x, y);
             }
         });
     }
@@ -101,7 +105,16 @@ public class ChallengeStartActivity extends MapActivity {
     
     @Override
 	protected void onResume() {
+		final Button bUncover = (Button) findViewById(R.id.button_uncover);
+		
 		super.onResume();
+		
+		if (currentLocation == null) {
+	    	Log.d(Constants.LOG_TAG, "Location is null.");
+	    	bUncover.setEnabled(false);
+        	Toast.makeText(this.getApplicationContext(), R.string.no_gps, Toast.LENGTH_LONG).show();
+		} else
+			Log.d(Constants.LOG_TAG, "Location is not null.");
 	}
 
 
@@ -134,6 +147,9 @@ public class ChallengeStartActivity extends MapActivity {
     	
     	Log.d(Constants.LOG_TAG, "Cell x = " + i);
     	
+    	if (i * diffX + left > right)
+    		return -1;
+    	
     	return i;
     }
     
@@ -148,26 +164,30 @@ public class ChallengeStartActivity extends MapActivity {
     	
     	int i = 0;
     	
-    	for (i = currentChallenge.getCellsY() - 1; (current + diffY) < (i * diffY + bottom) && (i * diffY + bottom) >= bottom; i--)
+    	for (i = 0; current > (i * diffY + bottom) && (i * diffY + bottom) <= top; i++)
     		;
     	
-    	Log.d(Constants.LOG_TAG, "Cell y = " + (currentChallenge.getCellsY() - 1 - i));
+    	Log.d(Constants.LOG_TAG, "Cell y = " + (currentChallenge.getCellsY() - i));
     	
-    	return currentChallenge.getCellsY() - 1 - i;
+    	if ((i * diffY + bottom) > top)
+    		return -1;
+    	
+    	return currentChallenge.getCellsY() - i;
     }
     
     private void uncoverCell(int x, int y) {
-    	if (sendUncoverRequest(x, y)) {
-    		//ChallengeListModel.getInstance(this).loadChallenges();
-    		
-    		currentChallenge.uncoverCellLocally(x, y, this);
-    		
-        	Log.d(Constants.LOG_TAG, "Cell uncovered");
-    		
-    		addOverlays();
-    	}
+    	PeerManager.sendUncoverMessage(x, y);
+		//ChallengeListModel.getInstance(this).loadChallenges();
+		
+		currentChallenge.uncoverCellLocally(x, y, this);
+		
+    	Log.d(Constants.LOG_TAG, "Cell uncovered");
+		
+		addOverlays();
     }
     
+    
+    /*
     private boolean sendUncoverRequest(int x, int y) {
     	boolean bTransactionPerformed = false;
     	HttpClient httpClient = new DefaultHttpClient(); 
@@ -226,8 +246,18 @@ public class ChallengeStartActivity extends MapActivity {
     	
     	return bTransactionPerformed;
     }
+    */
+    
+    public boolean isInGrid(GeoPoint gp) {
+    	return gp.getLatitudeE6() <= currentChallenge.getLocationLeftTop().getLatitudeE6()
+    	 	&& gp.getLatitudeE6() >= currentChallenge.getLocationRightBottom().getLatitudeE6()
+    	 	&& gp.getLongitudeE6() >= currentChallenge.getLocationLeftTop().getLongitudeE6()
+    	 	&& gp.getLongitudeE6() <= currentChallenge.getLocationRightBottom().getLongitudeE6();
+    }
     
     public void setupLocationManager() {
+
+		final Button bUncover = (Button) findViewById(R.id.button_uncover);
 
     	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     	
@@ -239,6 +269,13 @@ public class ChallengeStartActivity extends MapActivity {
 		    	Log.d(Constants.LOG_TAG, "location changed to " + arg0);
 		    	
 		    	currentLocation = new GeoPoint((int) (arg0.getLatitude() * 1E6), (int) (arg0.getLongitude() * 1E6));
+		    	
+		    	if (isInGrid(currentLocation))
+		    		bUncover.setEnabled(true);
+		    	else
+		    		bUncover.setEnabled(false);
+		    	
+		    	Log.d(Constants.LOG_TAG, "Location setted.");
 		        
 		        addOverlays();
 		    	
@@ -268,7 +305,7 @@ public class ChallengeStartActivity extends MapActivity {
     		
     	};
     	
-    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+    	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 3, locationListener);
     }
 
 	@Override

@@ -1,9 +1,13 @@
 package at.ac.uniklu.mobile.peer;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Vector;
 
 import android.content.Context;
+import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
 /**
@@ -22,12 +26,12 @@ public class PeerManager {
 	/** the server ip which is responsible for initial peer registration **/
 	public static String RENDEZVOUS_SERVER_IP = "93.104.210.214";
 	//public static String RENDEZVOUS_SERVER_IP = "192.168.1.101";
-	/** server port for intial peer registration **/
-	public static int RENDEZVOUS_SERVER_PORT = 19423;
 	public static String RENDEZVOUS_JOIN_MESSAGE = "joined";
 	public static String RENDEZVOUS_MESSAGE_SEP_CHAR = ";";
-	public static int RENDEZVOUS_TIME_PERIOD = 5000;
 	public static String RENDEZVOUS_FIRST_PEER_MESSAGE = "OK";
+	
+	public static Peer myPeer;
+	public static Thread peerServerThread;
 	
 	public static PeerRendezvousClient rc;
 	
@@ -35,6 +39,20 @@ public class PeerManager {
 		peers = new Vector<Peer>();
 		currentChallenge = challenge; 
 		appContext = context;
+		
+		try {
+			Log.d(Constants.LOG_TAG, "Creating local peer...");
+			myPeer =  new Peer(HelperUtil.getAndroidId(context), InetAddress.getByName(HelperUtil.getIpAddress()));
+			Log.d(Constants.LOG_TAG, "Peer created with vectortimestamp " + myPeer.getVectorTimestamp());
+			
+			peerServerThread = new Thread(myPeer);
+			
+			peerServerThread.start();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		startRendezvous();
 	}
 	
@@ -65,18 +83,22 @@ public class PeerManager {
 			peers.addAll(currentPeers);
 			
 			for (Peer p : peers)
-				p.connectToPeer();
+				if (!p.isServer())
+					p.connectToPeer(true);
+				else
+					p.connectToPeer(false);
 		}
 	}
 	
-	public static void startRendezvous() {
-		rc = new PeerRendezvousClient(appContext, currentChallenge);
-		rc.start();
+	public static  void startRendezvous() {
+		synchronized (peers) {
+			rc = new PeerRendezvousClient(appContext, currentChallenge);
+			rc.getPeers();
+		}
 	}
 	
 	public static void sendUncoverMessage(int x, int y) {
-		for (Peer p : peers) {
+		for (Peer p : peers)
 			p.sendUncoverMessage(x, y);
-		}
 	}
 }
