@@ -41,26 +41,12 @@ public class ChallengeListActivity extends ListActivity {
     	Log.d(Constants.LOG_TAG, "initialize list view");
         setContentView(R.layout.challenge_list);
         
-        ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
+        listModel = ChallengeListModel.getInstance(getApplicationContext()	);
         Log.d(Constants.LOG_TAG, "display progress dialog");
-        //progressDialog = ProgressDialog.show(this, "Please wait...", "Loading challenges");
-        
-        
-        /*progressDialog = new ProgressDialog(this);
-        progressThread = new ProgressThread();
-        
-        progressThread.start();
-        */
         
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Loading challenges");
         new MyTask(progress).execute();
-
-        
-        //progressThread.stopp();
-        
-       
-
     }
     
     /**
