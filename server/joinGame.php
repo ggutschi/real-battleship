@@ -34,6 +34,8 @@ $result = mysql_query("SELECT * FROM participants WHERE challenge_id = " . $chal
 if (mysql_num_rows($result) == 1)
 {
 	echo "OK";
+	// start listening for other peers
+	require_once('peerListener.php');
 	exit;
 }
 else

@@ -20,7 +20,6 @@ while($row = mysql_fetch_array($result))
     //echo 'challenge location ' . " " . $row['location'] .'<br />';    
     //echo 'challenge location ' . " " . $row['locationLeftTop_X'] .'<br />';
     //echo 'challenge location ' . " " . $row['locationRightBottom_X'] .'<br />';
-        
     $response[$i] = array('id' => $row['id'],
                       'name' => $row['name'],
                       'location' => $row['location'],
@@ -31,7 +30,7 @@ while($row = mysql_fetch_array($result))
                       'active' => (bool)$row['active'],
                       );
     
-    //$response[$i]['participants'] = array();
+    $response[$i]['participants'] = array();
                                         
     $result_participants = mysql_query("SELECT android_id, inet_addr 
                                         FROM participants where challenge_id = " . $row['id'] . ";");
@@ -49,7 +48,7 @@ while($row = mysql_fetch_array($result))
     $result_ships = mysql_query("SELECT * FROM ships where challenge_id = " . $row['id'] . ";");
 
     $k = 0;
-
+    $response[$i]['ships'] = array();
     while($row_ships = mysql_fetch_array($result_ships))
     {
 	$response[$i]['ships'][$k] = array('id' => $row_ships['id'],
@@ -58,6 +57,7 @@ while($row = mysql_fetch_array($result))
     	$result_pos= mysql_query("SELECT `row`, `column`, `uncovered` 
                                         FROM ship_positions where ship_id = " . $row_ships['id'] . ";");
 	$z = 0;
+       $response[$i]['ships'][$k]['shippositions'] = array();
        while($row_pos = mysql_fetch_array($result_pos))
        {    
 	      //echo 'ship position row ' . " " . $row_pos['row'] .'<br />';
