@@ -113,7 +113,6 @@ public class Challenge {
 		  JSONObject geoLocation_rightBottom = jsonChallenge.getJSONObject(FIELD_GEOLOCATION_RIGHT_BOTTOM);
 		  locationRightBottom = new GeoPoint((int)(geoLocation_rightBottom.getDouble(FIELD_GEOLOCATION_LAT)*1E6), (int)(geoLocation_rightBottom.getDouble(FIELD_GEOLOCATION_LON)*1E6));
 		  
-		  
 		  JSONArray jsonParticipants = jsonChallenge.getJSONArray(FIELD_PARTICIPANTS);
 		  participants = new ArrayList<Participant>();
 		  for (int i = 0; i < jsonParticipants.length(); i++) 
@@ -140,7 +139,7 @@ public class Challenge {
 		  for (int i = 0; i < this.getCellsY(); i++) {
 			  uncoveredCells.add(new ArrayList<Boolean>());
 			  
-			  for (int j = 0; j < this.getCellsY(); j++)
+			  for (int j = 0; j < this.getCellsX(); j++)
 				  uncoveredCells.get(i).add(false);
 		  }
 		  

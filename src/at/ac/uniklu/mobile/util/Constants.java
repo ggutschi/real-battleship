@@ -38,5 +38,7 @@ public class Constants {
 	public final static String WEBSERVICE_STATUSCODE_UNCOVERED = "OK";
 	/** response code from webservice if the transaction was sucessfully performed (e.g. adding a new participant to the challenge) **/
 	public final static String WEBSERVICE_STATUSCODE_NOT_UNCOVERED = "NOK";	
+	/** port for peer to peer messaging and rendezvous server **/
+	public final static int PEER_TO_PEER_PORT = 19423;
 	
 }

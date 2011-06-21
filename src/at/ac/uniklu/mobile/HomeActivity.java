@@ -1,5 +1,8 @@
 package at.ac.uniklu.mobile;
 	
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 
 import android.content.Intent;
@@ -91,8 +94,6 @@ public class HomeActivity extends MapActivity {
             		
             }
         });
-
-        
     }
     
     @Override

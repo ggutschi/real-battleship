@@ -11,6 +11,8 @@ public class VectorTimestamp {
 	
 	public VectorTimestamp(String androidId) {
 		this.androidId = androidId;
+		
+		myVector.put(androidId, 0);
 	}
 	
 	public HashMap<String, Integer> getVector() {
@@ -28,7 +30,10 @@ public class VectorTimestamp {
 	}
 	
 	public synchronized void next()   {
-		myVector.put(androidId, myVector.get(androidId) + 1);
+		if (myVector.containsKey(androidId))
+			myVector.put(androidId, myVector.get(androidId) + 1);
+		else
+			myVector.put(androidId, 0);
 	}
 
 	public boolean causalError(VectorTimestamp received)   {
@@ -58,6 +63,9 @@ public class VectorTimestamp {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		
+		if (myVector.isEmpty())
+			return "";
+		
 		for (String androidId : this.myVector.keySet()) {
 			sb.append(androidId);
 			sb.append(PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR);
@@ -65,6 +73,6 @@ public class VectorTimestamp {
 			sb.append(PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR);
 		}
 		
-		return sb.substring(0, sb.length() - 2).toString();
+		return sb.substring(0, sb.length() - 1).toString();
 	}
 }
