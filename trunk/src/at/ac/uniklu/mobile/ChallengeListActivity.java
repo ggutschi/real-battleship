@@ -11,6 +11,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +32,7 @@ public class ChallengeListActivity extends ListActivity {
 	private ArrayList<Challenge> challengeList;
     
 	private ProgressDialog progressDialog;
-    private ProgressThread progressThread;
+	private ChallengeListModel listModel = null; 
 	
 	/** Called when the activity is first created. */
     @Override
@@ -40,7 +41,10 @@ public class ChallengeListActivity extends ListActivity {
     	Log.d(Constants.LOG_TAG, "initialize list view");
         setContentView(R.layout.challenge_list);
         
-        ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext());
+        ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
+        Log.d(Constants.LOG_TAG, "display progress dialog");
+        //progressDialog = ProgressDialog.show(this, "Please wait...", "Loading challenges");
+        
         
         /*progressDialog = new ProgressDialog(this);
         progressThread = new ProgressThread();
@@ -48,25 +52,14 @@ public class ChallengeListActivity extends ListActivity {
         progressThread.start();
         */
         
-        challengeList = listModel.getChallenges();
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Loading challenges");
+        new MyTask(progress).execute();
+
         
         //progressThread.stopp();
-               
-        ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(this, challengeList, android.R.layout.simple_list_item_2);
-        setListAdapter(challengeAdapter);
         
-        // Register an observer to handle the case where the list contents change
-        getListAdapter().registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                configureView();
-            }
-        });
-        
-        // Register our adapter to be notified of model changes
-        listModel.registerDependentAdapter(challengeAdapter);
-
-        registerForContextMenu(getListView());
+       
 
     }
     
@@ -116,34 +109,6 @@ public class ChallengeListActivity extends ListActivity {
 		finish();
 	}
     
-    
-    private class ProgressThread extends Thread {
-    	boolean stop = false;
-    	
-    	@Override
-    	public void run() {            
-            
-            progressDialog.setTitle("Loading");
-            progressDialog.setMessage("Loading challenges from server...");
-            
-            progressDialog.show();
-    		
-    		
-    		while (!stop) {
-    			try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-    		}
-    		
-    		progressDialog.dismiss();
-    	}
-    	
-    	public void stopp() {
-    		this.stop = true;
-    	}
-    }
 
 
 
@@ -227,4 +192,45 @@ public class ChallengeListActivity extends ListActivity {
             return itemView;
         }
     }
+    
+    public class MyTask extends AsyncTask<Void, Void, Void> {
+    	  public MyTask(ProgressDialog progress) {
+    	    progressDialog = progress;
+    	  }
+
+    	  public void onPreExecute() {
+    		  progressDialog.show();
+    	  }
+
+    	  public Void doInBackground(Void... unused) {
+    		  ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
+     		 challengeList = listModel.getChallenges();     		
+     		 return null;
+    	  }
+
+    	  public void onPostExecute(Void unused) {
+    		  progressDialog.dismiss();
+    		  ChallengeListActivity.this.populateList(challengeList);
+    	  }
+    	}
+    
+    public void populateList(ArrayList<Challenge> challengeList) {
+    	ChallengeListAdapter challengeAdapter = new ChallengeListAdapter(ChallengeListActivity.this, challengeList, android.R.layout.simple_list_item_2);
+        ChallengeListActivity.this.setListAdapter(challengeAdapter);
+        
+        // Register an observer to handle the case where the list contents change
+        ChallengeListActivity.this.getListAdapter().registerDataSetObserver(new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                configureView();
+            }
+        });
+        
+        // Register our adapter to be notified of model changes
+        ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
+        listModel.registerDependentAdapter(challengeAdapter);
+
+        ChallengeListActivity.this.registerForContextMenu(getListView());
+    }
+
 }
