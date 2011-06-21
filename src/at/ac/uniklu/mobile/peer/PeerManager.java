@@ -65,9 +65,7 @@ public class PeerManager {
 	}
 	
 	public static void startRendezvous() {
-		PeerRendezvousClient rc = new PeerRendezvousClient();
-		PeerRendezvousServer rs = new PeerRendezvousServer(appContext, currentChallenge);
+		PeerRendezvousClient rc = new PeerRendezvousClient(appContext, currentChallenge);
 		rc.start();
-		rs.start();
 	}
 }
