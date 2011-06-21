@@ -2,7 +2,11 @@ package at.ac.uniklu.mobile.message;
 
 import java.io.Serializable;
 
+import at.ac.uniklu.mobile.peer.PeerManager;
+
 public class UncoverMessage implements Serializable {
+	private static final String UNCOVER_MESSAGE = "uncovered";
+	
 	private VectorTimestamp vt;
 	private int x;
 	private int y;
@@ -33,5 +37,13 @@ public class UncoverMessage implements Serializable {
 		this.y = y;
 	}
 	
-	
+	@Override
+	public String toString() {		
+		return UncoverMessage.UNCOVER_MESSAGE + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
+				+ this.x + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR 
+				+ this.y + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR
+				+ this.vt;
+				//+ HelperUtil.getAndroidId(context) + PeerManager.RENDEZVOUS_MESSAGE_SEP_CHAR + "10.0.2.2";
+				
+	}
 }

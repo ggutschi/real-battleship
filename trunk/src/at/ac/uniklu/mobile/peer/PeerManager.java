@@ -20,14 +20,16 @@ public class PeerManager {
 	private static Context appContext; 
 	
 	/** the server ip which is responsible for initial peer registration **/
-	//public static String RENDEZVOUS_SERVER_IP = "93.104.210.214";
-	public static String RENDEZVOUS_SERVER_IP = "192.168.1.101";
+	public static String RENDEZVOUS_SERVER_IP = "93.104.210.214";
+	//public static String RENDEZVOUS_SERVER_IP = "192.168.1.101";
 	/** server port for intial peer registration **/
 	public static int RENDEZVOUS_SERVER_PORT = 19423;
 	public static String RENDEZVOUS_JOIN_MESSAGE = "joined";
 	public static String RENDEZVOUS_MESSAGE_SEP_CHAR = ";";
 	public static int RENDEZVOUS_TIME_PERIOD = 5000;
 	public static String RENDEZVOUS_FIRST_PEER_MESSAGE = "OK";
+	
+	public static PeerRendezvousClient rc;
 	
 	public static void init(Challenge challenge, Context context) {
 		peers = new Vector<Peer>();
@@ -61,11 +63,20 @@ public class PeerManager {
 		synchronized (peers) {
 			peers = new Vector<Peer>();
 			peers.addAll(currentPeers);
+			
+			for (Peer p : peers)
+				p.connectToPeer();
 		}
 	}
 	
 	public static void startRendezvous() {
-		PeerRendezvousClient rc = new PeerRendezvousClient(appContext, currentChallenge);
+		rc = new PeerRendezvousClient(appContext, currentChallenge);
 		rc.start();
+	}
+	
+	public static void sendUncoverMessage(int x, int y) {
+		for (Peer p : peers) {
+			p.sendUncoverMessage(x, y);
+		}
 	}
 }
