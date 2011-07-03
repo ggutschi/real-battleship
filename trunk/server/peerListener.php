@@ -154,13 +154,13 @@ class PeerListener {
 }
 
 private function handleUncoverMessage($dataArr) {
-  
-  $challenge_id = $dataArr[1]; // challenge_id
-  $uncovered_col = $dataArr[2]; // col
-  $uncovered_row = $dataArr[3]; // row
+  $android_id = $dataArr[1]; // android_id;
+  $challenge_id = $dataArr[2]; // challenge_id
+  $uncovered_col = $dataArr[3]; // col
+  $uncovered_row = $dataArr[4]; // row
 
-  if(!isset($challenge_id) || !isset($uncovered_row) || !isset($uncovered_col)) {
-	 $msg = "Fehlende Parameter. challenge_id: " . $_POST['challenge_id'] . " row: " . $_POST['row'] . " col: " . $_POST['col'];
+  if(!isset($android_id) || !isset($challenge_id) || !isset($uncovered_row) || !isset($uncovered_col)) {
+	 $msg = "Fehlende Parameter. android_id: " . $_POST['android_id'] . " challenge_id: " . $_POST['challenge_id'] . " row: " . $_POST['row'] . " col: " . $_POST['col'];
 	 return $msg;
   }
   
