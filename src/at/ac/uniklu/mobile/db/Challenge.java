@@ -1,6 +1,7 @@
 package at.ac.uniklu.mobile.db;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,8 +10,9 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-import at.ac.uniklu.mobile.HomeActivity;
 import at.ac.uniklu.mobile.R;
+import at.ac.uniklu.mobile.message.ObservableMessage;
+import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 
 import com.google.android.maps.GeoPoint;
@@ -18,7 +20,7 @@ import com.google.android.maps.GeoPoint;
 /**
  * Class describing the data structure of a challenge
  */
-public class Challenge {
+public class Challenge extends Observable {
 	
 	/** challenge name field **/
 	public static final String FIELD_ID = "id";
@@ -160,7 +162,10 @@ public class Challenge {
 						
 		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
 		            		Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
+		            		// notify activity view that score has to be changed
 		            		s.setDestroyed(true);
+		            		setChanged();
+		            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(s.getShipPositions().size())));
 		            	} else
 							Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
 					}
