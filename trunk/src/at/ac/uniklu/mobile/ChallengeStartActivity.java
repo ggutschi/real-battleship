@@ -1,33 +1,9 @@
 package at.ac.uniklu.mobile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
-import org.json.JSONArray;
-
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -35,12 +11,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
-import at.ac.uniklu.mobile.util.HelperUtil;
 import at.ac.uniklu.mobile.util.PositionOverlay;
 
 import com.google.android.maps.GeoPoint;
@@ -49,7 +26,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-public class ChallengeStartActivity extends MapActivity {
+public class ChallengeStartActivity extends MapActivity implements Observer {
 	
 	private MapView 		mapView;
 	private MapController 	mapController;
@@ -65,7 +42,10 @@ public class ChallengeStartActivity extends MapActivity {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
     	
-    	this.currentChallenge = ChallengeListModel.getInstance(this).getChallengeById(getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	currentChallenge = ChallengeListModel.getInstance(this).getChallengeById(getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	
+    	// register activity as an observer object (e.g. for observing ship uncover actions to adjust current score in activity)
+    	currentChallenge.addObserver(this);
     	
     	Log.d(Constants.LOG_TAG, "Challenge: " + currentChallenge);
     	
@@ -257,6 +237,33 @@ public class ChallengeStartActivity extends MapActivity {
     	 	&& gp.getLongitudeE6() <= currentChallenge.getLocationRightBottom().getLongitudeE6();
     }
     
+    /**
+     * increase current game score after uncovering a ship 
+     * @param increment how much should the score be incremented
+     */
+    public void increaseScore(int increment) {
+    	score+=increment;
+    	TextView t=(TextView)findViewById(R.id.score); 
+        t.setText(score);
+    }
+    /**
+     * decrease current game score 
+     * @param decrement how much should the score be decremented
+     */
+    public void decreaseScore(int decrement) {
+    	score-=decrement;
+    	TextView t=(TextView)findViewById(R.id.score); 
+        t.setText(score);
+    }
+    
+    /**
+     * 
+     * @return current game score
+     */
+    public int getScore() {
+    	return score;
+    }
+    
     public void setupLocationManager() {
 
 		final Button bUncover = (Button) findViewById(R.id.button_uncover);
@@ -314,5 +321,32 @@ public class ChallengeStartActivity extends MapActivity {
 	protected boolean isRouteDisplayed() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	/**
+	 * implements the observer part of the observer pattern
+	 * used for changing the current game score (increase/decrease score)
+	 * @param o the observable object
+	 * @param arg the observable message consisting of an message intend and message content 
+	 */
+	public void update(Observable o, Object arg) {
+		Log.d(Constants.LOG_TAG, "update activity by observable object");
+		try {
+			switch (((ObservableMessage)arg).getMessageIntend()) {
+			case SCORE_INCREMENT:
+				int increaseScore = (Integer)((ObservableMessage)arg).getMessageContent();
+				increaseScore(increaseScore);
+				break;
+			case SCORE_DECREMENT:
+				int decreaseScore = (Integer)((ObservableMessage)arg).getMessageContent();
+				decreaseScore(decreaseScore);
+				break;
+			default:
+				Log.e(Constants.LOG_TAG, "unkown observable message intend");
+		}
+		}
+		catch(Exception ex) {
+			Log.e(Constants.LOG_TAG, "observable message not interpretable", ex);
+		}
 	}
 }
