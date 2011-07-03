@@ -206,9 +206,16 @@ private function handleUncoverMessage($dataArr) {
 }
 
 private function handleReleaseMessage($dataArr) {  
-  if ($this->checkInput($dataArr)) {
-    $this->log('remove peer with android_id' . $dataArr[2] . ' from challenge ' . $dataArr[1]);
-    unset($this->peers[$dataArr[1]+0][$dataArr[2]]);
+  if (count($dataArr) == 2) {
+    $this->log('remove peer with android_id' . $dataArr[1]);
+    
+    foreach($this->peers as $challenge_id => $challenge_arr) {
+      if (isset($challenge_arr[$dataArr[1]]) && !empty($challenge_arr[$dataArr[1]])) {
+        unset($this->peers[$challenge_id][$dataArr[1]]); 
+        $this->log('unset peer in challenge ' . $challenge_id); 
+      }
+    }
+    
     $this->log('current peer array:');
     print_r($this->peers);
     return self::$OK_MESSAGE;    
