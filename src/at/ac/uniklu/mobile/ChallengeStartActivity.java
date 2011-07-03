@@ -247,7 +247,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
         t.setText(score);
     }
     /**
-     * decrease current game score 
+     * decrease current game score after another player 
+     * prior hit the ship but score of current player already got incremented  
      * @param decrement how much should the score be decremented
      */
     public void decreaseScore(int decrement) {
