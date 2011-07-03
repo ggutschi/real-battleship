@@ -25,8 +25,10 @@ public final class R {
         public static final int frameLayout1=0x7f060001;
         public static final int label_challenge_location=0x7f060006;
         public static final int label_challenge_name=0x7f060004;
+        public static final int label_score=0x7f06000c;
         public static final int linearLayoutChallengeInfo=0x7f060003;
         public static final int no_challenge_selected=0x7f060002;
+        public static final int score=0x7f06000d;
     }
     public static final class layout {
         public static final int challenge_list=0x7f030000;
@@ -51,7 +53,9 @@ public final class R {
         public static final int game_over=0x7f04000f;
         public static final int label_challenge=0x7f04000a;
         public static final int label_location=0x7f04000b;
+        public static final int label_score=0x7f040011;
         public static final int no_challenge_selected=0x7f040000;
+        public static final int no_gps=0x7f040010;
         public static final int reset_challenge=0x7f040004;
         public static final int ship_position_uncovered=0x7f04000d;
         public static final int ship_uncovered=0x7f04000e;
@@ -71,6 +75,7 @@ public final class R {
         /**  Style for a label/value row of widgets 
          */
         public static final int row_layout1=0x7f050002;
+        public static final int score_label=0x7f050008;
         public static final int value=0x7f050001;
     }
 }

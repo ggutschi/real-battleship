@@ -56,6 +56,8 @@ public class ChallengeStartActivity extends MapActivity {
 	//private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
 	private GeoPoint		currentLocation;
 	private Challenge 		currentChallenge;
+	/** current game score of player **/
+	private int				score;
 	
 	/** Called when the activity is first created. */
     @Override
