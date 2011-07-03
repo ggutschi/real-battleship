@@ -11,6 +11,9 @@ mysql_query("UPDATE ship_positions SET uncovered=0");
 // reset destroyed ships
 mysql_query("UPDATE ships SET destroyed=0");
 
+// delete scores
+mysql_query("DELETE * from scores");
+
 echo "OK";
 
 ?>
