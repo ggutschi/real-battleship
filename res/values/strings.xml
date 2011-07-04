@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="no_challenge_selected">Please select a challenge.</string>
+    <string name="no_challenge_selected">Hello %s, please select a challenge.</string>
     <string name="app_name">Real Battleship</string>
     <string name="change_challenge">Change Challenge</string>
     <string name="start_challenge">Start Challenge</string>
     <string name="reset_challenge">Reset Challenge</string>
+    
+    <!-- edit user nickname view -->
+    <string name="hint_username">Please enter your nickname</string>
+    <string name="button_continue">Continue</string>
+    <string name="label_setup">User Setup</string>
     
     <!--  list view -->
     <string name="challenge_list_empty">No challenges available.</string>
