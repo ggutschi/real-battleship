@@ -5,9 +5,13 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.message.VectorTimestamp;
+import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
@@ -61,18 +65,18 @@ public class PeerManager {
 		startRendezvous();
 	}
 	
-	public static synchronized void addPeer(Peer peer) {		
-		peers.add(peer);
-		vectorTimestamp.getVector().put(peer.getAndroidId(), 0);
+	public static void addPeer(Peer peer) {		
+		synchronized (peers) {
+			peers.add(peer);
+			vectorTimestamp.getVector().put(peer.getAndroidId(), 0);
+		}
 	}
 	
-	public static synchronized void removePeer(Peer peer) {
-		peers.remove(peer);
-		vectorTimestamp.getVector().remove(peer.getAndroidId());
-	}
-	
-	public Vector<Peer> getPeers() {
-		return peers;
+	public static void removePeer(Peer peer) {	
+		synchronized (peers) {
+			vectorTimestamp.getVector().remove(peer.getAndroidId());
+			peers.remove(peer);
+		}
 	}
 	
 	public static Challenge getCurrentChallenge() {
@@ -85,19 +89,28 @@ public class PeerManager {
 	 * @return true if passed peer in contained, otherwise false
 	 */
 	public static void initPeers(Vector<Peer> currentPeers) {
+		boolean exists = false;
+		
 		synchronized (peers) {
 			peers = new Vector<Peer>();
 			peers.addAll(currentPeers);
 			
 			vectorTimestamp = new VectorTimestamp(HelperUtil.getAndroidId(appContext));
 			
-			for (Peer p : peers) {
-				if (!p.isServer())
-					p.connectToPeer(true);
+			for (int i=0; i < peers.size(); i++) {
+				if (!peers.get(i).isServer())
+					exists = peers.get(i).connectToPeer(true);
 				else
-					p.connectToPeer(false);
+					exists = peers.get(i).connectToPeer(false);
 				
-				vectorTimestamp.getVector().put(p.getAndroidId(), 0);
+				if (!exists) {
+					PeerManager.sendReleaseMessage(peers.get(i).getAndroidId());
+					PeerManager.removePeer(peers.get(i));
+
+					if (i != peers.size())
+						i--;
+				} else
+					vectorTimestamp.getVector().put(peers.get(i).getAndroidId(), 0);
 			}
 		}
 	}
@@ -122,12 +135,28 @@ public class PeerManager {
 	
 	public static void removePeer(String androidId) {
 		synchronized (peers) {
-			for (Peer p : peers)
-				if (p.getAndroidId().equals(androidId)) {
-					p.closeSocket();
+			Peer tmp = null;
+			
+			for (int i = 0; i < peers.size() && tmp == null; i++)
+				if (peers.get(i).getAndroidId().equals(androidId)) {
 					
-					removePeer(p);
+					tmp = peers.get(i);
 				}
+			
+			tmp.closeSocket();
+			removePeer(tmp);
 		}
+	}
+	
+	public static void sendReleaseMessage(String androidId) 
+	{
+		synchronized (peers) {
+			for (Peer p : peers)
+				p.sendReleaseMessage(androidId);
+		}
+	}
+	
+	public static Context getContext() {
+		return appContext;
 	}
 }

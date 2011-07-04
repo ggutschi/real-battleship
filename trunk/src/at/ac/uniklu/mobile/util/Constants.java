@@ -17,6 +17,9 @@ public class Constants {
 	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
 	public final static String URL_WEBSERVICE_GETCHALLENGES = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenges.php";
 	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://192.168.1.101/rbs/getChallenges.php";
+	/** URL of webservice to retrieve a challenge from server **/
+	//public final static String URL_WEBSERVICE_GETCHALLENGES = "http://10.0.2.2/rbs/getChallenges.php";	
+	public final static String URL_WEBSERVICE_GETCHALLENGE = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/getChallenge.php";
 	/** URL of webservice to add a new particpiant to a challenge **/
 	public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://cms03-typo3-dev.xgx.at/7050227546/rbs/addParticipant.php";
 	//public final static String URL_WEBSERVICE_ADDPARTICIPANTS = "http://192.168.1.101/rbs/addParticipant.php";
@@ -42,6 +45,8 @@ public class Constants {
 	public final static int PEER_TO_PEER_PORT = 19423;
 	/** separator for peer messages **/
 	public final static char MESSAGE_SEP_CHAR = ';';
+	/** message prefix for joining **/
+	public final static String JOINED_MSG = "joined";
 	/** message prefix for uncovering fields **/
 	public final static String UNCOVERED_MSG = "uncovered";
 	/** message prefix for uncovering fields **/

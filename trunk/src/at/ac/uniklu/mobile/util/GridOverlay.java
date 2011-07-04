@@ -89,12 +89,8 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             for (Ship s : currentChallenge.getShips()) {
             	if (s.isDestroyed()) {
             		paint.setColor(UNCOVERED_SHIP_COLOR);
-            		
-            		Log.d(Constants.LOG_TAG, "Ship is destroyed.");
             	} else {
             		paint.setColor(UNCOVERED_SHIPPOSITION_COLOR);
-        		
-            		Log.d(Constants.LOG_TAG, "Shipcell is destroyed.");
             	}
                 
                 paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);

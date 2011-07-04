@@ -151,6 +151,10 @@ public class Challenge extends Observable {
 					  uncoveredCells.get(sp.getRow()).set(sp.getColumn(), true);
 	}
 	
+	public void setChanged() {
+		super.setChanged();
+	}
+	
 	private void uncoverShipPositionLocallyAt(int x, int y, Context c) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())

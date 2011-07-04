@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -61,7 +62,74 @@ public class ChallengeListModel {
         context = pContext;
         challengeList = new ArrayList<Challenge>();
         //initializeDefaultChallenges();
-        loadChallenges();
+        //loadChallenges();
+    }
+    
+    public void loadChallenge(int id) {
+    	
+    	Log.d(Constants.LOG_TAG, "load challenge with id " + id);
+    	
+    	HttpClient httpClient = new DefaultHttpClient();  
+    	HttpPost httpPost = new HttpPost(Constants.URL_WEBSERVICE_GETCHALLENGE);  
+    	HttpResponse response;  
+    	
+    	try {  
+        	
+       	 	List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+            nameValuePairs.add(new BasicNameValuePair("challenge_id", Integer.toString(id)));
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            
+    		response = httpClient.execute(httpPost);  
+    		
+    		if (response.getStatusLine().getStatusCode() == Constants.WEBSERVICE_STATUSCODE_OK) {
+    		
+    			HttpEntity entity = response.getEntity();
+    			
+    			if (entity != null)
+    			{
+    				InputStream instream = entity.getContent();  
+            		BufferedReader reader = new BufferedReader(new InputStreamReader(instream));  
+            		StringBuilder sb = new StringBuilder();  
+            		  
+            		String line = null;  
+            		while ((line = reader.readLine()) != null)  
+            		sb.append(line + "n");
+            		
+            		String result=sb.toString();
+            		
+            		Log.d(Constants.LOG_TAG, "json response: " + result);
+            		instream.close();
+            		
+            		JSONObject challenge = new JSONObject(new String(result));
+            		
+            		challengeList.remove(getChallengeById(id));
+            		
+            		challengeList.add(new Challenge(challenge));
+    			} // if
+    			else
+    				Log.e(Constants.LOG_TAG, "no response content from webservice received");
+        		
+        		        		
+    		}
+    		else {
+    			// server call was not successfull
+    			Log.e(Constants.LOG_TAG, "could not load challenges from server, wrong response code: " 
+    					+ response.getStatusLine().getStatusCode());
+    		}
+    		
+    	}
+		catch (ClientProtocolException e) {
+		e.printStackTrace();  
+		Log.e(Constants.LOG_TAG, "", e);
+		} catch (IOException e) {    
+		e.printStackTrace();  
+		Log.e(Constants.LOG_TAG, "", e);
+		}  catch (Exception e){  
+		e.printStackTrace();  
+		Log.e(Constants.LOG_TAG, "", e);
+		}finally{  
+			httpPost.abort();  
+		}
     }
     
     public void loadChallenges() {
@@ -121,7 +189,7 @@ public class ChallengeListModel {
 		}  catch (Exception e){  
 		e.printStackTrace();  
 		Log.e(Constants.LOG_TAG, "", e);
-		}finally{  
+		}finally{   
 		httpGet.abort();  
 		}
     }

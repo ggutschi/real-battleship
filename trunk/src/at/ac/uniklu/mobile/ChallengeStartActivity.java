@@ -42,6 +42,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
     	
+    	ChallengeListModel.getInstance(this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	
     	currentChallenge = ChallengeListModel.getInstance(this).getChallengeById(getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	
     	// register activity as an observer object (e.g. for observing ship uncover actions to adjust current score in activity)
@@ -244,7 +246,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     public void increaseScore(int increment) {
     	score+=increment;
     	TextView t=(TextView)findViewById(R.id.score); 
-        t.setText(score);
+        t.setText(Integer.toString(score));
     }
     /**
      * decrease current game score after another player 
@@ -252,8 +254,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
      * @param decrement how much should the score be decremented
      */
     public void decreaseScore(int decrement) {
-    	score-=decrement;
-    	TextView t=(TextView)findViewById(R.id.score); 
+    	score -= decrement;
+    	TextView t = (TextView) findViewById(R.id.score); 
         t.setText(score);
     }
     
@@ -341,6 +343,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 			case SCORE_DECREMENT:
 				int decreaseScore = (Integer)((ObservableMessage)arg).getMessageContent();
 				decreaseScore(decreaseScore);
+				break;
+			case DEBUG_MESSAGE:
+				Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
 			default:
 				Log.e(Constants.LOG_TAG, "unkown observable message intend");
