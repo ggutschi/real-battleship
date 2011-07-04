@@ -178,20 +178,29 @@ public class Challenge extends Observable {
 				}
 	}
 	
-	public void uncoverCellLocally(int x, int y, Context c) {
+	public boolean uncoverCellLocally(int x, int y, Context c) {
 		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
 
         	Log.d(Constants.LOG_TAG, "Uncovering cell (" + x + ", " + y + ")");
         	
-        	if (uncoveredCells.get(y).get(x))
+        	if (uncoveredCells.get(y).get(x)) {
         		Toast.makeText(c, R.string.already_uncovered, Toast.LENGTH_SHORT).show();
+        		return false;
+        	}
         	
         	uncoveredCells.get(y).set(x, true);
 
         	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
 			this.uncoverShipPositionLocallyAt(x, y, c);
+			
+    		setChanged();
+    		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, null));
+			
+			return true;
 		} else
         	Log.d(Constants.LOG_TAG, "Uncovering cells failed");
+		
+		return false;
 	}
 	
 	public void resetChallengeLocally() {

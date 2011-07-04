@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.message.ObservableMessage;
+import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
@@ -103,6 +104,21 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
 
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		
+		PeerManager.myPeer.stopp();
+		
+		try {
+			PeerManager.peerServerThread.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
 	private void addOverlays() {
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
@@ -160,14 +176,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     }
     
     private void uncoverCell(int x, int y) {
-    	PeerManager.sendUncoverMessage(x, y);
-		//ChallengeListModel.getInstance(this).loadChallenges();
-		
-		currentChallenge.uncoverCellLocally(x, y, this);
+    	// only send uncover message if shipcell uncovered
+		if (currentChallenge.uncoverCellLocally(x, y, this))
+	    	PeerManager.sendUncoverMessage(x, y);
 		
     	Log.d(Constants.LOG_TAG, "Cell uncovered");
-		
-		addOverlays();
     }
     
     
@@ -347,6 +360,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 			case DEBUG_MESSAGE:
 				Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
+			case UPDATE_MAP:
+	    		this.addOverlays();
+	    		break;
 			default:
 				Log.e(Constants.LOG_TAG, "unkown observable message intend");
 		}
