@@ -12,6 +12,10 @@ public class Participant {
 	/** json field label of android id **/
 	private static final String FIELD_ANDROID_ID = "android_id";
 	
+	/** label of user´s nickname **/
+	public static final String FIELD_NICKNAME = "nickname";
+	
+	
 	/** json field label of ip address **/
 	private static final String FIELD_INET_ADDR = "inet_addr";
 	
