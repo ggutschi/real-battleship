@@ -189,7 +189,7 @@ public class ChallengeListActivity extends ListActivity {
     	  }
 
     	  public Void doInBackground(Void... unused) {
-    		  ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
+    		 ChallengeListModel listModel = ChallengeListModel.getInstance(getApplicationContext()	);
      		 challengeList = listModel.getChallenges();     		
      		 return null;
     	  }
