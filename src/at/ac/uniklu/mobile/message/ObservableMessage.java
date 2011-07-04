@@ -6,7 +6,7 @@ package at.ac.uniklu.mobile.message;
  *
  */
 public class ObservableMessage {
-	public enum MessageIntend {SCORE_INCREMENT, SCORE_DECREMENT, DEBUG_MESSAGE};
+	public enum MessageIntend {SCORE_INCREMENT, SCORE_DECREMENT, DEBUG_MESSAGE, UPDATE_MAP};
 	public Object messageContent;
 	public MessageIntend messageIntend;
 	

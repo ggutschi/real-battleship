@@ -110,10 +110,10 @@ public class Peer implements Runnable {
 	
 			PeerManager.getCurrentChallenge().setChanged();
 			PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Sent message: " + msg));
-			
+		} else {
 			PeerManager.sendReleaseMessage(androidId);
-		} else
 			Log.d(Constants.LOG_TAG , "Socket to " + this.androidId + " with IP " + this.ipAddress + " null or not connected.");
+		}
 	}
 	
 	
@@ -134,49 +134,53 @@ public class Peer implements Runnable {
 	public void run() {
 		try {
 			ServerSocket ss = new ServerSocket(Constants.PEER_TO_PEER_PORT);
-			socket = ss.accept();
+			Socket sSocket = ss.accept();
 			
 			Log.d(Constants.LOG_TAG, "Socket connection accepted.");
 
 			String line = null;
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(sSocket.getInputStream()));
 		
 			while (!stop) {
 				line = in.readLine();
 				
 				Log.d(Constants.LOG_TAG, "Message received: " + line);
 				
-				// released;android_id
-				String[] msgSplitted = line.split(Constants.MESSAGE_SEP_CHAR + "");
-				
-				if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
-					VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
+				if (line != null) {
+					// released;android_id
+					String[] msgSplitted = line.split(Constants.MESSAGE_SEP_CHAR + "");
 					
-					if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
-						PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
-					}
-					
-					PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
-					PeerManager.getVectorTimestamp().next();
-					
-					PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[3]), PeerManager.getContext());
-				} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
-					if (msgSplitted.length > 1) {
-						String androidId = msgSplitted[1];
+					if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
+						VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
 						
-						PeerManager.removePeer(androidId);
-					}
-				} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
+						if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
+							PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
+						}
+						
+						PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
+						PeerManager.getVectorTimestamp().next();
+						
+						PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext());
+					} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
+						if (msgSplitted.length > 1) {
+							String androidId = msgSplitted[1];
+							
+							PeerManager.removePeer(androidId);
+						}
+					} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
+	
+						if (msgSplitted.length > 1) {
+							String androidId = msgSplitted[2];
 
-					if (msgSplitted.length > 1) {
-						String androidId = msgSplitted[1];
-						
-						PeerManager.addPeer(new Peer(androidId, socket.getInetAddress()));
+							Log.d(Constants.LOG_TAG, "Adding peer " + androidId + " with IP " + sSocket.getInetAddress());
+							PeerManager.addPeer(new Peer(androidId, sSocket.getInetAddress()));
+							Log.d(Constants.LOG_TAG, "Peer added.");
+						}
 					}
 				}
 			}
 
-			socket.close();
+			sSocket.close();
 			ss.close();
 
 		} catch (IOException e) {
