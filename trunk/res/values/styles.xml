@@ -8,6 +8,9 @@
 		<item name="android:layout_marginRight">2dp</item>		
 		<item name="android:layout_height">wrap_content</item>
 	</style>
+	<style name="label_top" parent="label">
+		<item name="android:layout_marginTop">10dp</item>
+	</style>
 	
 	<style name="value">
 		<item name="android:textSize">16sp</item>
@@ -15,6 +18,9 @@
 		<item name="android:layout_weight">75</item>
 		<item name="android:layout_width">0dp</item>
 		<item name="android:layout_height">wrap_content</item>
+	</style>
+	<style name="value_top" parent="value">
+		<item name="android:layout_marginTop">10dp</item>
 	</style>
 	
 	<!-- Style for a label/value row of widgets -->

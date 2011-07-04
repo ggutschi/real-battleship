@@ -242,12 +242,13 @@ private function handleJoinMessage($dataArr, $socketRessource) {
       print_r($this->peers);
       // return ip addresses
       $ip_addresses = array();
+      array_push($ip_addresses, array('ipaddy' => $this->address, 'android_id' => 'server'));
       foreach ($this->peers[$dataArr[1]] as $peer) {
         if (strcmp($this->peers[$dataArr[1]+0][$dataArr[2]]['ipaddy'], $peer['ipaddy']) != 0)
           array_push($ip_addresses, array('ipaddy' => $peer['ipaddy'], 'android_id' => $peer['android_id']));
         
       }
-      array_push($ip_addresses, array('ipaddy' => $this->address, 'android_id' => 'server'));
+      
       
       $msg = json_encode($ip_addresses);
       return $msg;
