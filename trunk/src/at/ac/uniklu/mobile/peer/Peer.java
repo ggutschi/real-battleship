@@ -28,6 +28,8 @@ public class Peer implements Runnable {
 	private InetAddress ipAddress;
 	private Socket socket;
 	private PrintWriter out;
+	private Socket sSocket;
+	private ServerSocket ss;
 	
 	private boolean stop = false;
 	
@@ -78,6 +80,9 @@ public class Peer implements Runnable {
 	
 	public void closeSocket() {
 		try {
+			if (out != null)
+				out.close();
+			
 			if (socket != null)
 				socket.close();
 		} catch (IOException e) {
@@ -101,7 +106,7 @@ public class Peer implements Runnable {
 	
 	public void sendUncoverMessage(int x, int y) {
 		if (socket != null && socket.isConnected()) {
-			Log.d(Constants.LOG_TAG , "Peer try to send message...");
+			Log.d(Constants.LOG_TAG , "Peer try to send message to android id " + this.androidId);
 			PeerManager.getVectorTimestamp().next();
 			String msg = (new UncoverMessage(PeerManager.myPeer.androidId, PeerManager.getCurrentChallenge(), PeerManager.getVectorTimestamp(), x, y)).toString();
 			out.println(msg);
@@ -133,8 +138,8 @@ public class Peer implements Runnable {
 	
 	public void run() {
 		try {
-			ServerSocket ss = new ServerSocket(Constants.PEER_TO_PEER_PORT);
-			Socket sSocket = ss.accept();
+			ss = new ServerSocket(Constants.PEER_TO_PEER_PORT);
+			sSocket = ss.accept();
 			
 			Log.d(Constants.LOG_TAG, "Socket connection accepted.");
 
@@ -142,6 +147,7 @@ public class Peer implements Runnable {
 			BufferedReader in = new BufferedReader(new InputStreamReader(sSocket.getInputStream()));
 		
 			while (!stop) {
+				Log.d(Constants.LOG_TAG, "Waiting for message... ");
 				line = in.readLine();
 				
 				Log.d(Constants.LOG_TAG, "Message received: " + line);
@@ -177,6 +183,10 @@ public class Peer implements Runnable {
 							Log.d(Constants.LOG_TAG, "Peer added.");
 						}
 					}
+				} else {
+					sSocket.close();
+
+					sSocket = ss.accept();
 				}
 			}
 
@@ -188,6 +198,17 @@ public class Peer implements Runnable {
 	}
 	
 	public void stopp() {
+		try { 
+			if (sSocket != null)
+				sSocket.close();
+			if (socket != null)
+				socket.close();
+			if (ss != null)
+				ss.close();
+		} catch (IOException e) {
+			Log.e(Constants.LOG_TAG, "Socket close exception.", e);
+		}
+		
 		stop = true;
 	}
 }

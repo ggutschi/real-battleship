@@ -23,12 +23,14 @@ public class PlayerEditActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_user);
+        Log.d(Constants.LOG_TAG, "on Create player edit");
+        setContentView(R.layout.edit_user); 
         
         user_nickname = (EditText) findViewById(R.id.username);
         button_continue = (Button) findViewById(R.id.button_continue);
-        
+        Log.d(Constants.LOG_TAG, "setup change listener");
         setupChangeListener();
+        Log.d(Constants.LOG_TAG, "setup change listener after");
         
         // set up button listener for menu selection
         final Button button_continue = (Button) findViewById(R.id.button_continue);
