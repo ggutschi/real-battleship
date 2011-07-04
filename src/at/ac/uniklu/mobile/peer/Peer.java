@@ -84,7 +84,7 @@ public class Peer implements Runnable {
 	public void sendUncoverMessage(int x, int y) {
 		Log.d(Constants.LOG_TAG , "Peer try to send message...");
 		PeerManager.getVectorTimestamp().next();
-		String msg = (new UncoverMessage(PeerManager.getCurrentChallenge(), PeerManager.getVectorTimestamp(), x, y)).toString();
+		String msg = (new UncoverMessage(androidId, PeerManager.getCurrentChallenge(), PeerManager.getVectorTimestamp(), x, y)).toString();
 		out.println(msg);
 		//out.flush();
 		Log.d(Constants.LOG_TAG, "Peer message " + msg + " was sent!");
@@ -113,8 +113,16 @@ public class Peer implements Runnable {
 				String[] msgSplitted = line.split(Constants.MESSAGE_SEP_CHAR + "");
 				
 				if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
-					// CHECK VECTORTIMESTAMP
-					// UNCOVER FIELD LOCALLY
+					VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
+					
+					if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
+						// RESOLVE ERROR
+					}
+					
+					PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
+					PeerManager.getVectorTimestamp().next();
+					
+					
 				} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
 					if (msgSplitted.length > 1) {
 						String androidId = msgSplitted[1];

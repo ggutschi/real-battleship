@@ -63,10 +63,12 @@ public class PeerManager {
 	
 	public static synchronized void addPeer(Peer peer) {		
 		peers.add(peer);
+		vectorTimestamp.getVector().put(peer.getAndroidId(), 0);
 	}
 	
 	public static synchronized void removePeer(Peer peer) {
 		peers.remove(peer);
+		vectorTimestamp.getVector().remove(peer.getAndroidId());
 	}
 	
 	public Vector<Peer> getPeers() {
