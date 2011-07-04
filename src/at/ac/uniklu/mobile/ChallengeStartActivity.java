@@ -8,6 +8,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,11 +33,12 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	
 	private MapView 		mapView;
 	private MapController 	mapController;
-	//private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
-	private GeoPoint		currentLocation;
+	private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
+	//private GeoPoint		currentLocation;
 	private Challenge 		currentChallenge;
 	/** current game score of player **/
 	private int				score;
+	Handler 				handler; 
 	
 	/** Called when the activity is first created. */
     @Override
@@ -84,6 +87,12 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
             		uncoverCell(x, y);
             }
         });
+        
+        handler = new Handler() {
+        	public void handleMessage(Message msg) {
+        		addOverlays();
+        	}
+        };        
     }
     
     
@@ -106,12 +115,19 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
 	@Override
 	protected void onDestroy() {
+    	Log.d(Constants.LOG_TAG, "super.onDestroy()...");
 		super.onDestroy();
-		
+
+    	Log.d(Constants.LOG_TAG, "closeConnections()...");
+		PeerManager.closeConnections();
+
+    	Log.d(Constants.LOG_TAG, "myPeer.stopp()...");
 		PeerManager.myPeer.stopp();
 		
 		try {
+	    	Log.d(Constants.LOG_TAG, "Thread.join()...");
 			PeerManager.peerServerThread.join();
+	    	Log.d(Constants.LOG_TAG, "destroyed.");
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -361,6 +377,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
 			case UPDATE_MAP:
+				handler.sendMessage(new Message());
 	    		this.addOverlays();
 	    		break;
 			default:
