@@ -3,6 +3,7 @@ package at.ac.uniklu.mobile;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
 
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.message.ObservableMessage;
-import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
@@ -123,6 +123,17 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
     	Log.d(Constants.LOG_TAG, "myPeer.stopp()...");
 		PeerManager.myPeer.stopp();
+		
+		Vector<Thread> peerThreads = PeerManager.myPeer.getPeerThreads();
+		
+		for (Thread peerThread : peerThreads) {
+			try {
+				peerThread.join();
+			}
+			catch(Exception ex) {
+				Log.e(Constants.LOG_TAG, "peer join exception", ex);
+			}
+		}
 		
 		try {
 	    	Log.d(Constants.LOG_TAG, "Thread.join()...");
