@@ -1,22 +1,21 @@
 package at.ac.uniklu.mobile.peer;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Vector;
 
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import at.ac.uniklu.mobile.message.ObservableMessage;
-import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.message.ReleasedMessage;
 import at.ac.uniklu.mobile.message.UncoverMessage;
 import at.ac.uniklu.mobile.message.VectorTimestamp;
+import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 
 /**
@@ -30,7 +29,11 @@ public class Peer implements Runnable {
 	private PrintWriter out;
 	private Socket sSocket;
 	private ServerSocket ss;
+	private Vector<Thread> peerThreads;
 	
+	
+
+
 	private boolean stop = false;
 	
 	public Peer(String androidId, InetAddress ipAddress) {
@@ -38,6 +41,10 @@ public class Peer implements Runnable {
 		this.androidId = androidId;
 		this.ipAddress = ipAddress;
 		Log.d(Constants.LOG_TAG, "Local peer created (constructor).");
+	}
+	
+	public Vector<Thread> getPeerThreads() {
+		return peerThreads;
 	}
 	
 	public boolean connectToPeer(boolean rendezvous) {
@@ -139,61 +146,18 @@ public class Peer implements Runnable {
 	public void run() {
 		try {
 			ss = new ServerSocket(Constants.PEER_TO_PEER_PORT);
-			sSocket = ss.accept();
 			
-			Log.d(Constants.LOG_TAG, "Socket connection accepted.");
-
-			String line = null;
-			BufferedReader in = new BufferedReader(new InputStreamReader(sSocket.getInputStream()));
-		
 			while (!stop) {
-				Log.d(Constants.LOG_TAG, "Waiting for message... ");
-				line = in.readLine();
-				
-				Log.d(Constants.LOG_TAG, "Message received: " + line);
-				
-				if (line != null) {
-					// released;android_id
-					String[] msgSplitted = line.split(Constants.MESSAGE_SEP_CHAR + "");
-					
-					if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
-						VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
-						
-						if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
-							PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
-						}
-						
-						PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
-						PeerManager.getVectorTimestamp().next();
-						
-						PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext());
-					} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
-						if (msgSplitted.length > 1) {
-							String androidId = msgSplitted[1];
-							
-							PeerManager.removePeer(androidId);
-						}
-					} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
-	
-						if (msgSplitted.length > 1) {
-							String androidId = msgSplitted[2];
-
-							Log.d(Constants.LOG_TAG, "Adding peer " + androidId + " with IP " + sSocket.getInetAddress());
-							PeerManager.addPeer(new Peer(androidId, sSocket.getInetAddress()));
-							Log.d(Constants.LOG_TAG, "Peer added.");
-						}
-					}
-				} else {
-					sSocket.close();
-
-					sSocket = ss.accept();
-				}
-			}
-
-			sSocket.close();
-			ss.close();
+				sSocket = ss.accept();
+				Log.d(Constants.LOG_TAG, "Socket connection accepted.");
+				PeerCommunication peerComm = new PeerCommunication(sSocket);
+				Thread t = new Thread(peerComm);
+				peerThreads.add(t);
+				t.start();
+			}			
 
 		} catch (IOException e) {
+			Log.e(Constants.LOG_TAG, "IO Exception", e);
 		}
 	}
 	
@@ -205,10 +169,77 @@ public class Peer implements Runnable {
 				socket.close();
 			if (ss != null)
 				ss.close();
+			
 		} catch (IOException e) {
 			Log.e(Constants.LOG_TAG, "Socket close exception.", e);
 		}
 		
 		stop = true;
 	}
+	
+	
+	/**
+	 * class implementing a thread for handling peer messages
+	 *
+	 */
+	private class PeerCommunication implements Runnable {
+	    private Socket server;
+	    private String line,input;
+
+	    public PeerCommunication(Socket server) {
+	      this.server=server;
+	    }
+
+	    public void run () {
+
+	      try {
+	        // Get input from the client
+	        DataInputStream in = new DataInputStream (server.getInputStream());
+	        PrintStream out = new PrintStream(server.getOutputStream());
+
+	        while((line = in.readLine()) != null) {
+	        	Log.d(Constants.LOG_TAG, "handle peer message: " +  line);
+	        	handleClientMessage(line);
+	        }
+	        
+	        server.close();
+	      } catch (IOException ioe) {
+	    	  Log.e(Constants.LOG_TAG, "IOException on socket listen: ", ioe);
+	      }
+	    }
+	    
+	    private void handleClientMessage(String input) {
+	    	// released;android_id
+			String[] msgSplitted = input.split(Constants.MESSAGE_SEP_CHAR + "");
+			
+			if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
+				VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
+				
+				if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
+					PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
+				}
+				
+				PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
+				PeerManager.getVectorTimestamp().next();
+				
+				PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext());
+			} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
+				if (msgSplitted.length > 1) {
+					String androidId = msgSplitted[1];
+					
+					PeerManager.removePeer(androidId);
+				}
+			} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
+
+				if (msgSplitted.length > 1) {
+					String androidId = msgSplitted[2];
+
+					Log.d(Constants.LOG_TAG, "Adding peer " + androidId + " with IP " + sSocket.getInetAddress());
+					PeerManager.addPeer(new Peer(androidId, sSocket.getInetAddress()));
+					Log.d(Constants.LOG_TAG, "Peer added.");
+				}
+			}
+	    }
+	}
 }
+
