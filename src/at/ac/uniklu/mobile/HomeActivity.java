@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Ship;
 import at.ac.uniklu.mobile.db.ShipPosition;
+import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
 import at.ac.uniklu.mobile.util.HttpUtil;
@@ -28,7 +31,7 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
-public class HomeActivity extends MapActivity {
+public class HomeActivity extends MapActivity  {
 	
 	private MapView mapView;
 	private MapController mapController;
@@ -146,6 +149,10 @@ public class HomeActivity extends MapActivity {
             	ChallengeListModel listModel = ChallengeListModel.getInstance(this);
             	int current_challenge_id = data.getExtras().getInt(Challenge.FIELD_ID);
             	currentChallenge = listModel.getChallengeById(current_challenge_id);
+
+                //if (currentChallenge != null)
+                	//currentChallenge.addObserver(this);
+                
             	Log.d(Constants.LOG_TAG, "new challenge selected with id: " + currentChallenge.getId()
             			+ " name: " + currentChallenge.getName() 
             			+ " location: " + currentChallenge.getLocation()
@@ -237,6 +244,28 @@ public class HomeActivity extends MapActivity {
     protected boolean isRouteDisplayed() {
         return false;
     }
-    
+	
+	/**
+	 * implements the observer part of the observer pattern
+	 * used for changing the current game score (increase/decrease score)
+	 * @param o the observable object
+	 * @param arg the observable message consisting of an message intend and message content 
+
+	public void update(Observable o, Object arg) {
+		Log.d(Constants.LOG_TAG, "update activity by observable object");
+		try {
+			switch (((ObservableMessage)arg).getMessageIntend()) {
+			case DEBUG_MESSAGE:
+				Toast.makeText(this, arg.toString(), Toast.LENGTH_LONG);
+				break;
+			default:
+				Log.e(Constants.LOG_TAG, "unkown observable message intend");
+		}
+		}
+		catch(Exception ex) {
+			Log.e(Constants.LOG_TAG, "observable message not interpretable", ex);
+		}
+	}
+  	 */  
     
 }

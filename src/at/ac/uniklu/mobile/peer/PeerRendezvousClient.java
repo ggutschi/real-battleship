@@ -15,6 +15,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.ObservableMessage;
+import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
@@ -67,6 +69,16 @@ public class PeerRendezvousClient {
 			
 			if (line != null && !line.equals(PeerManager.RENDEZVOUS_FIRST_PEER_MESSAGE) && !line.equals("")) {
 				Vector<Peer> peers = extractServerMessage(line);
+
+				challenge.setChanged();
+				challenge.notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Received peers: " + line));
+
+
+				Log.d(Constants.LOG_TAG, "Server message " + line);
+				
+				for (Peer p : peers)
+					Log.d(Constants.LOG_TAG, "Received peer " + p.getAndroidId() + " with IP " + p.getIpAddress());
+				
 				if (peers != null)
 					PeerManager.initPeers(peers);
 			}
@@ -107,7 +119,7 @@ public class PeerRendezvousClient {
 			JSONArray peerArr = new JSONArray(serverMessage);
 			peers = new Vector<Peer>();
 			for (int i = 0; i < peerArr.length(); i++) {
-				JSONObject obj = peerArr.getJSONObject(0);
+				JSONObject obj = peerArr.getJSONObject(i);
 				Peer peer = new Peer(obj.getString("android_id"), InetAddress.getByName(obj.getString("ipaddy")));
 				peers.add(peer);
 			}
