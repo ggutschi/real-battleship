@@ -173,7 +173,7 @@ public class Challenge extends Observable {
 		            		
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
 			            		setChanged();
-			            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(s.getShipPositions().size())));
+			            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(Constants.SHIPCELL_SCORE)));
 		            		}
 		            	} else {
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {

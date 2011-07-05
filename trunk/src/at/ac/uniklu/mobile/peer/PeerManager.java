@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.MessageLog;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.message.VectorTimestamp;
 import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
@@ -37,8 +38,10 @@ public class PeerManager {
 	public static String RENDEZVOUS_MESSAGE_SEP_CHAR = ";";
 	public static String RENDEZVOUS_FIRST_PEER_MESSAGE = "OK";
 	
-	public static Peer myPeer;
-	public static Thread peerServerThread;
+	public static Peer 		myPeer;
+	public static Thread 	peerServerThread;
+
+	public static MessageLog	log				= new MessageLog();
 	
 	public static PeerRendezvousClient rc;
 	
@@ -48,6 +51,8 @@ public class PeerManager {
 		appContext = context;
 		
 		vectorTimestamp = new VectorTimestamp(HelperUtil.getAndroidId(appContext));
+		
+		log.clearLog();
 		
 		try {
 			Log.d(Constants.LOG_TAG, "Creating local peer with android id " + HelperUtil.getAndroidId(context));

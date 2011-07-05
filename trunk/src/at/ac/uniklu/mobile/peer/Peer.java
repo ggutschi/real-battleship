@@ -115,8 +115,14 @@ public class Peer implements Runnable {
 		if (socket != null && socket.isConnected()) {
 			Log.d(Constants.LOG_TAG , "Peer try to send message to android id " + this.androidId);
 			PeerManager.getVectorTimestamp().next();
-			String msg = (new UncoverMessage(PeerManager.myPeer.androidId, PeerManager.getCurrentChallenge(), PeerManager.getVectorTimestamp(), x, y)).toString();
+			
+			UncoverMessage um = new UncoverMessage(PeerManager.myPeer.androidId, PeerManager.getCurrentChallenge().getId(), PeerManager.getVectorTimestamp(), x, y);			
+			String msg = um.toString();
 			out.println(msg);
+			
+			// log message for resolving conflicts
+			PeerManager.log.addMessage(um);
+			
 			//out.flush();
 			Log.d(Constants.LOG_TAG, "Peer message " + msg + " was sent!");
 	

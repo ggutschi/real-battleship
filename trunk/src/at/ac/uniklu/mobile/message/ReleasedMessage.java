@@ -5,9 +5,7 @@ import java.io.Serializable;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 
-public class ReleasedMessage implements Serializable {
-	
-	private String androidId;
+public class ReleasedMessage extends PeerMessage implements Serializable {
 	
 	public ReleasedMessage(String androidId) {
 		this.androidId = androidId;

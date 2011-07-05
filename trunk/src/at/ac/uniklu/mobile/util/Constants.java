@@ -51,4 +51,8 @@ public class Constants {
 	public final static String UNCOVERED_MSG = "uncovered";
 	/** message prefix for uncovering fields **/
 	public final static String RELEASED_MSG = "released";
+	/** message prefix for sending message if field is already uncovered **/
+	public final static String ALREADY_UNCOVERED_MSG = "aluncovered";
+	/** default score of shipCell **/
+	public final static int SHIPCELL_SCORE = 10;
 }
