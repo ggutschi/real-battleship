@@ -73,7 +73,7 @@ public class HomeActivity extends MapActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "change challenge button clicked");
-            	startActivityForResult(new Intent(HomeActivity.this, ChallengeListActivity.class), 
+            	startActivityForResult(new Intent(HomeActivity.this, ChallengeListActivity.class).putExtra(Participant.FIELD_NICKNAME, username), 
             			Constants.CMD_CODE_CHANGE_CHALLENGE);
             	
                 //startActivity(new Intent(HomeActivity.this, ChallengeListActivity.class));
@@ -88,6 +88,16 @@ public class HomeActivity extends MapActivity {
                 startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId()));
             }
         });
+        
+        // set up button listener for menu selection
+        final Button button_score = (Button) findViewById(R.id.button_view_score);
+        button_score.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            	Log.d(Constants.LOG_TAG, "start challenge button clicked");
+                startActivity(new Intent(HomeActivity.this, ScoreActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId()));
+            }
+        });
+        
         
         // set up button listener for menu selection
         final Button button_reset = (Button) findViewById(R.id.button_reset_challenge);
@@ -128,8 +138,16 @@ public class HomeActivity extends MapActivity {
     	
 		super.onResume();
 		
+		Button button_score = (Button) findViewById(R.id.button_view_score);
+		
 		if (currentChallenge != null)
-			zoomOut();
+		{	
+			button_score.setEnabled(true);
+			zoomOut();			
+		}
+		else
+			button_score.setEnabled(false);
+			
 	}
     
     private void zoomOut() {
