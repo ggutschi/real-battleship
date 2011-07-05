@@ -413,9 +413,14 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	  }
 
     	  public Void doInBackground(Void... unused) {
+  	    	currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+	    	
+    	    	Log.d(Constants.LOG_TAG, "PeerManager.init(...)...");
+      	    	PeerManager.init(ChallengeStartActivity.this.currentChallenge, ChallengeStartActivity.this.getBaseContext());
+        	    Log.d(Constants.LOG_TAG, "PeerManager.init(...) finished.");
+
     	    	
-    	    	ChallengeListModel.getInstance(ChallengeStartActivity.this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
-    	    	
+        	    ChallengeListModel.getInstance(ChallengeStartActivity.this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	ChallengeStartActivity.this.currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	
     	    	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
@@ -425,8 +430,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	    	
     	    	Log.d(Constants.LOG_TAG, "Challenge: " + ChallengeStartActivity.this.currentChallenge);
 
-    	    	
-    	    	PeerManager.init(ChallengeStartActivity.this.currentChallenge, ChallengeStartActivity.this.getBaseContext());
+
     	    	
     	    	return null;
     	  }

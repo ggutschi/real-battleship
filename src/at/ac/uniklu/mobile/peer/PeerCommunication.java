@@ -69,7 +69,7 @@ public class PeerCommunication extends Thread {
 			UncoverMessage um = new UncoverMessage(androidId, Integer.parseInt(msgSplitted[2]), UncoverMessage.extractVectorTimestamp(msgSplitted), Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]));
 			
 			if (PeerManager.getVectorTimestamp().causalError(um.getVectorTimestamp())) {
-				Log.e(Constants.LOG_TAG, "CAUSAL ERROR: myVT = " + PeerManager.getVectorTimestamp() + ", recVT = " + um.getVectorTimestamp());
+				PeerManager.log.searchForConflict(um);
 			}
 			
 			PeerManager.getVectorTimestamp().adapt(um.getVectorTimestamp());
