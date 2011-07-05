@@ -6,8 +6,9 @@ class PeerListener {
     private static $JOIN_MESSAGE_TYPE = 'joined';
     private static $RELEASE_MESSAGE_TYPE = 'released';
     private static $UNCOVER_MESSAGE_TYPE = 'uncovered';
-	  private static $OK_MESSAGE = 'OK';
-	  private static $NOK_MESSAGE = 'NOK';
+    private static $OK_MESSAGE = 'OK';
+    private static $NOK_MESSAGE = 'NOK';
+    private static $ALREADY_UNCOVERED_MESSAGE = 'aluncovered';
 	  
     private $clients;
     private $sock = null;
@@ -185,9 +186,35 @@ private function handleUncoverMessage($dataArr) {
   	// ship position exists
   	if ($ship_position['uncovered'] != 1)
   	{
+  		//echo "in ship not uncovered";
   		// ship position not yet uncovered
   		mysql_query("UPDATE ship_positions SET uncovered=1 where id = " . $ship_position['id']);
-  
+  		// update score of user
+		$result = mysql_query("SELECT p.id, p.challenge_id, s.score from participants p left join scores s on (s.participant_id = p.id) where p.android_id='" . $android_id . "' and p.challenge_id=" . $challenge_id);
+		//echo "SELECT p.id, s.score from participants p left join scores s on (s.participant_id = p.id) where p.android_id='" . $android_id . "' and p.challenge_id=" . $challenge_id;
+		$participant_score = mysql_fetch_assoc($result);	
+              //echo 'participant: ';
+		//print_r($participant_score);		
+              if (is_array($participant_score)) {
+			echo 'in is array';
+			if (!is_null($participant_score['score']) && !empty($participant_score['score']))
+				$currentScore = $participant_score['score'];		
+			else
+				$currentScore = 0;
+
+			// increase score
+			$currentScore+=10;
+			$this->log('participant android id: ' . $android_id . ', current score: ' . $currentScore);
+
+			// update score in database
+			$result_checkscore = mysql_query("SELECT * from scores where participant_id = " . $participant_score['id'] . " and challenge_id = " . $challenge_id);
+			if (mysql_num_rows($result_checkscore) == 0) 
+ 				mysql_query("INSERT INTO scores (challenge_id, participant_id, score) VALUES (" . $challenge_id . ", " . $participant_score['id'] . ", " . $currentScore . ");");			
+			else
+				mysql_query("UPDATE scores SET score=" . $currentScore . " where participant_id=" . $participant_score['id'] . " and challenge_id = " . $challenge_id);
+			
+		} 
+
   		$num_uncovered = mysql_query("select * from ship_positions sp where ship_id = " . $ship_position['ship_id'] . " and uncovered = 0");
   		$count_uncovered = mysql_num_rows($num_uncovered);
   
@@ -197,7 +224,7 @@ private function handleUncoverMessage($dataArr) {
   		$msg = self::$OK_MESSAGE;
   	}
   	else
-  		$msg = self::$NOK_MESSAGE; // already uncovered
+  		$msg = self::$ALREADY_UNCOVERED_MESSAGE;
   }
   else
 	 $msg = "Ship Position not found.";

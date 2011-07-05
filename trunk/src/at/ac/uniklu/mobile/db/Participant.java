@@ -8,6 +8,7 @@ public class Participant {
 	private String android_id;
 	/** the inet address of a participant´s smartphone **/
 	private String inet_addr;
+	private String score;
 	
 	private String nickname;
 
@@ -17,6 +18,8 @@ public class Participant {
 	/** label of user´s nickname **/
 	public static final String FIELD_NICKNAME = "nickname";
 	
+	public static final String FIELD_SCORE = "score";
+	
 	
 	/** json field label of ip address **/
 	private static final String FIELD_INET_ADDR = "inet_addr";
@@ -25,6 +28,7 @@ public class Participant {
 		android_id = jsonObject.getString(FIELD_ANDROID_ID);
 		inet_addr = jsonObject.getString(FIELD_INET_ADDR);
 		nickname = jsonObject.getString(FIELD_NICKNAME);
+		score = jsonObject.getString(FIELD_SCORE);
 	}
 
 	public String getAndroid_id() {
@@ -49,6 +53,14 @@ public class Participant {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+
+	public String getScore() {
+		return score;
+	}
+
+	public void setScore(String score) {
+		this.score = score;
 	}
 	
 
