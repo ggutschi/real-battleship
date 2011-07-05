@@ -18,4 +18,5 @@
 	        android:visibility="gone"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
         />
+        <Button android:layout_height="wrap_content" android:id="@+id/button_back" android:layout_width="fill_parent" android:text="@string/back"></Button>
 </LinearLayout>
