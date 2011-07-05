@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import android.app.ProgressDialog;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,6 +17,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +53,16 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	Log.d(Constants.LOG_TAG, "OnCreate called.");
+    	
+
+    	View titleView = getWindow().findViewById(android.R.id.title);
+    	if (titleView != null) {
+    	  ViewParent parent = titleView.getParent();
+    	  if (parent != null && (parent instanceof View)) {
+    	    View parentView = (View)parent;
+    	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
+    	  }
+    	}
     	
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
