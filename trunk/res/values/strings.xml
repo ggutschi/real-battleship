@@ -7,7 +7,7 @@
     <string name="reset_challenge">Reset Challenge</string>
     
     <!-- edit user nickname view -->
-    <string name="hint_username">Please enter your nickname</string>
+    <string name="hint_username">Enter your nickname</string>
     <string name="button_continue">Continue</string>
     <string name="label_setup">User Setup</string>
     
