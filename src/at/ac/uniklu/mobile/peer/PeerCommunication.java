@@ -58,13 +58,21 @@ public class PeerCommunication extends Thread {
 		String[] msgSplitted = input.split(Constants.MESSAGE_SEP_CHAR + "");
 		
 		if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
-			VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
+
+			String androidId = msgSplitted[1];
+
+			// Adds the peer if not already in peer vector
+			Log.d(Constants.LOG_TAG, "Adding peer " + androidId + " with IP " + server.getInetAddress());
+			PeerManager.addPeer(new Peer(androidId, server.getInetAddress()));
+			Log.d(Constants.LOG_TAG, "Peer added.");
 			
-			if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
-				Log.e(Constants.LOG_TAG, "CAUSAL ERROR: myVT = " + PeerManager.getVectorTimestamp() + ", recVT = " + receivedVectorTimestamp);
+			UncoverMessage um = new UncoverMessage(androidId, Integer.parseInt(msgSplitted[2]), UncoverMessage.extractVectorTimestamp(msgSplitted), Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]));
+			
+			if (PeerManager.getVectorTimestamp().causalError(um.getVectorTimestamp())) {
+				Log.e(Constants.LOG_TAG, "CAUSAL ERROR: myVT = " + PeerManager.getVectorTimestamp() + ", recVT = " + um.getVectorTimestamp());
 			}
 			
-			PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
+			PeerManager.getVectorTimestamp().adapt(um.getVectorTimestamp());
 			PeerManager.getVectorTimestamp().next();
 			
 			PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext(), msgSplitted[1]);
@@ -83,6 +91,9 @@ public class PeerCommunication extends Thread {
 				PeerManager.addPeer(new Peer(androidId, server.getInetAddress()));
 				Log.d(Constants.LOG_TAG, "Peer added.");
 			}
+		} else if (msgSplitted[0].equalsIgnoreCase(Constants.ALREADY_UNCOVERED_MSG)) {
+			PeerManager.getCurrentChallenge().hasChanged();
+			PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.SCORE_DECREMENT, new Integer(Constants.SHIPCELL_SCORE)));
 		}
     }
 }

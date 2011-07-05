@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.ChallengeListActivity.MyTask;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.message.MessageLog;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.peer.PeerCommunication;
 import at.ac.uniklu.mobile.peer.PeerManager;

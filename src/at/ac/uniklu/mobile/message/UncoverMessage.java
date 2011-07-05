@@ -5,17 +5,16 @@ import java.io.Serializable;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 
-public class UncoverMessage implements Serializable {
+public class UncoverMessage extends PeerMessage implements Serializable {
 	
-	private String androidId;
-	private Challenge challenge;
+	private int challengeId;
 	private VectorTimestamp vt;
 	private int x;
 	private int y;
 	
-	public UncoverMessage(String androidId, Challenge challenge, VectorTimestamp myTimestamp, int x, int y) {
+	public UncoverMessage(String androidId, int challengeId, VectorTimestamp myTimestamp, int x, int y) {
 		this.androidId = androidId;
-		this.challenge = challenge;
+		this.challengeId = challengeId;
 		this.vt = myTimestamp;
 		this.x = x;
 		this.y = y;
@@ -42,7 +41,7 @@ public class UncoverMessage implements Serializable {
 	}
 
 	
-	public static VectorTimestamp getVectorTimestamp(String[] msgSplitted) {
+	public static VectorTimestamp extractVectorTimestamp(String[] msgSplitted) {
 		if (msgSplitted.length > 1) {
 			VectorTimestamp vt = new VectorTimestamp(msgSplitted[1]);
 			
@@ -60,7 +59,7 @@ public class UncoverMessage implements Serializable {
 	public String toString() {		
 		return Constants.UNCOVERED_MSG + Constants.MESSAGE_SEP_CHAR 
 				+ this.androidId + Constants.MESSAGE_SEP_CHAR 
-				+ this.challenge.getId() + Constants.MESSAGE_SEP_CHAR 
+				+ this.challengeId + Constants.MESSAGE_SEP_CHAR 
 				+ this.x + Constants.MESSAGE_SEP_CHAR 
 				+ this.y + Constants.MESSAGE_SEP_CHAR 
 				+ this.vt;
