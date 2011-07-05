@@ -148,9 +148,15 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 		for (PeerCommunication peerCommunication : peerCommunications) {
 			try {
 
-				peerCommunication.stopp();
 				Log.e(Constants.LOG_TAG, "Joining peerThread...");
-				peerCommunication.join();
+				peerCommunication.stopp();
+				peerCommunication.join(500);
+				
+				if (peerCommunication.isAlive()) {
+					peerCommunication.interrupt();
+					peerCommunication = null;
+				}
+				
 				Log.e(Constants.LOG_TAG, "peerThread joined.");
 			}
 			catch(Exception ex) {

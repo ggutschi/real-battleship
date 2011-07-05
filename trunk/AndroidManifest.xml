@@ -32,7 +32,7 @@
                   android:noHistory="true">
         </activity>
         <activity android:name="ScoreActivity"
-                  android:configChanges="keyboardHidden"
+                  android:configChanges="orientation|keyboardHidden"
                   android:label="@string/scores">
         </activity>            
         <!--  use google maps library -->

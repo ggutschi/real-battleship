@@ -156,6 +156,7 @@ public class Peer implements Runnable {
 			while (!stop) {
 				sSocket = ss.accept();
 				Log.d(Constants.LOG_TAG, "Socket connection accepted.");
+
 				PeerCommunication peerComm = new PeerCommunication(sSocket);
 				peerCommunications.add(peerComm);
 				peerComm.start();
@@ -170,7 +171,8 @@ public class Peer implements Runnable {
 		
 		stop = true;
 		
-		try { 
+		try {
+			
 			if (sSocket != null)
 				sSocket.close();
 			if (socket != null)

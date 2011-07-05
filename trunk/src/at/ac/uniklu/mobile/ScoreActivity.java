@@ -7,6 +7,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -65,6 +66,16 @@ import at.ac.uniklu.mobile.util.Constants;
 	        new MyTask(progress, challenge_id).execute();
 	    }
 	    
+
+	    
+	    
+	    @Override
+	    public void onConfigurationChanged(Configuration newConfig) {
+	      super.onConfigurationChanged(newConfig);
+	      
+
+	  		Log.d(Constants.LOG_TAG, "Configuration changed.");
+	    }
 	    
 	    
 	    /**
