@@ -5,10 +5,11 @@ require_once('config.php');
 $conn = mysql_connect($db_host, $db_user, $db_pwd) OR die('Error connecting to mysql database');
 mysql_select_db($db_name);
 
-$android_id = htmlspecialchars(stripslashes($_POST['android_id']));
-$inet_address = htmlspecialchars(stripslashes($_POST['inet_address']));
-$challenge_id = htmlspecialchars(stripslashes($_POST['challenge_id']));
-
+$android_id = htmlspecialchars(stripslashes($_REQUEST['android_id']));
+$inet_address = htmlspecialchars(stripslashes($_REQUEST['inet_address']));
+$challenge_id = htmlspecialchars(stripslashes($_REQUEST['challenge_id']));
+$nickname = htmlspecialchars(stripslashes($_REQUEST['nickname']));
+// || empty($nickname)
 if(empty($challenge_id) || empty($inet_address) || empty($android_id))
 {
 	echo "Fehlende Parameter.";
@@ -31,13 +32,13 @@ if (is_array($challenge))
 	$res_participant = mysql_query("SELECT * from participants where challenge_id=" . $challenge_id . " AND android_id='" . $android_id . "'");
 
 	if (mysql_num_rows($res_participant) <= 0) 
-	{
+	{ 
 		// teilnehmer nicht gefunden, insert
-		mysql_query("INSERT INTO participants (id, challenge_id, inet_addr, android_id) VALUES (0, '" . $challenge_id . "', '" . $inet_address . "', '" . $android_id . "')");
+		mysql_query("INSERT INTO participants (id, challenge_id, inet_addr, android_id, nickname) VALUES (0, '" . $challenge_id . "', '" . $inet_address . "', '" . $android_id . "', '" . $nickname . "')");
 		echo "OK";
 	}
 	else
-	{
+	{ 
 		// teilnehmer gefunden, update
 		mysql_query("UPDATE participants SET inet_addr='" . $inet_address . "' where android_id = '" . $android_id . "' AND challenge_id = " . $challenge_id);
 		echo "OK";

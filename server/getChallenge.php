@@ -33,14 +33,21 @@ $response = array('id' => $row['id'],
 
 $response['participants'] = array();
                   
-$result_participants = mysql_query("SELECT android_id, inet_addr 
+$result_participants = mysql_query("SELECT p.*, s.score from participants p left join scores s on (s.participant_id = p.id and s.challenge_id = p.challenge_id) 
+				      where p.challenge_id=" . $challenge_id);
+
+/*SELECT android_id, inet_addr 
                                     FROM participants where challenge_id = " . $challenge_id . ";");
+*/
+
 $j = 0;
 while($row_participants = mysql_fetch_array($result_participants)) {    
   //echo 'participant android id ' . " " . $row_participants['android_id'] .'<br />';
   //echo 'participant inet addr' . " " . $row_participants['inet_addr'] .'<br />';
   $response['participants'][$j] = array('android_id' => $row_participants['android_id'], 
-                                            'inet_addr' => $row_participants['inet_addr']);
+                                            'inet_addr' => $row_participants['inet_addr'],
+						  'nickname'  => $row_participants['nickname'],
+						  'score'     => $row_participants['score']);
   $j++;
 }
 

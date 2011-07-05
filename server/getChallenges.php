@@ -40,7 +40,8 @@ while($row = mysql_fetch_array($result))
       //echo 'participant android id ' . " " . $row_participants['android_id'] .'<br />';
       //echo 'participant inet addr' . " " . $row_participants['inet_addr'] .'<br />';
       $response[$i]['participants'][$j] = array('android_id' => $row_participants['android_id'], 
-                                                'inet_addr' => $row_participants['inet_addr']);
+                                                'inet_addr' => $row_participants['inet_addr'],
+						      'nickname'  => $row_participants['nickname']);
       $j++;
     }
 

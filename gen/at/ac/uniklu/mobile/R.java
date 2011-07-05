@@ -17,18 +17,20 @@ public final class R {
     public static final class id {
         public static final int button_change_challenge=0x7f06000b;
         public static final int button_continue=0x7f060002;
-        public static final int button_reset_challenge=0x7f06000d;
+        public static final int button_reset_challenge=0x7f06000e;
         public static final int button_start_challenge=0x7f06000c;
-        public static final int button_uncover=0x7f06000e;
+        public static final int button_uncover=0x7f060011;
+        public static final int button_view_score=0x7f06000d;
         public static final int challenge_location=0x7f06000a;
         public static final int challenge_map=0x7f060003;
         public static final int challenge_name=0x7f060008;
         public static final int frameLayout1=0x7f060004;
         public static final int label_challenge_location=0x7f060009;
         public static final int label_challenge_name=0x7f060007;
-        public static final int label_score=0x7f06000f;
+        public static final int label_score=0x7f060012;
         public static final int label_setup=0x7f060000;
         public static final int linearLayoutChallengeInfo=0x7f060006;
+        public static final int nickname=0x7f06000f;
         public static final int no_challenge_selected=0x7f060005;
         public static final int score=0x7f060010;
         public static final int username=0x7f060001;
@@ -37,38 +39,45 @@ public final class R {
         public static final int challenge_list=0x7f030000;
         public static final int edit_user=0x7f030001;
         public static final int home=0x7f030002;
-        public static final int start_challenge=0x7f030003;
+        public static final int score_list=0x7f030003;
+        public static final int score_row=0x7f030004;
+        public static final int start_challenge=0x7f030005;
     }
     public static final class string {
         /**  challenge start 
          */
-        public static final int already_uncovered=0x7f04000f;
+        public static final int already_uncovered=0x7f040012;
         public static final int app_name=0x7f040001;
         public static final int button_continue=0x7f040006;
-        public static final int challenge_changed=0x7f04000b;
-        /**   list view 
+        public static final int challenge_changed=0x7f04000d;
+        /**   challenge list view 
          */
         public static final int challenge_list_empty=0x7f040008;
         /**   home view 
          */
-        public static final int challenge_not_changed=0x7f04000a;
-        public static final int challenge_reset=0x7f04000c;
+        public static final int challenge_not_changed=0x7f04000c;
+        public static final int challenge_reset=0x7f04000e;
         public static final int challenges=0x7f040009;
         public static final int change_challenge=0x7f040002;
-        public static final int game_over=0x7f040012;
+        public static final int game_over=0x7f040015;
         /**  edit user nickname view 
          */
         public static final int hint_username=0x7f040005;
-        public static final int label_challenge=0x7f04000d;
-        public static final int label_location=0x7f04000e;
-        public static final int label_score=0x7f040014;
+        public static final int label_challenge=0x7f04000f;
+        public static final int label_location=0x7f040010;
+        public static final int label_score=0x7f040017;
         public static final int label_setup=0x7f040007;
         public static final int no_challenge_selected=0x7f040000;
-        public static final int no_gps=0x7f040013;
+        public static final int no_gps=0x7f040016;
         public static final int reset_challenge=0x7f040004;
-        public static final int ship_position_uncovered=0x7f040010;
-        public static final int ship_uncovered=0x7f040011;
+        /**  score list view 
+         */
+        public static final int score_list_empty=0x7f04000a;
+        public static final int scores=0x7f04000b;
+        public static final int ship_position_uncovered=0x7f040013;
+        public static final int ship_uncovered=0x7f040014;
         public static final int start_challenge=0x7f040003;
+        public static final int view_score=0x7f040011;
     }
     public static final class style {
         public static final int challenge_location=0x7f050008;
