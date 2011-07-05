@@ -43,6 +43,7 @@
     >
     	<Button android:text="@string/change_challenge" android:layout_height="wrap_content" android:id="@+id/button_change_challenge" android:layout_width="fill_parent"></Button>
     	<Button android:layout_height="wrap_content" android:id="@+id/button_start_challenge" android:layout_width="fill_parent" android:text="@string/start_challenge"></Button>
+    	<Button android:layout_height="wrap_content" android:id="@+id/button_view_score" android:layout_width="fill_parent" android:text="@string/view_score"></Button>
     	<Button android:layout_height="wrap_content" android:id="@+id/button_reset_challenge" android:layout_width="fill_parent" android:text="@string/reset_challenge"></Button>
    </LinearLayout>
   
