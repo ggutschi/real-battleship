@@ -74,9 +74,21 @@ public class PeerManager {
 	
 	public static void addPeer(Peer peer) {		
 		synchronized (peers) {
-			peers.add(peer);
-			vectorTimestamp.getVector().put(peer.getAndroidId(), 0);
+			
+			if (!contains(peer)) {
+				peers.add(peer);
+				peer.connectToPeer(true);
+				vectorTimestamp.getVector().put(peer.getAndroidId(), 0);
+			}
 		}
+	}
+	
+	public static boolean contains(Peer p) {
+		for (Peer pe : peers)
+			if (pe.getAndroidId().equals(p.getAndroidId()))
+				return true;
+		
+		return false;
 	}
 	
 	public static void removePeer(Peer peer) {	

@@ -29,7 +29,7 @@ public class Peer implements Runnable {
 	private PrintWriter out;
 	private Socket sSocket;
 	private ServerSocket ss;
-	private Vector<Thread> peerThreads;
+	private Vector<PeerCommunication> peerCommunications = new Vector<PeerCommunication>();
 	
 	
 
@@ -43,8 +43,8 @@ public class Peer implements Runnable {
 		Log.d(Constants.LOG_TAG, "Local peer created (constructor).");
 	}
 	
-	public Vector<Thread> getPeerThreads() {
-		return peerThreads;
+	public Vector<PeerCommunication> getPeerCommunication() {
+		return peerCommunications;
 	}
 	
 	public boolean connectToPeer(boolean rendezvous) {
@@ -54,7 +54,7 @@ public class Peer implements Runnable {
 			
 			socket = new Socket();
 			
-			socket.connect(sa, 4000);
+			socket.connect(sa, 8000);
 			
 			out = new PrintWriter(socket.getOutputStream(), true);
 
@@ -124,7 +124,7 @@ public class Peer implements Runnable {
 			PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Sent message: " + msg));
 		} else {
 			PeerManager.sendReleaseMessage(androidId);
-			Log.d(Constants.LOG_TAG , "Socket to " + this.androidId + " with IP " + this.ipAddress + " null or not connected.");
+			Log.d(Constants.LOG_TAG , "Socket to " + this.androidId + " with IP " + this.ipAddress + " null or not connected. (socket = " + socket + ", ss = " + ss + ", sSocket = " + sSocket + ")");
 		}
 	}
 	
@@ -140,7 +140,7 @@ public class Peer implements Runnable {
 			PeerManager.getCurrentChallenge().setChanged();
 			PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Sent message: " + msg));
 		} else
-			Log.d(Constants.LOG_TAG , "Socket to " + this.androidId + " with IP " + this.ipAddress + " null or not connected.");
+			Log.d(Constants.LOG_TAG , "Socket to " + this.androidId + " with IP " + this.ipAddress + " null or not connected. (socket = " + socket + ", ss = " + ss + ", sSocket = " + sSocket + ")");
 	}
 	
 	public void run() {
@@ -151,17 +151,19 @@ public class Peer implements Runnable {
 				sSocket = ss.accept();
 				Log.d(Constants.LOG_TAG, "Socket connection accepted.");
 				PeerCommunication peerComm = new PeerCommunication(sSocket);
-				Thread t = new Thread(peerComm);
-				peerThreads.add(t);
-				t.start();
+				peerCommunications.add(peerComm);
+				peerComm.start();
 			}			
 
 		} catch (IOException e) {
-			Log.e(Constants.LOG_TAG, "IO Exception", e);
+			Log.e(Constants.LOG_TAG, "IO Exception (stop = "+ stop + ")", e);
 		}
 	}
 	
 	public void stopp() {
+		
+		stop = true;
+		
 		try { 
 			if (sSocket != null)
 				sSocket.close();
@@ -173,73 +175,9 @@ public class Peer implements Runnable {
 		} catch (IOException e) {
 			Log.e(Constants.LOG_TAG, "Socket close exception.", e);
 		}
-		
-		stop = true;
 	}
 	
 	
-	/**
-	 * class implementing a thread for handling peer messages
-	 *
-	 */
-	private class PeerCommunication implements Runnable {
-	    private Socket server;
-	    private String line,input;
 
-	    public PeerCommunication(Socket server) {
-	      this.server=server;
-	    }
-
-	    public void run () {
-
-	      try {
-	        // Get input from the client
-	        DataInputStream in = new DataInputStream (server.getInputStream());
-	        PrintStream out = new PrintStream(server.getOutputStream());
-
-	        while((line = in.readLine()) != null) {
-	        	Log.d(Constants.LOG_TAG, "handle peer message: " +  line);
-	        	handleClientMessage(line);
-	        }
-	        
-	        server.close();
-	      } catch (IOException ioe) {
-	    	  Log.e(Constants.LOG_TAG, "IOException on socket listen: ", ioe);
-	      }
-	    }
-	    
-	    private void handleClientMessage(String input) {
-	    	// released;android_id
-			String[] msgSplitted = input.split(Constants.MESSAGE_SEP_CHAR + "");
-			
-			if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
-				VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
-				
-				if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
-					PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
-				}
-				
-				PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);
-				PeerManager.getVectorTimestamp().next();
-				
-				PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext());
-			} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
-				if (msgSplitted.length > 1) {
-					String androidId = msgSplitted[1];
-					
-					PeerManager.removePeer(androidId);
-				}
-			} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
-
-				if (msgSplitted.length > 1) {
-					String androidId = msgSplitted[2];
-
-					Log.d(Constants.LOG_TAG, "Adding peer " + androidId + " with IP " + sSocket.getInetAddress());
-					PeerManager.addPeer(new Peer(androidId, sSocket.getInetAddress()));
-					Log.d(Constants.LOG_TAG, "Peer added.");
-				}
-			}
-	    }
-	}
 }
 
