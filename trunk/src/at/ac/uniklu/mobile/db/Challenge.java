@@ -156,7 +156,9 @@ public class Challenge extends Observable {
 		super.setChanged();
 	}
 	
-	private void uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
+	private boolean uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
+		boolean shipPosDestroyed = false;
+		
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
 				if (sp.getRow() == y && sp.getColumn() == x) {
@@ -164,6 +166,7 @@ public class Challenge extends Observable {
 					if (!sp.isUncovered()) {
 		            		
 						sp.setUncovered(true);
+						shipPosDestroyed = true;
 						
 		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
@@ -184,6 +187,8 @@ public class Challenge extends Observable {
 		    		
 		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
 				}
+		
+		return shipPosDestroyed;
 	}
 	
 	public boolean uncoverCellLocally(int x, int y, Context c, String androidId) {
@@ -202,12 +207,15 @@ public class Challenge extends Observable {
         	uncoveredCells.get(y).set(x, true);
 
         	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
-			this.uncoverShipPositionLocallyAt(x, y, c, androidId);
+			boolean shipPositionDestroyed = this.uncoverShipPositionLocallyAt(x, y, c, androidId);
 			
     		setChanged();
     		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, null));
 			
-			return true;
+    		if (shipPositionDestroyed)
+    			return true;
+    		
+    		return false;
 		} else
         	Log.d(Constants.LOG_TAG, "Uncovering cells failed");
 		
