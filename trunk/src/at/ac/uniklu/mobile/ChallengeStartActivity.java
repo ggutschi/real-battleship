@@ -497,9 +497,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
   	        // read existing score of user
   	        for (Participant p : currentChallenge.getParticipants())
-  	        	if (p.getAndroid_id().equals(PeerManager.myPeer.getAndroidId()))
+  	        	if (p.getAndroid_id().equals(PeerManager.myPeer.getAndroidId())) {
   	        		if (!p.getScore().equals("null"))
   	        			ChallengeStartActivity.this.increaseScore(Integer.parseInt(p.getScore()));
+  	        	}
+  	        		
   	        	
     		  progressDialog.dismiss();
     	  }
