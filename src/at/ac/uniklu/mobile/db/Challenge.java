@@ -171,6 +171,8 @@ public class Challenge extends Observable {
 		            			Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
 		            		// notify activity view that score has to be changed
 		            		s.setDestroyed(true);
+
+		                	Log.d(Constants.LOG_TAG, "ship destroyed.");
 		            		
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
 			            		setChanged();
@@ -188,9 +190,13 @@ public class Challenge extends Observable {
 	}
 	
 	private boolean allShipsDestroyed() {
+    	Log.d(Constants.LOG_TAG, "all ships destroyed...");
 		for (Ship s : ships)
-			if (!s.isDestroyed())
+			if (!s.isDestroyed()) {
+
+		    	Log.d(Constants.LOG_TAG, "ship not destroyed");
 				return false;
+			}
 		
 		return true;
 	}
@@ -208,18 +214,17 @@ public class Challenge extends Observable {
         	
         	uncoveredCells.get(y).set(x, true);
 
-        	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
 			this.uncoverShipPositionLocallyAt(x, y, c, androidId);
-
-        	Log.d(Constants.LOG_TAG, "Notifying observers.");
         	
         	String msg = "";
         	
-        	if (allShipsDestroyed())
+        	if (allShipsDestroyed()) {
         		msg = "gameover";
+            	Log.d(Constants.LOG_TAG, "msg = gameover");
+        	}
         	
     		setChanged();
-    		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, null));
+    		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, msg));
 			
 		} else
         	Log.d(Constants.LOG_TAG, "Uncovering cells failed");

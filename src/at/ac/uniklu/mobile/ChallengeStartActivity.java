@@ -6,6 +6,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.location.Location;
@@ -416,8 +417,12 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				break;
 			case UPDATE_MAP:
 
-				if (((ObservableMessage)arg).getMessageContent().toString().equals("gameover"))
+				if (((ObservableMessage)arg).getMessageContent().toString().equals("gameover")) {
 					Toast.makeText(this, "The game is over!", Toast.LENGTH_LONG).show();
+
+	                Intent myIntent = new Intent(this, ScoreActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId());
+	                startActivity(myIntent);
+				}
     	    	
 				Log.d(Constants.LOG_TAG, "UPDATE_MAP");
 				handler.sendMessage(new Message());
