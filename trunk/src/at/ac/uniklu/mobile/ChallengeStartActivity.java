@@ -18,11 +18,13 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.ChallengeListActivity.MyTask;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.db.Participant;
 import at.ac.uniklu.mobile.message.MessageLog;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.peer.PeerCommunication;
@@ -52,9 +54,34 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+    	super.onCreate(savedInstanceState);
+    	
+    	final boolean customTitleSupported = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+
+    	setContentView(R.layout.start_challenge);
+
+
+        if ( customTitleSupported ) {
+            getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
+        }
+        
+        /*
+        final TextView myTitleText = (TextView) findViewById(R.id.myTitle);
+        if ( myTitleText != null ) {
+            myTitleText.setText("NEW TITLE");
+
+            // user can also set color using "Color" and then "Color value constant"
+           // myTitleText.setBackgroundColor(Color.GREEN);
+        }
+    	
+    	
+*/
     	Log.d(Constants.LOG_TAG, "OnCreate called.");
     	
-
+    	
+    	
+    	
     	View titleView = getWindow().findViewById(android.R.id.title);
     	if (titleView != null) {
     	  ViewParent parent = titleView.getParent();
@@ -63,14 +90,13 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
     	  }
     	}
-    	
-    	super.onCreate(savedInstanceState);
-    	setContentView(R.layout.start_challenge);
 
         
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Connecting to peers");
         new MyTask(progress).execute();
+        
+        
 
         
         // set up button listener for uncover button
@@ -298,8 +324,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
      */
     public void increaseScore(int increment) {
     	score+=increment;
-    	TextView t=(TextView)findViewById(R.id.score); 
-        t.setText(Integer.toString(score));
+    	TextView t=(TextView)findViewById(R.id.myTitle); 
+        t.setText("Score: " + Integer.toString(score));
     }
     /**
      * decrease current game score after another player 
@@ -308,8 +334,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
      */
     public void decreaseScore(int decrement) {
     	score -= decrement;
-    	TextView t = (TextView) findViewById(R.id.score); 
-        t.setText(score);
+    	TextView t=(TextView)findViewById(R.id.myTitle); 
+        t.setText("Score: " + Integer.toString(score));
     }
     
     /**
@@ -467,9 +493,13 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
   	        
   	    	setupLocationManager();
   	    	
-  	    	
   	        addOverlays();
-    		  
+
+  	        // read existing score of user
+  	        for (Participant p : currentChallenge.getParticipants())
+  	        	if (p.getAndroid_id().equals(PeerManager.myPeer.getAndroidId()))
+  	        		ChallengeStartActivity.this.increaseScore(Integer.parseInt(p.getScore()));
+  	        	
     		  progressDialog.dismiss();
     	  }
     	}

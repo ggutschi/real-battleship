@@ -16,22 +16,5 @@
         android:layout_height="wrap_content" android:text="Uncover Cell"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true" android:id="@+id/button_uncover" />
-    
-     <LinearLayout
-	    	android:orientation="horizontal"
-	    	android:layout_width="wrap_content"
-	    	android:layout_height="wrap_content"
-	    	android:layout_alignParentRight="true"
-    		android:layout_alignParentTop="true" >	    	
-		
-		<TextView android:layout_height="wrap_content" 
-    		android:layout_width="wrap_content"
-    		style="@style/score_label"
-    		android:text="@string/label_score" android:id="@+id/label_score" />
-    	<TextView android:layout_height="wrap_content" 
-    		android:layout_width="wrap_content"
-    		style="@style/score_label"
-    		android:text="0" android:id="@+id/score" />
-   	</LinearLayout> 
     	
 </RelativeLayout>
