@@ -61,7 +61,7 @@ public class PeerCommunication extends Thread {
 			VectorTimestamp receivedVectorTimestamp = UncoverMessage.getVectorTimestamp(msgSplitted);
 			
 			if (PeerManager.getVectorTimestamp().causalError(receivedVectorTimestamp)) {
-				PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "CAUSAL ERROR"));
+				Log.e(Constants.LOG_TAG, "CAUSAL ERROR: myVT = " + PeerManager.getVectorTimestamp() + ", recVT = " + receivedVectorTimestamp);
 			}
 			
 			PeerManager.getVectorTimestamp().adapt(receivedVectorTimestamp);

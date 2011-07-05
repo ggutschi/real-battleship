@@ -54,7 +54,7 @@ public class GridOverlay extends com.google.android.maps.Overlay {
         	paint.setStrokeWidth(GRID_LINE_WIDTH);
         	paint.setAlpha(GRID_TRANSPARENCY);
         	
-        	Log.d(Constants.LOG_TAG, "currentChallenge: " + currentChallenge);
+        	//Log.d(Constants.LOG_TAG, "currentChallenge: " + currentChallenge);
             
             mapView.getProjection().toPixels(currentChallenge.getLocationLeftTop(), point1);
             mapView.getProjection().toPixels(currentChallenge.getLocationRightBottom(), point2);
