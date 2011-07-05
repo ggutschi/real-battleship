@@ -52,19 +52,8 @@ import at.ac.uniklu.mobile.util.Constants;
 	    	  }
 	    	}
 	    	
-	    	// set up button listener for menu selection
-	        final Button back_button = (Button) findViewById(R.id.button_change_challenge);
-	        back_button.setOnClickListener(new View.OnClickListener() {
-	            public void onClick(View v) {
-	            	Log.d(Constants.LOG_TAG, "back button clicked");
-	            	ScoreActivity.this.setResult(R.string.unwind_stack_result_id);
-	            	ScoreActivity.this.finish();
-	            	
-	            }
-	        });
+	    	setContentView(R.layout.score_list);
 	    	
-	        setContentView(R.layout.score_list);
-	        
 	        challenge_id = getIntent().getExtras().getInt(Challenge.FIELD_ID);
 	        Log.d(Constants.LOG_TAG, "got challenge id " + challenge_id);
 	        
@@ -75,6 +64,8 @@ import at.ac.uniklu.mobile.util.Constants;
 	        progress.setMessage("Loading scores");
 	        new MyTask(progress, challenge_id).execute();
 	    }
+	    
+	    
 	    
 	    /**
 	     * Configure the view according to whether we have items in the list.

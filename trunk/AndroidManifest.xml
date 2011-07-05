@@ -28,7 +28,8 @@
                   android:label="@string/challenges">
         </activity>      
         <activity android:name="ChallengeStartActivity"
-                  android:configChanges="orientation|keyboardHidden">
+                  android:configChanges="orientation|keyboardHidden"
+                  android:noHistory="true">
         </activity>
         <activity android:name="ScoreActivity"
                   android:configChanges="keyboardHidden"

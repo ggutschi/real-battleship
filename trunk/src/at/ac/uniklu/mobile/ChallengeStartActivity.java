@@ -102,7 +102,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 					Toast.makeText(ChallengeStartActivity.this, "The game is over!", Toast.LENGTH_LONG).show();
 	
 	                Intent myIntent = new Intent(ChallengeStartActivity.this, ScoreActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId());
-	                startActivity(myIntent);
+	                startActivityForResult(myIntent, 0);
         		}
         		
         		addOverlays();
@@ -396,14 +396,6 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 3, locationListener);
     }
     
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == R.string.unwind_stack_result_id) {
-            this.setResult(R.string.unwind_stack_result_id);
-            this.finish();
-        }
-    }
 
 
 	@Override
