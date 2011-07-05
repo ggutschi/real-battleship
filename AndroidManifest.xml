@@ -28,7 +28,11 @@
         </activity>      
         <activity android:name="ChallengeStartActivity"
                   android:configChanges="orientation|keyboardHidden">
-        </activity>      
+        </activity>
+        <activity android:name="ScoreActivity"
+                  android:configChanges="keyboardHidden"
+                  android:label="@string/scores">
+        </activity>            
         <!--  use google maps library -->
         <uses-library android:name="com.google.android.maps" />
     </application>
