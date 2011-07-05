@@ -22,6 +22,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import at.ac.uniklu.mobile.db.Challenge;
+import at.ac.uniklu.mobile.db.Participant;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
@@ -35,6 +36,7 @@ public class ChallengeListActivity extends ListActivity {
     
 	private ProgressDialog progressDialog;
 	private ChallengeListModel listModel = null; 
+	private String nickname;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -52,6 +54,8 @@ public class ChallengeListActivity extends ListActivity {
     	
     	Log.d(Constants.LOG_TAG, "initialize list view");
         setContentView(R.layout.challenge_list);
+        nickname = getIntent().getExtras().getString(Participant.FIELD_NICKNAME);
+        Log.d(Constants.LOG_TAG, "got nickname " + nickname);
         
         listModel = ChallengeListModel.getInstance(getApplicationContext()	);
         Log.d(Constants.LOG_TAG, "display progress dialog");
@@ -94,9 +98,9 @@ public class ChallengeListActivity extends ListActivity {
 		String ip_address = HelperUtil.getIpAddress();
 		
 		Log.d(Constants.LOG_TAG, "notify server because of new participant with android_id: " + android_id
-				+ " ip address: " + ip_address + " challenge id: " + c.getId());
+				+ " ip address: " + ip_address + " challenge id: " + c.getId() + " nickname : " + nickname);
 		
-		boolean bOK = listModel.addParticipant(android_id, ip_address, c.getId());		
+		boolean bOK = listModel.addParticipant(android_id, ip_address, c.getId(), nickname);		
 		
 		Intent intent = new Intent(ChallengeListActivity.this, HomeActivity.class);
 		intent.putExtra(Challenge.FIELD_ID, c.getId());
