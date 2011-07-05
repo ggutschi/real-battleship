@@ -1,8 +1,11 @@
 package at.ac.uniklu.mobile;
 
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,7 +28,6 @@ public class PlayerEditActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    
         
         Log.d(Constants.LOG_TAG, "on Create player edit");
         setContentView(R.layout.edit_user); 

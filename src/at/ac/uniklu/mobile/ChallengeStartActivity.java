@@ -1,5 +1,6 @@
 package at.ac.uniklu.mobile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -12,6 +13,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,7 +69,6 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
         if ( customTitleSupported ) {
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
         }
-        
         
         
     	Log.d(Constants.LOG_TAG, "OnCreate called.");
