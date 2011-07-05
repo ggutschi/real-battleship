@@ -39,6 +39,10 @@ public class UncoverMessage extends PeerMessage implements Serializable {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	public int getChallengeId() {
+		return challengeId;
+	}
 
 	
 	public static VectorTimestamp extractVectorTimestamp(String[] msgSplitted) {

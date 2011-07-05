@@ -419,9 +419,13 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
       	    	PeerManager.init(ChallengeStartActivity.this.currentChallenge, ChallengeStartActivity.this.getBaseContext());
         	    Log.d(Constants.LOG_TAG, "PeerManager.init(...) finished.");
 
+    	    	PeerManager.log.clearLog();
     	    	
         	    ChallengeListModel.getInstance(ChallengeStartActivity.this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	ChallengeStartActivity.this.currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	    	
+    	    	// check for arrived uncover messages    	    	
+    	    	PeerManager.log.checkForUncoveredCells();
     	    	
     	    	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	
