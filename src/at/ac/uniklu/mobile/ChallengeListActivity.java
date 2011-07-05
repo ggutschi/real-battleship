@@ -11,11 +11,13 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,6 +40,16 @@ public class ChallengeListActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {    	 
     	super.onCreate(savedInstanceState);
+
+    	View titleView = getWindow().findViewById(android.R.id.title);
+    	if (titleView != null) {
+    	  ViewParent parent = titleView.getParent();
+    	  if (parent != null && (parent instanceof View)) {
+    	    View parentView = (View)parent;
+    	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
+    	  }
+    	}
+    	
     	Log.d(Constants.LOG_TAG, "initialize list view");
         setContentView(R.layout.challenge_list);
         
