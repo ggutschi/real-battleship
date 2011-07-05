@@ -25,11 +25,12 @@ $i = 0;
 
 while($row = mysql_fetch_array($result))
   {
-    $response[$i]['score'] = $row['score'];
     $response[$i]['user'] = array();
     $response[$i]['user']['nickname'] = $row['nickname'];
     $response[$i]['user']['android_id'] = $row['android_id'];
     $response[$i]['user']['inet_addr'] = $row['inet_addr'];
+    $response[$i]['user']['score'] = $row['score'];
+
     $i++; 
   }
   

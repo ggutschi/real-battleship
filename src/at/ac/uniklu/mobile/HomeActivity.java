@@ -52,6 +52,8 @@ public class HomeActivity extends MapActivity {
     	  }
     	}
     	
+    	
+    	
         super.onCreate(savedInstanceState);
 
     	Log.d(Constants.LOG_TAG, "On create");
@@ -197,8 +199,6 @@ public class HomeActivity extends MapActivity {
         	}
         }
     }
-
-
 
 	private void addOverlays() {
     	List<Overlay> overlays = mapView.getOverlays();
