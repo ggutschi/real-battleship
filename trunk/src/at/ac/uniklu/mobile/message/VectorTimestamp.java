@@ -46,7 +46,7 @@ public class VectorTimestamp {
 	
 	public static boolean equals (HashMap<String, Integer> hm1, HashMap<String, Integer> hm2) {
 		for (String androidId : hm1.keySet())
-			if (hm1.get(androidId) != hm2.get(androidId))
+			if (hm2.containsKey(androidId) && hm1.get(androidId) != hm2.get(androidId))
 				return false;
 		
 		return true;
@@ -57,7 +57,7 @@ public class VectorTimestamp {
 			return false;
 
 		for (String androidId : hm1.keySet())
-			if (hm1.get(androidId) > hm2.get(androidId))
+			if (hm2.containsKey(androidId) && hm1.get(androidId) > hm2.get(androidId))
 				return false;
 				
 		return true;
