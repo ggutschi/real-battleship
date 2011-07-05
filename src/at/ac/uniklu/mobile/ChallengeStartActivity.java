@@ -57,6 +57,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
     	super.onCreate(savedInstanceState);
     	
+    	
     	final boolean customTitleSupported = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 
     	setContentView(R.layout.start_challenge);
@@ -66,31 +67,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
         }
         
-        /*
-        final TextView myTitleText = (TextView) findViewById(R.id.myTitle);
-        if ( myTitleText != null ) {
-            myTitleText.setText("NEW TITLE");
-
-            // user can also set color using "Color" and then "Color value constant"
-           // myTitleText.setBackgroundColor(Color.GREEN);
-        }
-    	
-    	
-*/
+        
+        
     	Log.d(Constants.LOG_TAG, "OnCreate called.");
     	
-    	
-    	
-    	
-    	View titleView = getWindow().findViewById(android.R.id.title);
-    	if (titleView != null) {
-    	  ViewParent parent = titleView.getParent();
-    	  if (parent != null && (parent instanceof View)) {
-    	    View parentView = (View)parent;
-    	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
-    	  }
-    	}
-
+    
         
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Connecting to peers");
@@ -243,8 +224,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     
     private void uncoverCell(int x, int y) {
     	// only send uncover message if shipcell uncovered
+    	
 		if (currentChallenge.uncoverCellLocally(x, y, this, PeerManager.myPeer.getAndroidId()))
-	    	PeerManager.sendUncoverMessage(x, y);
+			PeerManager.sendUncoverMessage(x, y);
 		
     	Log.d(Constants.LOG_TAG, "Cell uncovered");
     }
@@ -498,7 +480,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
   	        // read existing score of user
   	        for (Participant p : currentChallenge.getParticipants())
   	        	if (p.getAndroid_id().equals(PeerManager.myPeer.getAndroidId()))
-  	        		ChallengeStartActivity.this.increaseScore(Integer.parseInt(p.getScore()));
+  	        		if (!p.getScore().equals("null"))
+  	        			ChallengeStartActivity.this.increaseScore(Integer.parseInt(p.getScore()));
   	        	
     		  progressDialog.dismiss();
     	  }
