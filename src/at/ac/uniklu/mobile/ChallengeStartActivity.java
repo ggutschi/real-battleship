@@ -413,7 +413,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				decreaseScore(decreaseScore);
 				break;
 			case DEBUG_MESSAGE:					
-				Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
+				//Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
 			case UPDATE_MAP:
 
