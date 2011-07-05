@@ -5,14 +5,22 @@
     android:orientation="vertical"
     >
     
-    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="vertical">
-    	<TextView android:text="@string/label_setup" android:id="@+id/label_setup" style="@style/label" android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:layout_marginTop="20dp" android:textSize="18dp"></TextView>
-    	<EditText android:id="@+id/username" android:layout_height="wrap_content" android:layout_width="fill_parent" android:hint="@string/hint_username" ></EditText>
+    <LinearLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:orientation="horizontal"
+	    	android:background="@drawable/login_in"
+	    	android:paddingTop="120dip">
+    	<EditText android:id="@+id/username"
+    		android:layout_height="wrap_content"
+    		android:layout_width="fill_parent"
+    		android:layout_weight="30"
+    		android:hint="@string/hint_username"
+    		android:maxLines="1"
+    		android:maxLength="20"></EditText>
 	    <Button 
 	    	android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	    	android:id="@+id/button_continue" 
 	    	android:text="@string/button_continue"	
+    		android:layout_weight="70"
 	    	android:enabled="false"/>
     </LinearLayout>
 </LinearLayout>
