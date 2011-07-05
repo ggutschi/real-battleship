@@ -11,9 +11,13 @@
     <string name="button_continue">Continue</string>
     <string name="label_setup">User Setup</string>
     
-    <!--  list view -->
+    <!--  challenge list view -->
     <string name="challenge_list_empty">No challenges available.</string>
     <string name="challenges">Available Challenges</string>
+    
+    <!-- score list view -->
+    <string name="score_list_empty">No scores available.</string>
+    <string name="scores">Score</string>
     
     <!--  home view -->
     <string name="challenge_not_changed">You could not be assigned to this challenge.</string>
@@ -21,6 +25,7 @@
     <string name="challenge_reset">Challenge reset successful.</string>
     <string name="label_challenge">Challenge</string>
     <string name="label_location">Location</string>
+    <string name="view_score">View Score</string>
     
     <!-- challenge start -->
     <string name="already_uncovered">Cell already uncovered.</string>
