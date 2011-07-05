@@ -97,6 +97,14 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
         
         handler = new Handler() {
         	public void handleMessage(Message msg) {
+
+        		if (msg.arg1 == 1) {
+					Toast.makeText(ChallengeStartActivity.this, "The game is over!", Toast.LENGTH_LONG).show();
+	
+	                Intent myIntent = new Intent(ChallengeStartActivity.this, ScoreActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId());
+	                startActivity(myIntent);
+        		}
+        		
         		addOverlays();
         	}
         };        
@@ -416,16 +424,16 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				//Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
 			case UPDATE_MAP:
+				Message m = new Message();
+				
+				m.arg1 = 0;
 
 				if (((ObservableMessage)arg).getMessageContent().toString().equals("gameover")) {
-					Toast.makeText(this, "The game is over!", Toast.LENGTH_LONG).show();
-
-	                Intent myIntent = new Intent(this, ScoreActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId());
-	                startActivity(myIntent);
+					m.arg1 = 1;
 				}
     	    	
 				Log.d(Constants.LOG_TAG, "UPDATE_MAP");
-				handler.sendMessage(new Message());
+				handler.sendMessage(m);
 	    		break;
 			default:
 				Log.e(Constants.LOG_TAG, "unkown observable message intend");
