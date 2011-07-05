@@ -9,6 +9,8 @@ public class Participant {
 	/** the inet address of a participant´s smartphone **/
 	private String inet_addr;
 	
+	private String nickname;
+
 	/** json field label of android id **/
 	private static final String FIELD_ANDROID_ID = "android_id";
 	
@@ -22,6 +24,7 @@ public class Participant {
 	public Participant(JSONObject jsonObject) throws JSONException {
 		android_id = jsonObject.getString(FIELD_ANDROID_ID);
 		inet_addr = jsonObject.getString(FIELD_INET_ADDR);
+		nickname = jsonObject.getString(FIELD_NICKNAME);
 	}
 
 	public String getAndroid_id() {
@@ -39,5 +42,14 @@ public class Participant {
 	public void setInet_addr(String inetAddr) {
 		inet_addr = inetAddr;
 	}
+	
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+	
 
 }
