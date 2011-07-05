@@ -12,7 +12,11 @@ mysql_query("UPDATE ship_positions SET uncovered=0");
 mysql_query("UPDATE ships SET destroyed=0");
 
 // delete scores
-mysql_query("DELETE * from scores");
+mysql_query("DELETE from scores");
+
+
+// delete participants
+mysql_query("DELETE from participants");
 
 echo "OK";
 
