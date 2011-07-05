@@ -207,6 +207,7 @@ public class HomeActivity extends MapActivity {
     	//overlays.add(new PositionOverlay(currentLocation, this.getApplicationContext()));
 
     	mapView.invalidate();
+    	
 
     	Log.d(Constants.LOG_TAG, "Overlays added.");
     }

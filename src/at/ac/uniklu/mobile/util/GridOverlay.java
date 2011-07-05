@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
+import at.ac.uniklu.mobile.ChallengeStartActivity;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Ship;
 import at.ac.uniklu.mobile.db.ShipPosition;
@@ -34,6 +35,8 @@ public class GridOverlay extends com.google.android.maps.Overlay {
 	
 	public GridOverlay(MapView mapView, Challenge currentChallenge) {
 		super();
+    	Log.d(Constants.LOG_TAG, "GridOverlay constructor Challenge: " + this.currentChallenge);
+	    	
 		
 		this.mapView = mapView;
 		this.currentChallenge = currentChallenge;
@@ -42,6 +45,9 @@ public class GridOverlay extends com.google.android.maps.Overlay {
     @Override
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
         super.draw(canvas, mapView, shadow);
+
+    	Log.d(Constants.LOG_TAG, "gridOverlay draw Challenge: " + this.currentChallenge);
+	    	
 
         if (!shadow) {
 
@@ -86,7 +92,7 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             	for (int j = 0; j < currentChallenge.getCellsX(); j++)
             		if (currentChallenge.isUncovered(j, i))
             			canvas.drawRect(point1.x + j * diffX, point1.y + i * diffY, point1.x + (j + 1) * diffX, point1.y + (i + 1) * diffY, paint);
-                    
+
             			
             for (Ship s : currentChallenge.getShips()) {
             	if (s.isDestroyed()) {
@@ -97,10 +103,14 @@ public class GridOverlay extends com.google.android.maps.Overlay {
                 
                 paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
             
-            	for (ShipPosition sp: s.getShipPositions())
-            		if (sp.isUncovered())
+            	for (ShipPosition sp: s.getShipPositions()) {
+		        	Log.d(Constants.LOG_TAG, "ShipPosition:");
+            		if (sp.isUncovered()) {
             			canvas.drawRect(point1.x + sp.getColumn() * diffX, point1.y + sp.getRow() * diffY, point1.x + (sp.getColumn() + 1) * diffX, point1.y + (sp.getRow() + 1) * diffY, paint);
-        
+
+    		        	Log.d(Constants.LOG_TAG, "ShipPosition is uncovered");
+            		}
+            	}
             }
         }
     }
