@@ -26,7 +26,8 @@
         <activity android:name="ChallengeListActivity"
                   android:label="@string/challenges">
         </activity>      
-        <activity android:name="ChallengeStartActivity">
+        <activity android:name="ChallengeStartActivity"
+                  android:configChanges="orientation|keyboardHidden">
         </activity>      
         <!--  use google maps library -->
         <uses-library android:name="com.google.android.maps" />

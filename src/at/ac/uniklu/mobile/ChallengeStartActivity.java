@@ -6,6 +6,7 @@ import java.util.Observer;
 import java.util.Vector;
 
 import android.app.ProgressDialog;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -48,6 +49,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	Log.d(Constants.LOG_TAG, "OnCreate called.");
+    	
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
 
@@ -78,6 +81,14 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
         };        
     }
     
+    
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      
+
+  		Log.d(Constants.LOG_TAG, "Configuration changed.");
+    }
     
     
     @Override
@@ -327,14 +338,15 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
 			@Override
 			public void onProviderDisabled(String provider) {
-				// TODO Auto-generated method stub
+				if (provider.equals("gps"))
+					Toast.makeText(ChallengeStartActivity.this, "Please turn on GPS.", Toast.LENGTH_LONG).show();
 				
 			}
 
 			@Override
 			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
-				
+				if (provider.equals("gps"))
+					Toast.makeText(ChallengeStartActivity.this, "GPS on. Waiting for location update...", Toast.LENGTH_LONG).show();
 			}
 
 			@Override
