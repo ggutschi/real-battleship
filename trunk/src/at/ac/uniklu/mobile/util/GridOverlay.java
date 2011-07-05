@@ -46,8 +46,6 @@ public class GridOverlay extends com.google.android.maps.Overlay {
     public void draw(Canvas canvas, MapView mapView, boolean shadow) {
         super.draw(canvas, mapView, shadow);
 
-    	Log.d(Constants.LOG_TAG, "gridOverlay draw Challenge: " + this.currentChallenge);
-	    	
 
         if (!shadow) {
 
@@ -104,11 +102,9 @@ public class GridOverlay extends com.google.android.maps.Overlay {
                 paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
             
             	for (ShipPosition sp: s.getShipPositions()) {
-		        	Log.d(Constants.LOG_TAG, "ShipPosition:");
             		if (sp.isUncovered()) {
             			canvas.drawRect(point1.x + sp.getColumn() * diffX, point1.y + sp.getRow() * diffY, point1.x + (sp.getColumn() + 1) * diffX, point1.y + (sp.getRow() + 1) * diffY, paint);
 
-    		        	Log.d(Constants.LOG_TAG, "ShipPosition is uncovered");
             		}
             	}
             }
