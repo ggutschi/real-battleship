@@ -70,6 +70,10 @@ public class PeerManager {
 		startRendezvous();
 	}
 	
+	public static void refreshCurrentChallenge(Challenge current) {
+		currentChallenge = current;
+	}
+	
 	public static void closeConnections() {
 		synchronized (peers) {
 			for (Peer p : peers)

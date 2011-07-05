@@ -167,6 +167,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
 
 	private void addOverlays() {
+
+    	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();
     	overlays.add(new GridOverlay(mapView, currentChallenge));
@@ -225,7 +228,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     private void uncoverCell(int x, int y) {
     	// only send uncover message if shipcell uncovered
     	
-		if (currentChallenge.uncoverCellLocally(x, y, this, PeerManager.myPeer.getAndroidId()))
+		currentChallenge.uncoverCellLocally(x, y, this, PeerManager.myPeer.getAndroidId());
+		
+		if (currentChallenge.isShipCell(x, y))
 			PeerManager.sendUncoverMessage(x, y);
 		
     	Log.d(Constants.LOG_TAG, "Cell uncovered");
@@ -406,10 +411,15 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				int decreaseScore = (Integer)((ObservableMessage)arg).getMessageContent();
 				decreaseScore(decreaseScore);
 				break;
-			case DEBUG_MESSAGE:
+			case DEBUG_MESSAGE:					
 				Toast.makeText(this, ((ObservableMessage)arg).getMessageContent().toString(), Toast.LENGTH_LONG).show();
 				break;
 			case UPDATE_MAP:
+
+				if (((ObservableMessage)arg).getMessageContent().toString().equals("gameover"))
+					Toast.makeText(this, "The game is over!", Toast.LENGTH_LONG).show();
+    	    	
+				Log.d(Constants.LOG_TAG, "UPDATE_MAP");
 				handler.sendMessage(new Message());
 	    		break;
 			default:
@@ -433,7 +443,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	  }
 
     	  public Void doInBackground(Void... unused) {
-  	    	currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    		  ChallengeStartActivity.this.currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
 	    	
     	    	Log.d(Constants.LOG_TAG, "PeerManager.init(...)...");
       	    	PeerManager.init(ChallengeStartActivity.this.currentChallenge, ChallengeStartActivity.this.getBaseContext());
@@ -444,15 +454,19 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
         	    ChallengeListModel.getInstance(ChallengeStartActivity.this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	ChallengeStartActivity.this.currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	
+    	    	PeerManager.refreshCurrentChallenge(currentChallenge);
+    	    	
     	    	// check for arrived uncover messages    	    	
     	    	PeerManager.log.checkForUncoveredCells();
+    	    	Log.d(Constants.LOG_TAG, "before add observer currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	
-    	    	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+
+      	    	ChallengeStartActivity.this.currentChallenge.addObserver(ChallengeStartActivity.this);
+      	    	
+    	    	Log.d(Constants.LOG_TAG, "after add observer currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
     	    	
     	    	// register activity as an observer object (e.g. for observing ship uncover actions to adjust current score in activity)
-    	    	ChallengeStartActivity.this.currentChallenge.addObserver(ChallengeStartActivity.this);
     	    	
-    	    	Log.d(Constants.LOG_TAG, "Challenge: " + ChallengeStartActivity.this.currentChallenge);
 
 
     	    	
@@ -460,7 +474,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	  }
 
     	  public void onPostExecute(Void unused) {
-
+  	    	
+  	    	Log.d(Constants.LOG_TAG, "currentChallenge: " + currentChallenge);
   	    	
   	    	mapView = (MapView) findViewById(R.id.challenge_map);
   	        mapView.setBuiltInZoomControls(true);
@@ -475,7 +490,10 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
   	        
   	    	setupLocationManager();
   	    	
+	    	Log.d(Constants.LOG_TAG, "before add overlays Challenge: " + ChallengeStartActivity.this.currentChallenge);
+  	    	
   	        addOverlays();
+	    	Log.d(Constants.LOG_TAG, "after add overlays Challenge: " + ChallengeStartActivity.this.currentChallenge);
 
   	        // read existing score of user
   	        for (Participant p : currentChallenge.getParticipants())

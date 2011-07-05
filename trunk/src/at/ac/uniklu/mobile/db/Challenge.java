@@ -156,17 +156,15 @@ public class Challenge extends Observable {
 		super.setChanged();
 	}
 	
-	private boolean uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
-		boolean shipPosDestroyed = false;
-		
+	private void uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
 				if (sp.getRow() == y && sp.getColumn() == x) {
 					
-					if (!sp.isUncovered()) {
-		            		
+					//if (!sp.isUncovered()) {
+
+		        		Log.d(Constants.LOG_TAG, "ShipPosition SETTED AS UNCOVERED challenge = " + this);
 						sp.setUncovered(true);
-						shipPosDestroyed = true;
 						
 		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
@@ -183,15 +181,21 @@ public class Challenge extends Observable {
 		            			Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
 		            		}
 		            	}
-					}
+					//}
 		    		
 		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
 				}
-		
-		return shipPosDestroyed;
 	}
 	
-	public boolean uncoverCellLocally(int x, int y, Context c, String androidId) {
+	private boolean allShipsDestroyed() {
+		for (Ship s : ships)
+			if (!s.isDestroyed())
+				return false;
+		
+		return true;
+	}
+	
+	public void uncoverCellLocally(int x, int y, Context c, String androidId) {
 		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
 
         	Log.d(Constants.LOG_TAG, "Uncovering cell (" + x + ", " + y + ")");
@@ -200,24 +204,33 @@ public class Challenge extends Observable {
 
         		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
         			Toast.makeText(c, R.string.already_uncovered, Toast.LENGTH_SHORT).show();
-        		
-        		return false;
         	}
         	
         	uncoveredCells.get(y).set(x, true);
 
         	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
-			boolean shipPositionDestroyed = this.uncoverShipPositionLocallyAt(x, y, c, androidId);
-			
+			this.uncoverShipPositionLocallyAt(x, y, c, androidId);
+
+        	Log.d(Constants.LOG_TAG, "Notifying observers.");
+        	
+        	String msg = "";
+        	
+        	if (allShipsDestroyed())
+        		msg = "gameover";
+        	
     		setChanged();
     		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, null));
 			
-    		if (shipPositionDestroyed)
-    			return true;
-    		
-    		return false;
 		} else
         	Log.d(Constants.LOG_TAG, "Uncovering cells failed");
+		
+	}
+	
+	public boolean isShipCell(int x, int y) {
+		for (Ship s : this.ships)
+			for (ShipPosition sp : s.getShipPositions())
+				if (sp.getRow() == y && sp.getColumn() == x)
+					return true;
 		
 		return false;
 	}
