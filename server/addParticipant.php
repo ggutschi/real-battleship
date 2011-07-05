@@ -34,7 +34,7 @@ if (is_array($challenge))
 	if (mysql_num_rows($res_participant) <= 0) 
 	{ 
 		// teilnehmer nicht gefunden, insert
-		mysql_query("INSERT INTO participants (id, challenge_id, inet_addr, android_id, nickname) VALUES (0, '" . $challenge_id . "', '" . $inet_address . "', '" . $android_id . "', '" . $nickname . "')");
+		mysql_query("INSERT INTO participants (challenge_id, inet_addr, android_id, nickname) VALUES ('" . $challenge_id . "', '" . $inet_address . "', '" . $android_id . "', '" . $nickname . "')");
 		echo "OK";
 	}
 	else

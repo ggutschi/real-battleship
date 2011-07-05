@@ -186,17 +186,18 @@ private function handleUncoverMessage($dataArr) {
   	// ship position exists
   	if ($ship_position['uncovered'] != 1)
   	{
-  		//echo "in ship not uncovered";
+  		$this->log('in ship not uncovered');
   		// ship position not yet uncovered
   		mysql_query("UPDATE ship_positions SET uncovered=1 where id = " . $ship_position['id']);
   		// update score of user
 		$result = mysql_query("SELECT p.id, p.challenge_id, s.score from participants p left join scores s on (s.participant_id = p.id) where p.android_id='" . $android_id . "' and p.challenge_id=" . $challenge_id);
 		//echo "SELECT p.id, s.score from participants p left join scores s on (s.participant_id = p.id) where p.android_id='" . $android_id . "' and p.challenge_id=" . $challenge_id;
+	       $this->log("SELECT p.id, s.score from participants p left join scores s on (s.participant_id = p.id) where p.android_id='" . $android_id . "' and p.challenge_id=" . $challenge_id);
 		$participant_score = mysql_fetch_assoc($result);	
               //echo 'participant: ';
 		//print_r($participant_score);		
               if (is_array($participant_score)) {
-			echo 'in is array';
+			$this->log('in is participant array');
 			if (!is_null($participant_score['score']) && !empty($participant_score['score']))
 				$currentScore = $participant_score['score'];		
 			else
