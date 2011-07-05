@@ -3,18 +3,21 @@ package at.ac.uniklu.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import at.ac.uniklu.mobile.db.Challenge;
@@ -40,6 +43,26 @@ import at.ac.uniklu.mobile.util.Constants;
 	    public void onCreate(Bundle savedInstanceState) {    	 
 	    	super.onCreate(savedInstanceState);
 	    	Log.d(Constants.LOG_TAG, "initialize list view");
+	    	View titleView = getWindow().findViewById(android.R.id.title);
+	    	if (titleView != null) {
+	    	  ViewParent parent = titleView.getParent();
+	    	  if (parent != null && (parent instanceof View)) {
+	    	    View parentView = (View)parent;
+	    	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
+	    	  }
+	    	}
+	    	
+	    	// set up button listener for menu selection
+	        final Button back_button = (Button) findViewById(R.id.button_change_challenge);
+	        back_button.setOnClickListener(new View.OnClickListener() {
+	            public void onClick(View v) {
+	            	Log.d(Constants.LOG_TAG, "back button clicked");
+	            	ScoreActivity.this.setResult(R.string.unwind_stack_result_id);
+	            	ScoreActivity.this.finish();
+	            	
+	            }
+	        });
+	    	
 	        setContentView(R.layout.score_list);
 	        
 	        challenge_id = getIntent().getExtras().getInt(Challenge.FIELD_ID);

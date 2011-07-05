@@ -5,6 +5,7 @@
     <string name="change_challenge">Change Challenge</string>
     <string name="start_challenge">Start Challenge</string>
     <string name="reset_challenge">Reset Challenge</string>
+    <string name="unwind_stack_result_id">unwind_stack_result_id</string>
     
     <!-- edit user nickname view -->
     <string name="hint_username">Enter your nickname</string>
@@ -18,6 +19,7 @@
     <!-- score list view -->
     <string name="score_list_empty">No scores available.</string>
     <string name="scores">Score</string>
+    <string name="back">Back</string>
     
     <!--  home view -->
     <string name="challenge_not_changed">You could not be assigned to this challenge.</string>

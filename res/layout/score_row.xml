@@ -6,11 +6,14 @@
 	<!-- row layout -->
    	<TextView android:id="@+id/nickname"
        	android:layout_width="200dip"
-       	android:layout_height="wrap_content"/>
+       	android:layout_height="wrap_content"
+       	android:textSize="18sp"/>
 
    	<TextView android:id="@+id/score"
    		android:gravity="right"
        	android:layout_width="70dip"
-       	android:layout_height="wrap_content" android:layout_weight="1"/>
+       	android:layout_height="wrap_content" 
+       	android:layout_weight="1"
+       	android:textSize="18sp" />
 </LinearLayout>
         

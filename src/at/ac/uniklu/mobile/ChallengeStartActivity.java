@@ -395,6 +395,16 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	
     	locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 3, locationListener);
     }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == R.string.unwind_stack_result_id) {
+            this.setResult(R.string.unwind_stack_result_id);
+            this.finish();
+        }
+    }
+
 
 	@Override
 	protected boolean isRouteDisplayed() {
