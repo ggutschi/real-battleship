@@ -7,10 +7,12 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,15 @@ public class HomeActivity extends MapActivity {
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	View titleView = getWindow().findViewById(android.R.id.title);
+    	if (titleView != null) {
+    	  ViewParent parent = titleView.getParent();
+    	  if (parent != null && (parent instanceof View)) {
+    	    View parentView = (View)parent;
+    	    parentView.setBackgroundColor(Color.rgb(0xff, 0x00, 0x00));
+    	  }
+    	}
+    	
         super.onCreate(savedInstanceState);
 
     	Log.d(Constants.LOG_TAG, "On create");
@@ -200,7 +211,7 @@ public class HomeActivity extends MapActivity {
     	} else {
         	currentLocation = new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), ((int)(Constants.DEFAULT_LONGITUDE * 1E6)));
         	
-        	mapController.setZoom(2);
+        	mapController.setZoom(3);
     	}
         
         Log.d(Constants.LOG_TAG, "set map center to geo point with lat: " + currentLocation.getLatitudeE6() 

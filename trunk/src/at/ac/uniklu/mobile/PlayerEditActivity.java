@@ -2,11 +2,13 @@ package at.ac.uniklu.mobile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import at.ac.uniklu.mobile.db.Participant;
@@ -23,6 +25,8 @@ public class PlayerEditActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    
+        
         Log.d(Constants.LOG_TAG, "on Create player edit");
         setContentView(R.layout.edit_user); 
         
