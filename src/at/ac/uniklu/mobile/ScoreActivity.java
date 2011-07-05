@@ -139,7 +139,7 @@ import at.ac.uniklu.mobile.util.Constants;
                               tt.setText(score.getUser().getNickname());                            
                         }
                         if(bt != null){
-                              bt.setText(Integer.valueOf(score.getScore()).toString());
+                              bt.setText(score.getUser().getScore());
                         }
                 }
                 return v;
