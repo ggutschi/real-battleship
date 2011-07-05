@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="400px" 
+  android:layout_height="fill_parent"
+  android:orientation="horizontal"
+  android:background="#f00">
+
+<ImageView android:id="@+id/ImageView01" 
+            android:layout_width="wrap_content" 
+            android:layout_height="wrap_content"
+            android:background="@drawable/logo_text">
+
+</ImageView>
+
+<TextView 
+
+  android:id="@+id/myTitle" 
+  android:text="Score: 0" 
+  android:layout_width="fill_parent" 
+  android:layout_height="fill_parent"
+  android:gravity="right"
+  android:textColor="#fff"
+   />
+</LinearLayout>
