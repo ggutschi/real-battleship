@@ -5,9 +5,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
+import android.app.ProgressDialog;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import at.ac.uniklu.mobile.ChallengeListActivity.MyTask;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.peer.PeerCommunication;
@@ -40,39 +43,18 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	/** current game score of player **/
 	private int				score;
 	Handler 				handler; 
+	private ProgressDialog 	progressDialog;
 	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
     	super.onCreate(savedInstanceState);
     	setContentView(R.layout.start_challenge);
-    	
-    	ChallengeListModel.getInstance(this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
-    	
-    	currentChallenge = ChallengeListModel.getInstance(this).getChallengeById(getIntent().getExtras().getInt(Challenge.FIELD_ID));
-    	
-    	// register activity as an observer object (e.g. for observing ship uncover actions to adjust current score in activity)
-    	currentChallenge.addObserver(this);
-    	
-    	Log.d(Constants.LOG_TAG, "Challenge: " + currentChallenge);
-    	
-    	PeerManager.init(currentChallenge, this.getBaseContext());
-    	
-    	
-    	mapView = (MapView) findViewById(R.id.challenge_map);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setSatellite(true);
+
         
-        addOverlays();
-        
-        mapController = mapView.getController();
-        
-        if (currentLocation != null) {
-	        mapController.setZoom(18);
-	        mapController.animateTo(currentLocation);
-        }
-        
-    	setupLocationManager();
+        ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Connecting to peers");
+        new MyTask(progress).execute();
 
         
         // set up button listener for uncover button
@@ -405,4 +387,57 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 			Log.e(Constants.LOG_TAG, "observable message not interpretable", ex);
 		}
 	}
+	
+
+    
+    public class MyTask extends AsyncTask<Void, Void, Void> {
+    	  public MyTask(ProgressDialog progress) {
+    	    progressDialog = progress;
+    	  }
+
+    	  public void onPreExecute() {
+    		  progressDialog.show();
+    	  }
+
+    	  public Void doInBackground(Void... unused) {
+    	    	
+    	    	ChallengeListModel.getInstance(ChallengeStartActivity.this).loadChallenge(getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	    	
+    	    	ChallengeStartActivity.this.currentChallenge = ChallengeListModel.getInstance(ChallengeStartActivity.this).getChallengeById(ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	    	
+    	    	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
+    	    	
+    	    	// register activity as an observer object (e.g. for observing ship uncover actions to adjust current score in activity)
+    	    	ChallengeStartActivity.this.currentChallenge.addObserver(ChallengeStartActivity.this);
+    	    	
+    	    	Log.d(Constants.LOG_TAG, "Challenge: " + ChallengeStartActivity.this.currentChallenge);
+
+    	    	
+    	    	PeerManager.init(ChallengeStartActivity.this.currentChallenge, ChallengeStartActivity.this.getBaseContext());
+    	    	
+    	    	return null;
+    	  }
+
+    	  public void onPostExecute(Void unused) {
+
+  	    	
+  	    	mapView = (MapView) findViewById(R.id.challenge_map);
+  	        mapView.setBuiltInZoomControls(true);
+  	        mapView.setSatellite(true);
+  	        
+  	        mapController = mapView.getController();
+  	        
+  	        if (currentLocation != null) {
+  		        mapController.setZoom(18);
+  		        mapController.animateTo(currentLocation);
+  	        }
+  	        
+  	    	setupLocationManager();
+  	    	
+  	    	
+  	        addOverlays();
+    		  
+    		  progressDialog.dismiss();
+    	  }
+    	}
 }

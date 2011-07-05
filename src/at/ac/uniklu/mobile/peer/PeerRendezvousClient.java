@@ -70,9 +70,8 @@ public class PeerRendezvousClient {
 			if (line != null && !line.equals(PeerManager.RENDEZVOUS_FIRST_PEER_MESSAGE) && !line.equals("")) {
 				Vector<Peer> peers = extractServerMessage(line);
 
-				challenge.setChanged();
-				challenge.notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Received peers: " + line));
-
+				//challenge.setChanged();
+				//challenge.notifyObservers(new ObservableMessage(MessageIntend.DEBUG_MESSAGE, "Received peers: " + line));
 
 				Log.d(Constants.LOG_TAG, "Server message " + line);
 				
