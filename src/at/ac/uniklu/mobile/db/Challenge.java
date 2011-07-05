@@ -165,6 +165,11 @@ public class Challenge extends Observable {
 
 		        		Log.d(Constants.LOG_TAG, "ShipPosition SETTED AS UNCOVERED challenge = " + this);
 						sp.setUncovered(true);
+	            		
+	            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
+		            		setChanged();
+		            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(Constants.SHIPCELL_SCORE)));
+	            		}
 						
 		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
@@ -173,11 +178,6 @@ public class Challenge extends Observable {
 		            		s.setDestroyed(true);
 
 		                	Log.d(Constants.LOG_TAG, "ship destroyed.");
-		            		
-		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
-			            		setChanged();
-			            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(Constants.SHIPCELL_SCORE)));
-		            		}
 		            	} else {
 		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
 		            			Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();

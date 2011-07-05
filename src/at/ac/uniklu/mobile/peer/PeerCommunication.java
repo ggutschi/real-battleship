@@ -20,6 +20,9 @@ import at.ac.uniklu.mobile.util.Constants;
 public class PeerCommunication extends Thread {
     private Socket server;
     private String line,input;
+    PrintStream out;
+    DataInputStream in;
+    boolean stop = false;
 
     public PeerCommunication(Socket server) {
       this.server=server;
@@ -29,10 +32,10 @@ public class PeerCommunication extends Thread {
 
       try {
         // Get input from the client
-        DataInputStream in = new DataInputStream (server.getInputStream());
-        PrintStream out = new PrintStream(server.getOutputStream());
+        in = new DataInputStream (server.getInputStream());
+        out = new PrintStream(server.getOutputStream());
 
-        while((line = in.readLine()) != null) {
+        while((line = in.readLine()) != null && !stop) {
         	Log.d(Constants.LOG_TAG, "handle peer message: " +  line);
         	handleClientMessage(line);
         }
@@ -47,7 +50,26 @@ public class PeerCommunication extends Thread {
     
     public void stopp() {
     	try {
-			server.close();
+    		Log.d(Constants.LOG_TAG, "Thread stopp()...");
+    		if (out != null) {
+        		Log.d(Constants.LOG_TAG, "Close out...");
+    			out.close();
+        		Log.d(Constants.LOG_TAG, "out closed.");
+    		}
+    		
+    		if (in != null) {
+        		Log.d(Constants.LOG_TAG, "Close in...");
+    			in.close();
+        		Log.d(Constants.LOG_TAG, "In closed.");
+    		}
+    		
+    		if (server != null) {
+        		Log.d(Constants.LOG_TAG, "Close server...");
+    			server.close();
+        		Log.d(Constants.LOG_TAG, "Server closed.");
+    		}
+    		
+    		stop = true;
 		} catch (IOException e) {
 	    	  Log.e(Constants.LOG_TAG, "IOException on server close: ", e);
 		}
