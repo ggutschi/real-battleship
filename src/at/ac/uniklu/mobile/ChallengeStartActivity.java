@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.message.ObservableMessage;
+import at.ac.uniklu.mobile.peer.PeerCommunication;
 import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
@@ -118,22 +119,28 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	Log.d(Constants.LOG_TAG, "super.onDestroy()...");
 		super.onDestroy();
 
-    	Log.d(Constants.LOG_TAG, "closeConnections()...");
-		PeerManager.closeConnections();
-
-    	Log.d(Constants.LOG_TAG, "myPeer.stopp()...");
-		PeerManager.myPeer.stopp();
 		
-		Vector<Thread> peerThreads = PeerManager.myPeer.getPeerThreads();
+		Vector<PeerCommunication> peerCommunications = PeerManager.myPeer.getPeerCommunication();
 		
-		for (Thread peerThread : peerThreads) {
+		for (PeerCommunication peerCommunication : peerCommunications) {
 			try {
-				peerThread.join();
+
+				peerCommunication.stopp();
+				Log.e(Constants.LOG_TAG, "Joining peerThread...");
+				peerCommunication.join();
+				Log.e(Constants.LOG_TAG, "peerThread joined.");
 			}
 			catch(Exception ex) {
 				Log.e(Constants.LOG_TAG, "peer join exception", ex);
 			}
 		}
+
+    	Log.d(Constants.LOG_TAG, "closeConnections()...");
+		PeerManager.closeConnections();
+
+    	Log.d(Constants.LOG_TAG, "myPeer.stopp()...");
+		PeerManager.myPeer.stopp();
+    	Log.d(Constants.LOG_TAG, "myPeer.stopped");
 		
 		try {
 	    	Log.d(Constants.LOG_TAG, "Thread.join()...");
@@ -204,7 +211,7 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     
     private void uncoverCell(int x, int y) {
     	// only send uncover message if shipcell uncovered
-		if (currentChallenge.uncoverCellLocally(x, y, this))
+		if (currentChallenge.uncoverCellLocally(x, y, this, PeerManager.myPeer.getAndroidId()))
 	    	PeerManager.sendUncoverMessage(x, y);
 		
     	Log.d(Constants.LOG_TAG, "Cell uncovered");
@@ -389,7 +396,6 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 				break;
 			case UPDATE_MAP:
 				handler.sendMessage(new Message());
-	    		this.addOverlays();
 	    		break;
 			default:
 				Log.e(Constants.LOG_TAG, "unkown observable message intend");

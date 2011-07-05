@@ -13,6 +13,7 @@ import android.widget.Toast;
 import at.ac.uniklu.mobile.R;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
+import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 
 import com.google.android.maps.GeoPoint;
@@ -155,7 +156,7 @@ public class Challenge extends Observable {
 		super.setChanged();
 	}
 	
-	private void uncoverShipPositionLocallyAt(int x, int y, Context c) {
+	private void uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
 				if (sp.getRow() == y && sp.getColumn() == x) {
@@ -165,33 +166,43 @@ public class Challenge extends Observable {
 						sp.setUncovered(true);
 						
 		            	if (s.getNumberOfUncoveredShipPositions() == s.getShipPositions().size()) {
-		            		Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
+		            		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
+		            			Toast.makeText(c, R.string.ship_uncovered, Toast.LENGTH_SHORT).show();
 		            		// notify activity view that score has to be changed
 		            		s.setDestroyed(true);
-		            		setChanged();
-		            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(s.getShipPositions().size())));
-		            	} else
-							Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
+		            		
+		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
+			            		setChanged();
+			            		notifyObservers(new ObservableMessage(MessageIntend.SCORE_INCREMENT, new Integer(s.getShipPositions().size())));
+		            		}
+		            	} else {
+		            		if (androidId.equals(PeerManager.myPeer.getAndroidId())) {
+		            			Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
+		            		}
+		            	}
 					}
 		    		
 		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
 				}
 	}
 	
-	public boolean uncoverCellLocally(int x, int y, Context c) {
+	public boolean uncoverCellLocally(int x, int y, Context c, String androidId) {
 		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
 
         	Log.d(Constants.LOG_TAG, "Uncovering cell (" + x + ", " + y + ")");
         	
         	if (uncoveredCells.get(y).get(x)) {
-        		Toast.makeText(c, R.string.already_uncovered, Toast.LENGTH_SHORT).show();
+
+        		if (androidId.equals(PeerManager.myPeer.getAndroidId()))
+        			Toast.makeText(c, R.string.already_uncovered, Toast.LENGTH_SHORT).show();
+        		
         		return false;
         	}
         	
         	uncoveredCells.get(y).set(x, true);
 
         	Log.d(Constants.LOG_TAG, "Uncovering shipPosition");
-			this.uncoverShipPositionLocallyAt(x, y, c);
+			this.uncoverShipPositionLocallyAt(x, y, c, androidId);
 			
     		setChanged();
     		notifyObservers(new ObservableMessage(MessageIntend.UPDATE_MAP, null));
