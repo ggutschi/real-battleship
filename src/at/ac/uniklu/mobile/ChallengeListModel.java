@@ -230,8 +230,9 @@ public class ChallengeListModel {
      * @param android_id the unique android id of the new participants´ smartphone
      * @param ip_address the current ip address of the new participants´ smartphone
      * @param challenge_id the id of the challenge a new participant wants to join with
+     * @param nickname the nickname of the player
      */
-    public boolean addParticipant(String android_id, String ip_address, int challenge_id) {
+    public boolean addParticipant(String android_id, String ip_address, int challenge_id, String nickname) {
     	boolean bTransactionPerformed = false;
     	HttpClient httpClient = new DefaultHttpClient(); 
     	HttpResponse response; 
@@ -243,16 +244,10 @@ public class ChallengeListModel {
 	         nameValuePairs.add(new BasicNameValuePair("android_id", android_id));
 	         nameValuePairs.add(new BasicNameValuePair("inet_address", ip_address));
 	         nameValuePairs.add(new BasicNameValuePair("challenge_id", Integer.toString(challenge_id)));
+	         nameValuePairs.add(new BasicNameValuePair("nickname", nickname));
 	         postMethod.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-	    	
-	    	/*params.setParameter("android_id", android_id);
-	    	params.setParameter("inet_address", ip_address);	    	
-	    	params.setParameter("challenge_id", challenge_id);
-	    	postMethod.setParams(params);
-	    	*/
-	    	
-	    	//Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
+	         //Log.d(Constants.LOG_TAG, "call webservice to add participant with params: " + params.toString());
 	    	
 	    	response = httpClient.execute(postMethod);
 	    	
