@@ -161,7 +161,7 @@ public class Challenge extends Observable {
 			for (ShipPosition sp : s.getShipPositions())
 				if (sp.getRow() == y && sp.getColumn() == x) {
 					
-					//if (!sp.isUncovered()) {
+					if (!sp.isUncovered()) {
 
 		        		Log.d(Constants.LOG_TAG, "ShipPosition SETTED AS UNCOVERED challenge = " + this);
 						sp.setUncovered(true);
@@ -183,7 +183,7 @@ public class Challenge extends Observable {
 		            			Toast.makeText(c, R.string.ship_position_uncovered, Toast.LENGTH_SHORT).show();
 		            		}
 		            	}
-					//}
+					}
 		    		
 		        	Log.d(Constants.LOG_TAG, "ShipPosition uncovered");
 				}
