@@ -103,6 +103,20 @@ public class HomeActivity extends MapActivity {
         
         // set up button listener for menu selection
         final Button button_reset = (Button) findViewById(R.id.button_reset_challenge);
+        if (username!=null && username.equalsIgnoreCase("chris")) {
+        	Log.d(Constants.LOG_TAG, "enable reset button");
+        	button_reset.setVisibility(0);
+        	button_reset.setEnabled(true);
+        	
+        }
+        	        	
+        else {
+        	Log.d(Constants.LOG_TAG, "disable reset button");
+        	button_reset.setVisibility(4);
+        	button_reset.setEnabled(false);
+        	
+        }
+        
         button_reset.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "reset challenge button clicked");
