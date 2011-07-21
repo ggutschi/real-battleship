@@ -6,6 +6,8 @@ package at.ac.uniklu.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -234,5 +236,19 @@ public class ChallengeListActivity extends ListActivity {
 
         ChallengeListActivity.this.registerForContextMenu(getListView());
     }
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		FlurryAgent.onStartSession(this, "RWETYFSLDYJSHJQG8S3B");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		FlurryAgent.onEndSession(this);
+	}
 
 }
