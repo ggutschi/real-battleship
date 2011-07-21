@@ -3,6 +3,8 @@ package at.ac.uniklu.mobile;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -96,6 +98,21 @@ import at.ac.uniklu.mobile.util.Constants;
 	        }
 	    }
 	    
+
+
+		@Override
+		protected void onStart() {
+			super.onStart();
+			
+			FlurryAgent.onStartSession(this, "RWETYFSLDYJSHJQG8S3B");
+		}
+
+		@Override
+		protected void onStop() {
+			super.onStop();
+			
+			FlurryAgent.onEndSession(this);
+		}
 	    
 	    
 	    @Override

@@ -2,6 +2,8 @@ package at.ac.uniklu.mobile;
 
 import java.io.IOException;
 
+import com.flurry.android.FlurryAgent;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -48,6 +50,22 @@ public class PlayerEditActivity extends Activity {
             }
         });
     }
+    
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		FlurryAgent.onStartSession(this, "RWETYFSLDYJSHJQG8S3B");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		FlurryAgent.onEndSession(this);
+	}
     
     /**
      * Create the change listeners we'll need to react to user input.

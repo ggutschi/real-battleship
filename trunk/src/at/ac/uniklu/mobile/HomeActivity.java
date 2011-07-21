@@ -25,6 +25,7 @@ import at.ac.uniklu.mobile.util.GridOverlay;
 import at.ac.uniklu.mobile.util.HttpUtil;
 import at.ac.uniklu.mobile.util.PositionOverlay;
 
+import com.flurry.android.FlurryAgent;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -145,6 +146,22 @@ public class HomeActivity extends MapActivity {
     public void onConfigurationChanged(Configuration newConfig) {
       super.onConfigurationChanged(newConfig);
     }
+    
+
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		
+		FlurryAgent.onStartSession(this, "RWETYFSLDYJSHJQG8S3B");
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		
+		FlurryAgent.onEndSession(this);
+	}
     
     
     @Override
