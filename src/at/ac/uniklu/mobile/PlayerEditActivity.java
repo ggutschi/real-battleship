@@ -1,27 +1,34 @@
 package at.ac.uniklu.mobile;
 
-import java.io.IOException;
 
 import com.flurry.android.FlurryAgent;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.EditText;
 import at.ac.uniklu.mobile.db.Participant;
 import at.ac.uniklu.mobile.util.Constants;
 
+
+/**
+ * Start screen of application asking for the name of the user
+ */
 public class PlayerEditActivity extends Activity {
 	
+	/**
+	 * Text field for username
+	 */
 	private EditText user_nickname;
+	
+	/**
+	 * Button for confirming username
+	 */
 	private Button button_continue;
 	
 	 /**

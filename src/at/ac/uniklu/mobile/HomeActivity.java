@@ -1,8 +1,5 @@
 package at.ac.uniklu.mobile;
 	
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.List;
 
 import android.content.Context;
@@ -15,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.Button;
@@ -25,12 +21,8 @@ import android.app.AlertDialog;
 
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Participant;
-import at.ac.uniklu.mobile.db.Ship;
-import at.ac.uniklu.mobile.db.ShipPosition;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.GridOverlay;
-import at.ac.uniklu.mobile.util.HttpUtil;
-import at.ac.uniklu.mobile.util.PositionOverlay;
 
 import com.flurry.android.FlurryAgent;
 import com.google.android.maps.GeoPoint;
@@ -41,13 +33,34 @@ import com.google.android.maps.Overlay;
 
 public class HomeActivity extends MapActivity {
 	
+	/**
+	 * Map view displaying the chosen challenge
+	 */
 	private MapView mapView;
+	
+	/**
+	 * Controller to control map view
+	 */
 	private MapController mapController;
 	
+	/**
+	 * Reference to currently chosen challenge
+	 */
 	private Challenge currentChallenge;
+	
+	/**
+	 * Current location of user
+	 */
 	private GeoPoint currentLocation;
+	
+	/**
+	 * Username of user
+	 */
 	private String username;
 	
+	/**
+	 * Location manager to proof availability of gps
+	 */
 	LocationManager locManager;
 	
     /** Called when the activity is first created. */
@@ -175,7 +188,10 @@ public class HomeActivity extends MapActivity {
         });*/
     }
     
-    
+    /**
+     * Proofs if internet connection is available
+     * @return true if connected to the internet, false ototherse
+     */
     public boolean isOnline() {
     	 ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     	 NetworkInfo ni = cm.getActiveNetworkInfo();
@@ -227,6 +243,9 @@ public class HomeActivity extends MapActivity {
 			
 	}
     
+    /**
+     * Zooms out and displays current location of user
+     */
     private void zoomOut() {
     	GeoPoint lt = currentChallenge.getLocationLeftTop();
     	GeoPoint rb = currentChallenge.getLocationRightBottom();
@@ -275,6 +294,9 @@ public class HomeActivity extends MapActivity {
         }
     }
 
+    /**
+     * adds the overlay displaying the grid
+     */
 	private void addOverlays() {
     	List<Overlay> overlays = mapView.getOverlays();
     	overlays.clear();

@@ -29,15 +29,26 @@ import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
 /**
- * Activity for display all available challenges.
+ * Activity for displaying all available challenges.
  *
  */
 public class ChallengeListActivity extends ListActivity {
 	
 	private ArrayList<Challenge> challengeList;
     
+	/**
+	 * Progress dialog displayed during challenge retrieval from webserver
+	 */
 	private ProgressDialog progressDialog;
-	private ChallengeListModel listModel = null; 
+	
+	/**
+	 * List model holding challenges
+	 */
+	private ChallengeListModel listModel = null;
+	
+	/**
+	 * Nickname of user
+	 */
 	private String nickname;
 	
 	/** Called when the activity is first created. */
@@ -45,6 +56,7 @@ public class ChallengeListActivity extends ListActivity {
     public void onCreate(Bundle savedInstanceState) {    	 
     	super.onCreate(savedInstanceState);
 
+    	// Set title and background color of title bar
     	View titleView = getWindow().findViewById(android.R.id.title);
     	if (titleView != null) {
     	  ViewParent parent = titleView.getParent();
@@ -197,6 +209,9 @@ public class ChallengeListActivity extends ListActivity {
         }
     }
     
+    /**
+     * Task for progress dialog
+     */
     public class MyTask extends AsyncTask<Void, Void, Void> {
     	  public MyTask(ProgressDialog progress) {
     	    progressDialog = progress;

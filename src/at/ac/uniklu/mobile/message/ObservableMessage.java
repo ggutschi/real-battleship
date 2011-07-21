@@ -6,8 +6,16 @@ package at.ac.uniklu.mobile.message;
  *
  */
 public class ObservableMessage {
+	/**
+	 * Kind of message
+	 */
 	public enum MessageIntend {SCORE_INCREMENT, SCORE_DECREMENT, DEBUG_MESSAGE, UPDATE_MAP};
+	
+	/**
+	 * Encapsulated message object
+	 */
 	public Object messageContent;
+	
 	public MessageIntend messageIntend;
 	
 	public ObservableMessage(MessageIntend pMessageIntend, Object pMessageContent) {

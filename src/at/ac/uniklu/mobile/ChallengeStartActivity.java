@@ -1,36 +1,28 @@
 package at.ac.uniklu.mobile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewParent;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import at.ac.uniklu.mobile.ChallengeListActivity.MyTask;
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Participant;
-import at.ac.uniklu.mobile.message.MessageLog;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.peer.PeerCommunication;
 import at.ac.uniklu.mobile.peer.PeerManager;
@@ -45,45 +37,75 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 
+
+/**
+ * Main screen for playing the game. It displays a fullscreen google map,
+ * the score and a button to uncover grid cells.
+ */
 public class ChallengeStartActivity extends MapActivity implements Observer {
 	
+	/**
+	 * Map for displaying the grid
+	 */
 	private MapView 		mapView;
+	
+	/**
+	 * Controller to control the map view
+	 */
 	private MapController 	mapController;
+	
 	//private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
+	
+	/**
+	 * GeoPoint representing the current user position
+	 */
 	private GeoPoint		currentLocation;
+	
+	/**
+	 * Currently chosen challenge
+	 */
 	private Challenge 		currentChallenge;
-	/** current game score of player **/
+	
+	/**
+	 * Current game score
+	 */
 	private int				score;
-	Handler 				handler; 
+	
+	/**
+	 * Handler for cross thread communication for progress dialog
+	 */
+	Handler 				handler;
+	
+	/**
+	 * Progress dialog displayed while connecting to peers
+	 */
 	private ProgressDialog 	progressDialog;
 	
-	/** Called when the activity is first created. */
+	/**
+	 * Called when the activity is first created.
+	 **/
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
     	super.onCreate(savedInstanceState);
     	
-    	
+
     	final boolean customTitleSupported = requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 
     	setContentView(R.layout.start_challenge);
 
-
+    	// set custom image as titlebar
         if ( customTitleSupported ) {
             getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.titlebar);
         }
-        
+     
         
     	Log.d(Constants.LOG_TAG, "OnCreate called.");
     	
-    
-        
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Connecting to peers");
         new MyTask(progress).execute();
         
-        
-
         
         // set up button listener for uncover button
         final Button button_start = (Button) findViewById(R.id.button_uncover);
@@ -201,6 +223,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 
 
 
+	/**
+	 * Adds the overlays for the grid and the current position cross
+	 */
 	private void addOverlays() {
 
     	Log.d(Constants.LOG_TAG, "currentChallenge = " + ChallengeStartActivity.this.currentChallenge + " id = " + ChallengeStartActivity.this.getIntent().getExtras().getInt(Challenge.FIELD_ID));
@@ -215,9 +240,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	Log.d(Constants.LOG_TAG, "Overlays added.");
     }
     
+	/**
+	 * Calculates the x componente of the current cell position
+	 * @return x component of current position
+	 */
     private int getCurrentCellX() {
-    	// TODO: Make calculations for other quarters of earth
-    	
     	
     	int right   = currentChallenge.getLocationRightBottom().getLongitudeE6();
     	int left    = currentChallenge.getLocationLeftTop().getLongitudeE6();
@@ -238,8 +265,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	return i;
     }
     
+	/**
+	 * Calculates the y componente of the current cell position
+	 * @return y component of current position
+	 */
     private int getCurrentCellY() {
-    	// TODO: Make calculations for other quarters of earth
     	
     	int bottom  = currentChallenge.getLocationRightBottom().getLatitudeE6();
     	int top     = currentChallenge.getLocationLeftTop().getLatitudeE6();
@@ -260,6 +290,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	return currentChallenge.getCellsY() - i;
     }
     
+    /**
+     * Uncovers the cell with the given x and y coordinates
+     * @param x x coordinate of point
+     * @param y y coordinate of point
+     */
     private void uncoverCell(int x, int y) {
     	// only send uncover message if shipcell uncovered
     	
@@ -271,68 +306,11 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	Log.d(Constants.LOG_TAG, "Cell uncovered");
     }
     
-    
-    /*
-    private boolean sendUncoverRequest(int x, int y) {
-    	boolean bTransactionPerformed = false;
-    	HttpClient httpClient = new DefaultHttpClient(); 
-    	HttpResponse response; 
-    	HttpPost postMethod = new HttpPost(Constants.URL_WEBSERVICE_UNCOVERSHIPPOSITION);  
-    	  
-    	try {  
-	    	 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	         nameValuePairs.add(new BasicNameValuePair("challenge_id", String.valueOf(currentChallenge.getId())));
-	         nameValuePairs.add(new BasicNameValuePair("row", String.valueOf(y)));
-	         nameValuePairs.add(new BasicNameValuePair("col", String.valueOf(x)));
-	         postMethod.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-			Log.d(Constants.LOG_TAG, "challenge id: " + currentChallenge.getId());
-
-		    Log.d(Constants.LOG_TAG, "challenge_id: " + nameValuePairs.get(0).toString());
-		    Log.d(Constants.LOG_TAG, "row: " + nameValuePairs.get(1).toString());
-		    Log.d(Constants.LOG_TAG, "col: " + nameValuePairs.get(2).toString());
-	    	
-	    	response = httpClient.execute(postMethod);
-	    	
-	    	if (response.getStatusLine().getStatusCode() == Constants.WEBSERVICE_STATUSCODE_OK) {
-	    		Log.d(Constants.LOG_TAG, "webservice response code ok");
-	    		HttpEntity entity = response.getEntity();    			
-    			if (entity != null)
-    			{
-    				InputStream instream = entity.getContent();  
-            		BufferedReader reader = new BufferedReader(new InputStreamReader(instream));
-            		String line = reader.readLine();
-            		
-            		if (line.equals(Constants.WEBSERVICE_STATUSCODE_UNCOVERED)) {
-            			bTransactionPerformed = true; // add participant successful
-            			Log.d(Constants.LOG_TAG, "webservice transaction successful");
-            		}
-            		else
-            			Log.e(Constants.LOG_TAG, "webservice transaction was not successful, response: " + line);
-    			}
-    			else
-    				Log.e(Constants.LOG_TAG, "webservice response entity is empty");
-	    	}
-	    	else
-	    		Log.e(Constants.LOG_TAG, "webservice response code not ok: " + response.getStatusLine().getStatusCode());
-	    	
-    	} catch (ClientProtocolException e) {    
-    		e.printStackTrace();  
-    		Log.e(Constants.LOG_TAG, "", e);
-    	} catch (IOException e) {
-    		e.printStackTrace();  
-    		Log.e(Constants.LOG_TAG, "", e);
-    	} catch (Exception e) {    
-    		e.printStackTrace();  
-    		Log.e(Constants.LOG_TAG, "", e);
-    	} finally {  
-    		postMethod.abort();  
-    	}
-    	
-    	return bTransactionPerformed;
-    }
-    */
-    
+    /**
+     * proofs if the given geopoint is inside the grid
+     * @param gp Geo point to proof
+     * @return true if the given geopoint is inside the grid, false otherwise
+     */
     public boolean isInGrid(GeoPoint gp) {
     	return gp.getLatitudeE6() <= currentChallenge.getLocationLeftTop().getLatitudeE6()
     	 	&& gp.getLatitudeE6() >= currentChallenge.getLocationRightBottom().getLatitudeE6()
@@ -368,6 +346,10 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
     	return score;
     }
     
+    
+    /**
+     * Initializes a location manager and corresponding location listener
+     */
     public void setupLocationManager() {
 
 		final Button bUncover = (Button) findViewById(R.id.button_uncover);
@@ -473,7 +455,9 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	}
 	
 
-    
+    /**
+     * AsyncTask for connecting to all peers
+     */
     public class MyTask extends AsyncTask<Void, Void, Void> {
     	  public MyTask(ProgressDialog progress) {
     	    progressDialog = progress;

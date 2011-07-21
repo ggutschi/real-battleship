@@ -2,14 +2,31 @@ package at.ac.uniklu.mobile.message;
 
 import java.io.Serializable;
 
-import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.util.Constants;
 
+/**
+ * Message sent when a peer uncovers a field
+ */
 public class UncoverMessage extends PeerMessage implements Serializable {
 	
+	/**
+	 * id of challenge
+	 */
 	private int challengeId;
+	
+	/**
+	 * vector timestamp for recognizing conflicts
+	 */
 	private VectorTimestamp vt;
+	
+	/**
+	 * x coordinate of uncovered cell
+	 */
 	private int x;
+	
+	/**
+	 * y coordinate of uncovered cell
+	 */
 	private int y;
 	
 	public UncoverMessage(String androidId, int challengeId, VectorTimestamp myTimestamp, int x, int y) {
@@ -44,7 +61,11 @@ public class UncoverMessage extends PeerMessage implements Serializable {
 		return challengeId;
 	}
 
-	
+	/**
+	 * Extracts the vector timestamp from the given uncover message
+	 * @param msgSplitted uncover message splitted by separation character
+	 * @return extracted vector timestamp
+	 */
 	public static VectorTimestamp extractVectorTimestamp(String[] msgSplitted) {
 		if (msgSplitted.length > 1) {
 			VectorTimestamp vt = new VectorTimestamp(msgSplitted[1]);

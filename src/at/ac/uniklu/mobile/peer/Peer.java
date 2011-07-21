@@ -1,8 +1,6 @@
 package at.ac.uniklu.mobile.peer;
 
-import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -14,26 +12,50 @@ import android.util.Log;
 import at.ac.uniklu.mobile.message.ObservableMessage;
 import at.ac.uniklu.mobile.message.ReleasedMessage;
 import at.ac.uniklu.mobile.message.UncoverMessage;
-import at.ac.uniklu.mobile.message.VectorTimestamp;
 import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 
 /**
- * describes one peer in network
+ * Describes a single peer in the network
  */
 public class Peer implements Runnable {
 	
+	/**
+	 * android device id
+	 */
 	private String androidId;
+	
+	/**
+	 * ip address of peer
+	 */
 	private InetAddress ipAddress;
+	
+	/**
+	 * socket for connecting to peer
+	 */
 	private Socket socket;
+	
+	/**
+	 * print writer for writing to socket
+	 */
 	private PrintWriter out;
+	
+	/**
+	 * socket for incoming socket connection
+	 */
 	private Socket sSocket;
+	
+	/**
+	 * server socket for incoming connection
+	 */
 	private ServerSocket ss;
+	
+	/**
+	 * vector of threads handling communications to all other peers
+	 */
 	private Vector<PeerCommunication> peerCommunications = new Vector<PeerCommunication>();
 	
 	
-
-
 	private boolean stop = false;
 	
 	public Peer(String androidId, InetAddress ipAddress) {
@@ -47,6 +69,12 @@ public class Peer implements Runnable {
 		return peerCommunications;
 	}
 	
+	
+	/**
+	 * connects to the current peer
+	 * @param rendezvous if true, a rendezvous message will be send to the peer
+	 * @return true if successfully connected, false otherwise
+	 */
 	public boolean connectToPeer(boolean rendezvous) {
 		try {
 			Log.d(Constants.LOG_TAG, "Connecting to peer " + androidId + " with IP " + ipAddress + " (rendezvous = " + rendezvous + ") ...");
@@ -81,10 +109,18 @@ public class Peer implements Runnable {
 		}
 	}
 	
+	
+	/**
+	 * checks if peer is the server
+	 * @return true if peer is server, false otherwise
+	 */
 	public boolean isServer() {
 		return this.ipAddress.getHostAddress().equals(PeerManager.RENDEZVOUS_SERVER_IP);
 	}
 	
+	/**
+	 * closes the connection to this peer
+	 */
 	public void closeSocket() {
 		try {
 			if (out != null)
@@ -111,6 +147,11 @@ public class Peer implements Runnable {
 		this.ipAddress = ipAddress;
 	}
 	
+	/**
+	 * sends an uncover message to this peer
+	 * @param x x coordinate of uncovered cell
+	 * @param y y coordinate of uncovered cell
+	 */
 	public void sendUncoverMessage(int x, int y) {
 		if (socket != null && socket.isConnected()) {
 			Log.d(Constants.LOG_TAG , "Peer try to send message to android id " + this.androidId);
@@ -134,7 +175,10 @@ public class Peer implements Runnable {
 		}
 	}
 	
-	
+	/**
+	 * sends a release message to the current peer
+	 * @param androidId android id of sending peer
+	 */
 	public void sendReleaseMessage(String androidId) {
 		if (socket != null && socket.isConnected()) {
 			Log.d(Constants.LOG_TAG , "Peer try to send message...");

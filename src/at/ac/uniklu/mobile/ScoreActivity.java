@@ -8,7 +8,6 @@ import com.flurry.android.FlurryAgent;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.DataSetObserver;
 import android.graphics.Color;
@@ -20,11 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import at.ac.uniklu.mobile.db.Challenge;
-import at.ac.uniklu.mobile.db.Participant;
 import at.ac.uniklu.mobile.db.Score;
 import at.ac.uniklu.mobile.util.Constants;
 
@@ -34,14 +31,34 @@ import at.ac.uniklu.mobile.util.Constants;
 	 */
 	public class ScoreActivity extends ListActivity {
 		
+		/**
+		 * id of current challenge
+		 */
 		private int challenge_id;
+		
+		/**
+		 * nickname of current user
+		 */
 		private String nickname;
+		
+		/**
+		 * list of scores
+		 */
 		private ArrayList<Score> scoreList;
-	    
+
+		/**
+		 * progress dialog displayed during loading of scores
+		 */
 		private ProgressDialog progressDialog;
+		
+		/**
+		 * list model holding all scores
+		 */
 		private ScoreListModel listModel = null; 
 		
-		/** Called when the activity is first created. */
+		/**
+		 * Called when the activity is first created. 
+		 * */
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {    	 
 	    	super.onCreate(savedInstanceState);
@@ -188,6 +205,9 @@ import at.ac.uniklu.mobile.util.Constants;
 	        }
 	    }
 	    
+	    /**
+	     * AsyncTask for progress dialog
+	     */
 	    public class MyTask extends AsyncTask<Void, Void, Void> {
 	    	private int challenge_id;
 	    	  public MyTask(ProgressDialog progress, int challenge) {

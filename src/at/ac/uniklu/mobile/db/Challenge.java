@@ -156,6 +156,13 @@ public class Challenge extends Observable {
 		super.setChanged();
 	}
 	
+	/**
+	 * Uncovers the shipposition at position x, y at the local peer
+	 * @param x x coordinate of cell
+	 * @param y y coordinate of cell
+	 * @param c Context
+	 * @param androidId uncovering android device id
+	 */
 	private void uncoverShipPositionLocallyAt(int x, int y, Context c, String androidId) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
@@ -189,6 +196,10 @@ public class Challenge extends Observable {
 				}
 	}
 	
+	/**
+	 * Proofs if all ships are destroyed and game is over
+	 * @return true if all ships are destroyed, false otherwise
+	 */
 	private boolean allShipsDestroyed() {
     	Log.d(Constants.LOG_TAG, "all ships destroyed...");
 		for (Ship s : ships)
@@ -201,6 +212,13 @@ public class Challenge extends Observable {
 		return true;
 	}
 	
+	/**
+	 * Uncovers the cell at position x, y at the local peer
+	 * @param x x coordinate of cell
+	 * @param y y coordinate of cell
+	 * @param c Context
+	 * @param androidId uncovering android device id
+	 */
 	public void uncoverCellLocally(int x, int y, Context c, String androidId) {
 		if (y < uncoveredCells.size() && uncoveredCells.size() > 0 && x < uncoveredCells.get(0).size()) {
 
@@ -231,6 +249,12 @@ public class Challenge extends Observable {
 		
 	}
 	
+	/**
+	 * Proofs if cell at position x, y is a shipcell
+	 * @param x
+	 * @param y
+	 * @return true if cell is shipcell, false otherwise
+	 */
 	public boolean isShipCell(int x, int y) {
 		for (Ship s : this.ships)
 			for (ShipPosition sp : s.getShipPositions())
@@ -240,6 +264,10 @@ public class Challenge extends Observable {
 		return false;
 	}
 	
+	
+	/**
+	 * Resets the challenge at the local peer
+	 */
 	public void resetChallengeLocally() {
 		for (Ship s : ships)
 			for (ShipPosition sp : s.getShipPositions())

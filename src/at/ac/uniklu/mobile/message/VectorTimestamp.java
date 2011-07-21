@@ -6,6 +6,10 @@ import android.util.Log;
 import at.ac.uniklu.mobile.peer.PeerManager;
 import at.ac.uniklu.mobile.util.Constants;
 
+
+/**
+ * Classical vector timestamp
+ */
 public class VectorTimestamp {
 	private HashMap<String, Integer> myVector = new HashMap<String, Integer>();
 	private String androidId;
@@ -23,6 +27,10 @@ public class VectorTimestamp {
 		return myVector;
 	}
 	
+	/**
+	 * Adapts the local timestamp to the given one
+	 * @param received
+	 */
 	public synchronized void adapt(VectorTimestamp received) {
 		HashMap<String, Integer> receivedVector = received.getVector();
 		
@@ -33,6 +41,9 @@ public class VectorTimestamp {
 		}
 	}
 	
+	/**
+	 * increases the local timestamp
+	 */
 	public synchronized void next()   {
 		if (myVector.containsKey(androidId))
 			myVector.put(androidId, myVector.get(androidId) + 1);
@@ -40,10 +51,21 @@ public class VectorTimestamp {
 			myVector.put(androidId, 0);
 	}
 
+	/**
+	 * proofs if a causal error exists
+	 * @param received
+	 * @return
+	 */
 	public boolean causalError(VectorTimestamp received)   {
 		return less(received.getVector(), myVector);
 	}
 	
+	/**
+	 * proofs if two timestamps are the same
+	 * @param hm1
+	 * @param hm2
+	 * @return
+	 */
 	public static boolean equals (HashMap<String, Integer> hm1, HashMap<String, Integer> hm2) {
 		for (String androidId : hm1.keySet())
 			if (hm2.containsKey(androidId) && hm1.get(androidId) != hm2.get(androidId))
@@ -52,6 +74,12 @@ public class VectorTimestamp {
 		return true;
 	}
 	
+	/**
+	 * proofs if timestamp 1 is less than timestamp 2
+	 * @param hm1
+	 * @param hm2
+	 * @return
+	 */
 	public static boolean less (HashMap<String, Integer> hm1, HashMap<String, Integer> hm2)   {
 		if (equals(hm1, hm2))
 			return false;

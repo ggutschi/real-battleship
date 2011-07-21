@@ -77,7 +77,8 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             	canvas.drawLine(f, point1.y, f, point2.y, paint);
 
             // draw horizontal lines
-            for (float f = point1.y; f >= point2.y; f += diffY)
+            Log.d(Constants.LOG_TAG, "p2.y = " + point2.y + " p1.y = " + point1.y);
+            for (float f = point2.y; f <= point1.y; f += diffY)
             	canvas.drawLine(point1.x, f, point2.x, f, paint);
 
     		paint.setColor(UNCOVERED_CELL_COLOR);
