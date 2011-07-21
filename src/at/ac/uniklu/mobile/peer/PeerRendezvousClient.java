@@ -20,6 +20,9 @@ import at.ac.uniklu.mobile.message.ObservableMessage.MessageIntend;
 import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
+/**
+ * Rendezvous client for getting list of peers
+ */
 public class PeerRendezvousClient {	
 
 	private Challenge challenge = null;
