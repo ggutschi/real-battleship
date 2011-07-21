@@ -8,7 +8,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,9 +27,14 @@ import at.ac.uniklu.mobile.db.Score;
 import at.ac.uniklu.mobile.util.Constants;
 
 
+/**
+ * List model holding all scores
+ */
 public class ScoreListModel {
 
-	/** list of all available challenges **/
+	/**
+	 * list of all available challenges
+	 * **/
 	private ArrayList<Score> scoreList;
 	
 	 /**
@@ -57,6 +61,11 @@ public class ScoreListModel {
         scoreList = new ArrayList<Score>();
     }
     
+    
+    /**
+     * Loads all scores of the challenge with the given id
+     * @param challenge_id id of challenge
+     */
     public void loadScores(int challenge_id) {
     	
     	Log.d(Constants.LOG_TAG, "load scores from challenge with id " + challenge_id);

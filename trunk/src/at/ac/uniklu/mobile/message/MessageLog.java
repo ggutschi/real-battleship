@@ -4,10 +4,19 @@ import java.util.LinkedList;
 
 import at.ac.uniklu.mobile.peer.PeerManager;
 
+/**
+ * Logger for peer messages to resolve message conflicts
+ */
 public class MessageLog {
+	/**
+	 * Message list
+	 */
 	private LinkedList<PeerMessage> ll = new LinkedList<PeerMessage>();
 	
-	
+	/**
+	 * Adds the given message to the list
+	 * @param m message to add
+	 */
 	public void addMessage(PeerMessage m) {
 		synchronized(ll) {
 			ll.add(m);
@@ -27,6 +36,9 @@ public class MessageLog {
 		}
 	}
 	
+	/**
+	 * Clears the message list
+	 */
 	public void clearLog() {
 		synchronized(ll) {
 			ll.clear();

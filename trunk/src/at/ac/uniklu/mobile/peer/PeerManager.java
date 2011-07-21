@@ -17,8 +17,7 @@ import at.ac.uniklu.mobile.util.Constants;
 import at.ac.uniklu.mobile.util.HelperUtil;
 
 /**
- * handles peers
- *
+ * manager for handling all peers
  */
 public class PeerManager {
 	
@@ -38,9 +37,11 @@ public class PeerManager {
 	public static String RENDEZVOUS_MESSAGE_SEP_CHAR = ";";
 	public static String RENDEZVOUS_FIRST_PEER_MESSAGE = "OK";
 	
+	/** local peer **/
 	public static Peer 		myPeer;
 	public static Thread 	peerServerThread;
 
+	/** log for incoming messages **/
 	public static MessageLog	log				= new MessageLog();
 	
 	public static PeerRendezvousClient rc;

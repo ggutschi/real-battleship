@@ -75,11 +75,15 @@ public class PeerCommunication extends Thread {
 		}
     }
     
+    /**
+     * handles the incoming messages
+     * @param input message
+     */
     private void handleClientMessage(String input) {
     	// released;android_id
 		String[] msgSplitted = input.split(Constants.MESSAGE_SEP_CHAR + "");
 		
-		if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {
+		if (msgSplitted[0].equalsIgnoreCase(Constants.UNCOVERED_MSG)) {		// uncover message received
 
 			String androidId = msgSplitted[1];
 
@@ -98,13 +102,13 @@ public class PeerCommunication extends Thread {
 			PeerManager.getVectorTimestamp().next();
 			
 			PeerManager.getCurrentChallenge().uncoverCellLocally(Integer.parseInt(msgSplitted[3]), Integer.parseInt(msgSplitted[4]), PeerManager.getContext(), msgSplitted[1]);
-		} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {
+		} else if (msgSplitted[0].equalsIgnoreCase(Constants.RELEASED_MSG)) {	// released message received
 			if (msgSplitted.length > 1) {
 				String androidId = msgSplitted[1];
 				
 				PeerManager.removePeer(androidId);
 			}
-		} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {
+		} else if (msgSplitted[0].equalsIgnoreCase(Constants.JOINED_MSG)) {		// joined message received
 
 			if (msgSplitted.length > 1) {
 				String androidId = msgSplitted[2];
@@ -113,7 +117,7 @@ public class PeerCommunication extends Thread {
 				PeerManager.addPeer(new Peer(androidId, server.getInetAddress()));
 				Log.d(Constants.LOG_TAG, "Peer added.");
 			}
-		} else if (msgSplitted[0].equalsIgnoreCase(Constants.ALREADY_UNCOVERED_MSG)) {
+		} else if (msgSplitted[0].equalsIgnoreCase(Constants.ALREADY_UNCOVERED_MSG)) {	// already uncovered message received
 			PeerManager.getCurrentChallenge().hasChanged();
 			PeerManager.getCurrentChallenge().notifyObservers(new ObservableMessage(MessageIntend.SCORE_DECREMENT, new Integer(Constants.SHIPCELL_SCORE)));
 		}

@@ -32,7 +32,7 @@ import at.ac.uniklu.mobile.util.Constants;
 import com.google.android.maps.GeoPoint;
 
 /**
- *
+ * List model holding all challenges
  */
 public class ChallengeListModel {
 
@@ -65,6 +65,10 @@ public class ChallengeListModel {
         //loadChallenges();
     }
     
+    /**
+     * Loads challenge with given id from webserver.
+     * @param id id of challenge to load
+     */
     public void loadChallenge(int id) {
     	
     	Log.d(Constants.LOG_TAG, "load challenge with id " + id);
@@ -132,6 +136,9 @@ public class ChallengeListModel {
 		}
     }
     
+    /**
+     * Loads all challenges from webserver
+     */
     public void loadChallenges() {
     	
     	Log.d(Constants.LOG_TAG, "load challenges");
@@ -204,7 +211,7 @@ public class ChallengeListModel {
     }    
     
     /**
-     * @return the mAnimals
+     * @return the list of challenges
      */
     public ArrayList<Challenge> getChallenges() {
     	this.loadChallenges();
@@ -215,7 +222,7 @@ public class ChallengeListModel {
     /**
      * get challenge by the unique challenge id
      * @param id challenge id
-     * @return
+     * @return challenge with the given id
      */
     public Challenge getChallengeById(int id) {
     	for (Challenge c: challengeList) {
