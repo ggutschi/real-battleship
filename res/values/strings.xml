@@ -8,8 +8,8 @@
     <string name="unwind_stack_result_id">unwind_stack_result_id</string>
     
     <!-- edit user nickname view -->
-    <string name="hint_username">Enter your nickname</string>
-    <string name="button_continue">Continue</string>
+    <string name="hint_username">Nickname</string>
+    <string name="button_continue">&gt;&gt;</string>
     <string name="label_setup">User Setup</string>
     
     <!--  challenge list view -->

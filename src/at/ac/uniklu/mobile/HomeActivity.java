@@ -5,9 +5,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
@@ -16,6 +21,8 @@ import android.view.ViewParent;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
+
 import at.ac.uniklu.mobile.db.Challenge;
 import at.ac.uniklu.mobile.db.Participant;
 import at.ac.uniklu.mobile.db.Ship;
@@ -41,6 +48,8 @@ public class HomeActivity extends MapActivity {
 	private GeoPoint currentLocation;
 	private String username;
 	
+	LocationManager locManager;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +65,8 @@ public class HomeActivity extends MapActivity {
     	
     	
         super.onCreate(savedInstanceState);
+        
+        locManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
     	Log.d(Constants.LOG_TAG, "On create");
     	
@@ -76,8 +87,19 @@ public class HomeActivity extends MapActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "change challenge button clicked");
-            	startActivityForResult(new Intent(HomeActivity.this, ChallengeListActivity.class).putExtra(Participant.FIELD_NICKNAME, username), 
-            			Constants.CMD_CODE_CHANGE_CHALLENGE);
+            	
+            	if (isOnline())
+            		startActivityForResult(new Intent(HomeActivity.this, ChallengeListActivity.class).putExtra(Participant.FIELD_NICKNAME, username), 
+            				Constants.CMD_CODE_CHANGE_CHALLENGE);
+            	else {
+            		new AlertDialog.Builder(HomeActivity.this)
+            		.setTitle("No internet connection")
+            		.setMessage("Please connect to the internet to be able to load challenges.")
+            		.setNeutralButton("Ok",
+            				new DialogInterface.OnClickListener() {
+            					public void onClick(DialogInterface dialog, int which) { }
+            		}).show();
+            	}
             	
                 //startActivity(new Intent(HomeActivity.this, ChallengeListActivity.class));
             }
@@ -88,7 +110,18 @@ public class HomeActivity extends MapActivity {
         button_start.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             	Log.d(Constants.LOG_TAG, "start challenge button clicked");
-                startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId()));
+
+            	if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                    startActivity(new Intent(HomeActivity.this, ChallengeStartActivity.class).putExtra(Challenge.FIELD_ID, currentChallenge.getId()));
+            	else {
+            		new AlertDialog.Builder(HomeActivity.this)
+            		.setTitle("No GPS")
+            		.setMessage("Please turn on your GPS to play.")
+            		.setNeutralButton("Ok",
+            				new DialogInterface.OnClickListener() {
+            					public void onClick(DialogInterface dialog, int which) { }
+            		}).show();
+            	}
             }
         });
         
@@ -140,6 +173,17 @@ public class HomeActivity extends MapActivity {
             		
             }
         });
+    }
+    
+    
+    public boolean isOnline() {
+    	 ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    	 NetworkInfo ni = cm.getActiveNetworkInfo();
+    	 
+    	 if (ni == null)
+    		 return false;
+    	 
+    	 return ni.isConnectedOrConnecting();
     }
     
     @Override

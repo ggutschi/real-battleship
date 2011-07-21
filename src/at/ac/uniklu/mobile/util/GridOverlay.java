@@ -66,21 +66,19 @@ public class GridOverlay extends com.google.android.maps.Overlay {
             float diffX = (point2.x - point1.x) / currentChallenge.getCellsX();	            
             float diffY = (point2.y - point1.y) / currentChallenge.getCellsY();
             
+            if (diffX < 0)
+            	diffX *= (-1);
+
+            if (diffY < 0)
+            	diffY *= (-1);
+            
             // draw vertical lines
-            if (point1.x < point2.x)
-            	for (float f = point1.x; f <= point2.x; f += diffX)
-            		canvas.drawLine(f, point1.y, f, point2.y, paint);
-            else
-            	for (float f = point1.x; f >= point2.x; f += diffX)
-            		canvas.drawLine(f, point1.y, f, point2.y, paint);
+            for (float f = point1.x; f <= point2.x; f += diffX)
+            	canvas.drawLine(f, point1.y, f, point2.y, paint);
 
             // draw horizontal lines
-            if (point1.y < point2.y)
-            	for (float f = point1.y; f <= point2.y; f += diffY)
-            		canvas.drawLine(point1.x, f, point2.x, f, paint);
-            else
-            	for (float f = point1.y; f >= point2.y; f += diffY)
-            		canvas.drawLine(point1.x, f, point2.x, f, paint);
+            for (float f = point1.y; f >= point2.y; f += diffY)
+            	canvas.drawLine(point1.x, f, point2.x, f, paint);
 
     		paint.setColor(UNCOVERED_CELL_COLOR);
             paint.setAlpha(UNCOVERED_SHIP_TRANSPARENCY);
