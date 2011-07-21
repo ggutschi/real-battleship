@@ -49,8 +49,8 @@ public class ChallengeStartActivity extends MapActivity implements Observer {
 	
 	private MapView 		mapView;
 	private MapController 	mapController;
-	private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
-	//private GeoPoint		currentLocation;
+	//private GeoPoint 		currentLocation 	= new GeoPoint ((int)(Constants.DEFAULT_LATITUDE * 1E6), (int)(Constants.DEFAULT_LONGITUDE * 1E6));
+	private GeoPoint		currentLocation;
 	private Challenge 		currentChallenge;
 	/** current game score of player **/
 	private int				score;
